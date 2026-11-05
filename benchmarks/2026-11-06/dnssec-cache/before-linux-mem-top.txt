@@ -1,0 +1,20 @@
+File: core-before.test
+Build ID: ef1d325beaec9ddb0986bb6a5ca1b481e5e9a2aa
+Type: alloc_objects
+Time: 2026-11-06 00:25:14 MSK
+Showing nodes accounting for 28618078, 99.81% of 28673501 total
+Dropped 50 nodes (cum <= 143367)
+      flat  flat%   sum%        cum   cum%
+   6660362 23.23% 23.23%    6660362 23.23%  github.com/miekg/dns.(*Msg).SetEdns0 (inline)
+   3883245 13.54% 36.77%    7160094 24.97%  github.com/miekg/dns.(*A).copy
+   3850357 13.43% 50.20%   14675341 51.18%  github.com/miekg/dns.(*Msg).CopyTo
+   3768435 13.14% 63.34%    3768435 13.14%  gdns/internal/core.responseCacheKey
+   3664890 12.78% 76.12%    3664890 12.78%  github.com/miekg/dns.(*RRSIG).copy
+   3513940 12.26% 88.38%   18189281 63.44%  github.com/miekg/dns.(*Msg).Copy (inline)
+   3276849 11.43% 99.81%    3276849 11.43%  github.com/miekg/dns.cloneSlice[go.shape.uint8,go.shape.[]uint8] (inline)
+         0     0% 99.81%   28618078 99.81%  gdns/internal/core.(*Engine).AnswerAs
+         0     0% 99.81%   28618078 99.81%  gdns/internal/core.(*Engine).Resolve
+         0     0% 99.81%   18189281 63.44%  gdns/internal/core.(*cache).get
+         0     0% 99.81%   28618078 99.81%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0% 99.81%    6660362 23.23%  gdns/internal/core.clientResponse
+         0     0% 99.81%   28618078 99.81%  testing.(*B).RunParallel.func1

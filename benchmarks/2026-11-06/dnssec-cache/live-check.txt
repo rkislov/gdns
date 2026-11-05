@@ -1,0 +1,32 @@
+=== RUN   TestDNSSECLive
+=== RUN   TestDNSSECLive/forward
+    dnssec_live_test.go:41: cloudflare.com. A NOERROR AD=true answers=3
+    dnssec_live_test.go:41: cloudflare.com. DNSKEY NOERROR AD=true answers=3
+    dnssec_live_test.go:41: example.com. A NOERROR AD=true answers=3
+    dnssec_live_test.go:41: dnssec-failed.org. A DNSSEC_BOGUS AD=false answers=0
+    dnssec_live_test.go:41: gdns-does-not-exist-20261105.cloudflare.com. A NOERROR AD=true answers=0
+    dnssec_live_test.go:41: gdns-does-not-exist-20261105.se. A NXDOMAIN AD=true answers=0
+    dnssec_live_test.go:41: cloudflare.com. DS NOERROR AD=true answers=2
+    dnssec_live_test.go:41: www.github.com. A NOERROR AD=false answers=2
+=== RUN   TestDNSSECLive/recursive
+    dnssec_live_test.go:41: cloudflare.com. A NOERROR AD=true answers=3
+    dnssec_live_test.go:41: cloudflare.com. DNSKEY NOERROR AD=true answers=3
+    dnssec_live_test.go:41: example.com. A NOERROR AD=true answers=3
+    dnssec_live_test.go:41: dnssec-failed.org. A DNSSEC_BOGUS AD=false answers=0
+    dnssec_live_test.go:41: gdns-does-not-exist-20261105.cloudflare.com. A NOERROR AD=true answers=0
+    dnssec_live_test.go:41: gdns-does-not-exist-20261105.se. A NXDOMAIN AD=true answers=0
+    dnssec_live_test.go:41: cloudflare.com. DS NOERROR AD=true answers=2
+    dnssec_live_test.go:41: www.github.com. A NOERROR AD=false answers=2
+--- PASS: TestDNSSECLive (14.74s)
+    --- PASS: TestDNSSECLive/forward (4.29s)
+    --- PASS: TestDNSSECLive/recursive (10.45s)
+=== RUN   TestRFC5011Live
+=== RUN   TestRFC5011Live/forward
+    dnssec_live_test.go:98: RFC5011 forward: 2 trusted anchors, 2 tracked keys, next=2026-11-07 00:33:39.272069 +0300 MSK
+=== RUN   TestRFC5011Live/recursive
+    dnssec_live_test.go:98: RFC5011 recursive: 2 trusted anchors, 2 tracked keys, next=2026-11-07 00:33:40.268433 +0300 MSK
+--- PASS: TestRFC5011Live (3.08s)
+    --- PASS: TestRFC5011Live/forward (1.00s)
+    --- PASS: TestRFC5011Live/recursive (2.09s)
+PASS
+ok  	gdns/internal/core	18.633s

@@ -48,11 +48,11 @@ type Engine struct {
 	Blocked      atomic.Uint64
 	Hits         atomic.Uint64
 	Failures     atomic.Uint64
-	logMu        sync.Mutex
-	logs         []logEntry
-	next         int
+	logMu        sync.RWMutex
+	logs         []logSlot
 	logLimit     int
-	logSequence  uint64
+	logSequence  atomic.Uint64
+	logFloor     uint64
 	slots        chan struct{}
 }
 
@@ -254,7 +254,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}
 	do := q.IsEdns0() != nil && q.IsEdns0().Do()
 	key := responseCacheKey(name, question.Qtype, do, q.CheckingDisabled, z)
-	if cached := st.cache.get(key); cached != nil {
+	if cached := st.cache.getReply(key, q.IsEdns0() != nil); cached != nil {
 		cached.Id = q.Id
 		cached.Question = q.Question
 		cached.Authoritative = false
@@ -266,7 +266,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 		return clientResponse(cached, q), "CACHE"
 	}
 	value, err, _ := st.flights.Do(key, func() (any, error) {
-		if cached := st.cache.get(key); cached != nil {
+		if cached := st.cache.getReply(key, q.IsEdns0() != nil); cached != nil {
 			return cached, nil
 		}
 
@@ -580,9 +580,24 @@ func clientResponse(m, q *dns.Msg) *dns.Msg {
 		m.Answer = filter(m.Answer)
 		m.Ns = filter(m.Ns)
 	}
-	m.Extra = nil
+	// Reuse only a private, single OPT (including the coallocated cache reply).
+	// Reinitialize the whole record so upstream cookies/ECS/options never leak.
 	if q.IsEdns0() != nil {
-		m.SetEdns0(1232, do)
+		var opt *dns.OPT
+		if len(m.Extra) == 1 {
+			opt, _ = m.Extra[0].(*dns.OPT)
+		}
+		if opt == nil {
+			m.Extra = nil
+			m.SetEdns0(1232, do)
+		} else {
+			*opt = dns.OPT{Hdr: dns.RR_Header{Name: ".", Rrtype: dns.TypeOPT, Class: 1232}}
+			if do {
+				opt.SetDo()
+			}
+		}
+	} else {
+		m.Extra = nil
 	}
 	return m
 }

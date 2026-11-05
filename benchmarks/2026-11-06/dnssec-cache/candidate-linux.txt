@@ -1,0 +1,6 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkAnswerFastPath/SecureCache/log=true-3         	 3535107	      1967 ns/op	     448 B/op	       6 allocs/op
+PASS

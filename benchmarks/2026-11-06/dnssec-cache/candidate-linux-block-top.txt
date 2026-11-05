@@ -1,0 +1,26 @@
+File: core-candidate.test
+Build ID: aa44fb774ef8e138c4fe6b9b1e95ac873e7a36d7
+Type: delay
+Time: 2026-11-06 00:31:52 MSK
+Showing nodes accounting for 26.09s, 100% of 26.09s total
+Dropped 8 nodes (cum <= 0.13s)
+      flat  flat%   sum%        cum   cum%
+    17.42s 66.78% 66.78%     17.42s 66.78%  runtime.chanrecv1
+     8.67s 33.22%   100%      8.67s 33.22%  sync.(*WaitGroup).Wait
+         0     0%   100%      8.70s 33.37%  gdns/internal/core.BenchmarkAnswerFastPath
+         0     0%   100%      8.67s 33.22%  gdns/internal/core.BenchmarkAnswerFastPath.func1
+         0     0%   100%      8.72s 33.41%  main.main
+         0     0%   100%      8.72s 33.41%  runtime.main
+         0     0%   100%     17.41s 66.75%  testing.(*B).Run
+         0     0%   100%      8.67s 33.22%  testing.(*B).RunParallel
+         0     0%   100%      8.70s 33.34%  testing.(*B).doBench
+         0     0%   100%      8.67s 33.22%  testing.(*B).doBench.gowrap1
+         0     0%   100%      8.67s 33.22%  testing.(*B).launch
+         0     0%   100%      8.70s 33.34%  testing.(*B).run
+         0     0%   100%      8.72s 33.41%  testing.(*B).run1
+         0     0%   100%      8.70s 33.37%  testing.(*B).run1.func1
+         0     0%   100%     26.08s   100%  testing.(*B).runN
+         0     0%   100%      8.72s 33.41%  testing.(*M).Run
+         0     0%   100%      8.70s 33.34%  testing.(*benchState).processBench
+         0     0%   100%      8.71s 33.38%  testing.runBenchmarks
+         0     0%   100%      8.71s 33.38%  testing.runBenchmarks.func1

@@ -1,0 +1,39 @@
+File: core-before.test
+Build ID: ef1d325beaec9ddb0986bb6a5ca1b481e5e9a2aa
+Type: cpu
+Time: 2026-11-06 00:25:06 MSK
+Duration: 8.17s, Total samples = 14990ms (183.40%)
+Showing nodes accounting for 9080ms, 60.57% of 14990ms total
+Dropped 192 nodes (cum <= 74.95ms)
+Showing top 30 nodes out of 160
+      flat  flat%   sum%        cum   cum%
+     830ms  5.54%  5.54%      830ms  5.54%  time.runtimeNow
+     640ms  4.27%  9.81%      640ms  4.27%  runtime.asyncPreempt
+     450ms  3.00% 12.81%     2910ms 19.41%  runtime.mallocgc
+     440ms  2.94% 15.74%     5500ms 36.69%  gdns/internal/core.(*cache).get
+     420ms  2.80% 18.55%      540ms  3.60%  runtime.gcmarknewobject
+     410ms  2.74% 21.28%      590ms  3.94%  internal/runtime/maps.(*Map).getWithoutKeySmallFastStr
+     360ms  2.40% 23.68%      470ms  3.14%  github.com/prometheus/client_golang/prometheus.(*histogramCounts).observe
+     360ms  2.40% 26.08%      830ms  5.54%  runtime.concatstrings
+     340ms  2.27% 28.35%     3490ms 23.28%  github.com/miekg/dns.(*Msg).CopyTo
+     320ms  2.13% 30.49%      320ms  2.13%  runtime.madvise
+     310ms  2.07% 32.56%    10140ms 67.65%  gdns/internal/core.(*Engine).Resolve
+     310ms  2.07% 34.62%      310ms  2.07%  runtime.memclrNoHeapPointers
+     300ms  2.00% 36.62%      450ms  3.00%  strings.Map
+     280ms  1.87% 38.49%      320ms  2.13%  internal/sync.(*Mutex).Unlock (inline)
+     260ms  1.73% 40.23%      820ms  5.47%  gdns/internal/core.(*Engine).appendLog
+     260ms  1.73% 41.96%      310ms  2.07%  github.com/prometheus/client_golang/prometheus.(*counter).Inc
+     240ms  1.60% 43.56%     1100ms  7.34%  github.com/miekg/dns.(*RRSIG).copy
+     240ms  1.60% 45.16%      960ms  6.40%  runtime.mallocgcSmallScanNoHeaderSC6
+     220ms  1.47% 46.63%      850ms  5.67%  runtime.mapaccess2_faststr
+     220ms  1.47% 48.10%      360ms  2.40%  runtime.tryDeferToSpanScan
+     210ms  1.40% 49.50%      910ms  6.07%  runtime.growslice
+     210ms  1.40% 50.90%      460ms  3.07%  runtime.scanObject
+     200ms  1.33% 52.23%     1280ms  8.54%  github.com/miekg/dns.(*A).copy
+     200ms  1.33% 53.57%      200ms  1.33%  sync/atomic.(*Int32).Add (inline)
+     190ms  1.27% 54.84%      650ms  4.34%  runtime.mallocgcSmallScanSlowPath
+     190ms  1.27% 56.10%      190ms  1.27%  runtime.memmove
+     180ms  1.20% 57.30%      440ms  2.94%  gdns/internal/telemetry.(*Monitor).ObserveDNSSEC
+     180ms  1.20% 58.51%      670ms  4.47%  github.com/prometheus/client_golang/prometheus.(*histogram).observe
+     160ms  1.07% 59.57%     1310ms  8.74%  runtime.mallocgcSmallScanNoHeader
+     150ms  1.00% 60.57%      600ms  4.00%  gdns/internal/core.(*Engine).observeDNSSECState

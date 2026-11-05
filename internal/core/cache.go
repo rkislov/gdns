@@ -38,7 +38,17 @@ func newCache(limit int) *cache {
 	return c
 }
 func (c *cache) shard(k string) *cacheShard { return &c.shards[maphash.String(c.seed, k)%64] }
-func (c *cache) get(k string) *dns.Msg {
+
+// A cache hit owns its message, OPT and Additional slice in one allocation.
+// RR payloads still receive the library's deep copy before TTL adjustment.
+type cachedReply struct {
+	msg   dns.Msg
+	opt   dns.OPT
+	extra [1]dns.RR
+}
+
+func (c *cache) get(k string) *dns.Msg { return c.getReply(k, false) }
+func (c *cache) getReply(k string, edns bool) *dns.Msg {
 	s := c.shard(k)
 	s.RLock()
 	e, ok := s.items[k]
@@ -64,7 +74,16 @@ func (c *cache) get(k string) *dns.Msg {
 			}
 		}
 	}
-	m := e.msg.Copy()
+	var m *dns.Msg
+	if edns {
+		reply := new(cachedReply)
+		reply.opt.Hdr = dns.RR_Header{Name: ".", Rrtype: dns.TypeOPT, Class: 1232}
+		m = e.msg.CopyTo(&reply.msg)
+		reply.extra[0] = &reply.opt
+		m.Extra = reply.extra[:]
+	} else {
+		m = e.msg.Copy()
+	}
 	for _, set := range [][]dns.RR{m.Answer, m.Ns, m.Extra} {
 		for _, rr := range set {
 			if rr.Header().Rrtype != dns.TypeOPT {

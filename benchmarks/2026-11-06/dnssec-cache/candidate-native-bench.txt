@@ -1,0 +1,18 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkAnswerFastPath/SecureCache/log=false           	 3181610	       374.1 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false           	 3186308	       374.7 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false           	 3198602	       375.2 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-8         	 4524352	       261.9 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-8         	 4585950	       262.5 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-8         	 4569304	       262.0 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	 2925610	       408.0 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	 2920777	       406.6 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	 2937835	       409.4 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8          	 3324696	       358.8 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8          	 3253423	       357.0 ns/op	     448 B/op	       6 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8          	 3359486	       368.5 ns/op	     448 B/op	       6 allocs/op
+PASS
+ok  	gdns/internal/core	20.113s

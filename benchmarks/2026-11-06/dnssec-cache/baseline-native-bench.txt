@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkAnswerFastPath/SecureCache/log=true           	 2301196	       460.8 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true           	 2827665	       422.8 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true           	 2798563	       424.6 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8         	 3027884	       400.3 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8         	 2996340	       399.5 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-8         	 3023806	       393.8 ns/op	     464 B/op	       8 allocs/op
+PASS
+ok  	gdns/internal/core	10.037s
