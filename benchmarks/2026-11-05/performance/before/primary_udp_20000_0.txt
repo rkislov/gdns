@@ -1,0 +1,23 @@
+DNS Performance Testing Tool
+Version 2.14.0
+
+[Status] Command line: dnsperf -m udp -s 127.0.0.1 -p 1153 -D -d /var/lib/ghole/performance-lab/before/primary.queries.txt -c 8 -T 2 -q 128 -Q 20000 -l 5 -t 1
+[Status] Sending queries (to 127.0.0.1:1153)
+[Status] Started at: Thu Nov  5 18:56:30 2026
+[Status] Stopping after 5.000000 seconds
+[Status] Testing complete (time limit)
+
+Statistics:
+
+  Queries sent:         92115
+  Queries completed:    92115 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NOERROR 92115 (100.00%)
+  Average packet size:  request 47, response 70
+  Run time (s):         5.000973
+  Queries per second:   18419.415582
+
+  Average Latency (s):  0.004804 (min 0.000044, max 0.053674)
+  Latency StdDev (s):   0.004040
+

@@ -27,6 +27,7 @@ import (
 var assets embed.FS
 
 type Server struct {
+	UDPWorkers    int
 	Engine        *core.Engine
 	Path, Token   string
 	mu            sync.Mutex
@@ -111,7 +112,7 @@ func (s *Server) Handler() http.Handler {
 				w.WriteHeader(405)
 				return
 			}
-			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "restart_required": s.restartRequired(), "dnssec": s.Engine.DNSSECStatus(), "logs": s.Engine.RecentLogs(8)}
+			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "udp_workers": s.UDPWorkers, "restart_required": s.restartRequired(), "dnssec": s.Engine.DNSSECStatus(), "logs": s.Engine.RecentLogs(8)}
 			if s.Monitor != nil {
 				data["telemetry"] = s.Monitor.Snapshot()
 			}

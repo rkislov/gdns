@@ -56,7 +56,7 @@ func ListenWithAdmin(c core.Config, e *core.Engine, admin http.Handler) (*Server
 			mux.Handle("/", admin)
 			handler = mux
 		}
-		s.doh = &http.Server{TLSConfig: cfg.Clone(), Handler: handler, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
+		s.doh = &http.Server{ConnContext: peerContext, TLSConfig: cfg.Clone(), Handler: handler, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
 	}
 	return s, nil
 }

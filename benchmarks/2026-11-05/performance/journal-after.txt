@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: ghole/internal/core
+cpu: Apple M4
+BenchmarkJournalPage100000     	  249730	      2380 ns/op	    5992 B/op	      52 allocs/op
+BenchmarkJournalPage100000     	  232848	      2345 ns/op	    5992 B/op	      52 allocs/op
+BenchmarkJournalPage100000     	  253839	      2352 ns/op	    5992 B/op	      52 allocs/op
+BenchmarkJournalPage100000-4   	  378214	      1586 ns/op	    5992 B/op	      52 allocs/op
+BenchmarkJournalPage100000-4   	  367183	      1571 ns/op	    5992 B/op	      52 allocs/op
+BenchmarkJournalPage100000-4   	  381522	      1571 ns/op	    5992 B/op	      52 allocs/op
+PASS
+ok  	ghole/internal/core	4.515s

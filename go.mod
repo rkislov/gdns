@@ -9,6 +9,7 @@ require (
 	github.com/semihalev/sdns v1.9.1
 	github.com/shirou/gopsutil/v4 v4.25.9
 	golang.org/x/sync v0.24.0
+	golang.org/x/sys v0.49.0
 	modernc.org/sqlite v1.39.1
 )
 
@@ -37,7 +38,6 @@ require (
 	golang.org/x/crypto v0.57.0 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/net v0.59.0 // indirect
-	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 	modernc.org/libc v1.66.10 // indirect

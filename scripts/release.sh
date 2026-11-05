@@ -2,7 +2,7 @@
 # Copyright 2026 Кислов Роман Сергеевич
 # SPDX-License-Identifier: Apache-2.0
 set -eu
-VERSION=${VERSION:-0.3.0}
+VERSION=${VERSION:-0.4.0}
 COMMIT=${COMMIT:-$(git rev-parse --short HEAD 2>/dev/null || printf unknown)}
 BUILD_DATE=${BUILD_DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}
 NFPM=${NFPM:-nfpm}
