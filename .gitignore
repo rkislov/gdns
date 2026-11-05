@@ -1,0 +1,17 @@
+/bin/
+/node_modules/
+ghole.json
+ghole.json.token
+*.token
+.DS_Store
+
+*.db
+*.db-wal
+*.db-shm
+*.private.json
+
+/dist/
+*.key
+*.pem
+*.p12
+.env

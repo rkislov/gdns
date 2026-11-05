@@ -1,0 +1,1 @@
+{"name":"ghole-ui","private":true,"scripts":{"css":"tailwindcss -i ui/input.css -o internal/web/static/style.css --minify"},"devDependencies":{"@tailwindcss/cli":"^4.1.0","tailwindcss":"^4.1.0"}}
