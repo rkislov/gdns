@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-11-05T21:46:55.824270+00:00",
+  "version": "gdns 0.6.0 (a45731f; 2026-11-05T21:45:15Z)",
+  "binary_sha256": "132759384229526b68b18efe756d876e47aca97d4195b6f2b1351bd27a093970",
+  "service": "active",
+  "udp_workers": 3,
+  "restart_required": false,
+  "config_preserved": true,
+  "token_preserved": true,
+  "managed_state_preserved": true,
+  "managed_revision": 3,
+  "rfc5011_state": "healthy",
+  "last_success": "2026-11-05T18:04:40.359577626+03:00",
+  "next_probe": "2026-11-06T18:04:40.359577626+03:00",
+  "pagination_sizes": [
+    10,
+    25,
+    50,
+    100
+  ],
+  "prometheus": true,
+  "https_ui": true,
+  "certbot_timer": "active",
+  "pre_backup": "/var/backups/gdns/pre-cache-profile-20261106",
+  "dnssec_transport_checks": 32,
+  "pagination_after_queries": true,
+  "udp_sockets": 3,
+  "post_backup": "/var/backups/gdns/post-cache-profile-20261106"
+}
