@@ -13,9 +13,9 @@
 - Отдельный интернет-тест `GHOLE_DNSSEC_LIVE=1 go test ./internal/core -run TestDNSSECLive -v -count=1` прошёл в forward и recursive режимах: cloudflare.com A/DNSKEY/DS, example.com A, неподписанный www.github.com, dnssec-failed.org, подписанные отрицательные ответы Cloudflare и зоны .se.
 - Linux amd64 canary-бинарник с новым Go 1.27 запущен в контейнерах ALT p11 и Astra UBI 1.8: SQLite и проверка конфигурации прошли. Это дополнительный smoke-тест бинарника; ограничения проверки дистрибутивов перечислены в [compatibility.md](compatibility.md). Сборки arm64 созданы кросс-компиляцией.
 
-CI исходного commit: https://github.com/rkislov/ghole/actions/runs/42039111285
+CI исходного commit: https://github.com/rkislov/gdns/actions/runs/42039111285
 
-Сборка и публикация: https://github.com/rkislov/ghole/actions/runs/42039602508
+Сборка и публикация: https://github.com/rkislov/gdns/actions/runs/42039602508
 
 ## Проверки установленной службы
 

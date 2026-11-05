@@ -1,12 +1,12 @@
 #!/bin/sh
 set -eu
-groupadd --system --force ghole
-if ! id -u ghole >/dev/null 2>&1; then
+groupadd --system --force gdns
+if ! id -u gdns >/dev/null 2>&1; then
   nologin=$(command -v nologin || printf /bin/false)
-  useradd --system --gid ghole --home-dir /var/lib/ghole --shell "$nologin" ghole
+  useradd --system --gid gdns --home-dir /var/lib/gdns --shell "$nologin" gdns
 fi
-install -d -o ghole -g ghole -m 0750 /var/lib/ghole
-install -d -o root -g ghole -m 0750 /etc/ghole
+install -d -o gdns -g gdns -m 0750 /var/lib/gdns
+install -d -o root -g gdns -m 0750 /etc/gdns
 if [ -d /run/systemd/system ]; then
   systemctl daemon-reload
 fi

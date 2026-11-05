@@ -12,8 +12,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"ghole/internal/core"
-	validation "ghole/internal/dnssec"
+	"gdns/internal/core"
+	validation "gdns/internal/dnssec"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/miekg/dns"
 	"hash"
@@ -40,6 +40,8 @@ type Store struct {
 	views        map[[2]int][32]byte
 }
 
+// SQL table names retain the legacy prefix to open existing installations
+// without rewriting configuration or RFC 5011 managed trust state.
 func Open(ctx context.Context, driver, dsn string) (*Store, error) {
 	switch driver {
 	case "sqlite":
@@ -61,7 +63,7 @@ func Open(ctx context.Context, driver, dsn string) (*Store, error) {
 		f.Close()
 	case "postgres":
 		if dsn == "" {
-			return nil, fmt.Errorf("PostgreSQL requires GHOLE_DATABASE_URL or -database")
+			return nil, fmt.Errorf("PostgreSQL requires GDNS_DATABASE_URL or -database")
 		}
 	default:
 		return nil, fmt.Errorf("storage must be sqlite or postgres")

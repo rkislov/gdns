@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"ghole/internal/core"
+	"gdns/internal/core"
 	"github.com/miekg/dns"
 	"strings"
 )

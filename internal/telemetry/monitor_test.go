@@ -5,7 +5,7 @@ package telemetry
 
 import (
 	"context"
-	validation "ghole/internal/dnssec"
+	validation "gdns/internal/dnssec"
 	"net/http/httptest"
 	"strings"
 	"sync"
@@ -30,7 +30,7 @@ func TestMetricsAndHistory(t *testing.T) {
 	w := httptest.NewRecorder()
 	m.Handler().ServeHTTP(w, httptest.NewRequest("GET", "/metrics", nil))
 	body := w.Body.String()
-	for _, want := range []string{`ghole_dns_queries_total{result="NOERROR",transport="doh"} 1`, `ghole_dns_blocked_total{transport="dot"} 1`, `ghole_dns_response_duration_seconds_count{transport="dot"} 1`, `go_goroutines`, `ghole_dnssec_validation_total{state="secure"} 1`, `ghole_dnssec_validation_total{state="bogus"} 1`} {
+	for _, want := range []string{`gdns_dns_queries_total{result="NOERROR",transport="doh"} 1`, `gdns_dns_blocked_total{transport="dot"} 1`, `gdns_dns_response_duration_seconds_count{transport="dot"} 1`, `go_goroutines`, `gdns_dnssec_validation_total{state="secure"} 1`, `gdns_dnssec_validation_total{state="bogus"} 1`} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("metric missing: %s", want)
 		}
@@ -94,7 +94,7 @@ func TestRFC5011Metrics(t *testing.T) {
 	})
 	w := httptest.NewRecorder()
 	m.Handler().ServeHTTP(w, httptest.NewRequest("GET", "/metrics", nil))
-	for _, want := range []string{`ghole_dnssec_rfc5011_enabled 1`, `ghole_dnssec_rfc5011_active_anchors 2`, `ghole_dnssec_rfc5011_last_success_timestamp_seconds 100`, `ghole_dnssec_rfc5011_keys{state="AddPend"} 1`} {
+	for _, want := range []string{`gdns_dnssec_rfc5011_enabled 1`, `gdns_dnssec_rfc5011_active_anchors 2`, `gdns_dnssec_rfc5011_last_success_timestamp_seconds 100`, `gdns_dnssec_rfc5011_keys{state="AddPend"} 1`} {
 		if !strings.Contains(w.Body.String(), want) {
 			t.Fatal("missing RFC 5011 metric", want)
 		}

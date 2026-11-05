@@ -1,5 +1,5 @@
 name: Предложение
-description: Предложить улучшение GHole
+description: Предложить улучшение gdns
 title: '[Feature] '
 body:
   - type: textarea

@@ -8,7 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	validation "ghole/internal/dnssec"
+	validation "gdns/internal/dnssec"
 	"github.com/miekg/dns"
 	"net/netip"
 	"sync/atomic"

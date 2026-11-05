@@ -1,7 +1,7 @@
 /bin/
 /node_modules/
-ghole.json
-ghole.json.token
+gdns.json
+gdns.json.token
 *.token
 .DS_Store
 
@@ -17,3 +17,7 @@ ghole.json.token
 .env
 __pycache__/
 *.pyc
+
+# Legacy installations may still use these private paths.
+ghole.json
+ghole.json.token

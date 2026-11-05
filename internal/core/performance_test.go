@@ -5,7 +5,7 @@ package core
 import (
 	"context"
 	"fmt"
-	"ghole/internal/telemetry"
+	"gdns/internal/telemetry"
 	"github.com/miekg/dns"
 	"net/netip"
 	"testing"

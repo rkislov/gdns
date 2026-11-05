@@ -1,4 +1,4 @@
-name: ghole
+name: gdns
 arch: ${ARCH}
 platform: linux
 version: ${VERSION}
@@ -10,27 +10,27 @@ description: |
   Go DNS resolver with authoritative zones, source-CIDR split records,
   block feeds, SQLite/PostgreSQL, DoH/DoT and an embedded admin UI.
 vendor: 'Кислов Роман Сергеевич'
-homepage: https://github.com/rkislov/ghole
+homepage: https://github.com/rkislov/gdns
 license: Apache-2.0
 depends:
   - systemd
 contents:
-  - src: ./dist/ghole_linux_${ARCH}
-    dst: /usr/bin/ghole
+  - src: ./dist/gdns_linux_${ARCH}
+    dst: /usr/bin/gdns
     file_info:
       mode: 0755
-  - src: ./packaging/systemd/ghole.service
-    dst: /usr/lib/systemd/system/ghole.service
+  - src: ./packaging/systemd/gdns.service
+    dst: /usr/lib/systemd/system/gdns.service
   - src: ./LICENSE
-    dst: /usr/share/doc/ghole/LICENSE
+    dst: /usr/share/doc/gdns/LICENSE
   - src: ./NOTICE
-    dst: /usr/share/doc/ghole/NOTICE
+    dst: /usr/share/doc/gdns/NOTICE
   - src: ./THIRD_PARTY_NOTICES.txt
-    dst: /usr/share/doc/ghole/THIRD_PARTY_NOTICES.txt
+    dst: /usr/share/doc/gdns/THIRD_PARTY_NOTICES.txt
   - src: ./README.md
-    dst: /usr/share/doc/ghole/README.md
+    dst: /usr/share/doc/gdns/README.md
   - src: ./docs/linux-installation.md
-    dst: /usr/share/doc/ghole/linux-installation.md
+    dst: /usr/share/doc/gdns/linux-installation.md
 scripts:
   postinstall: ./packaging/scripts/postinstall.sh
   preremove: ./packaging/scripts/preremove.sh

@@ -78,18 +78,18 @@ var securityStates = []string{"secure", "insecure", "bogus", "indeterminate", "d
 
 func New(diskPath string) *Monitor {
 	m := &Monitor{registry: prometheus.NewRegistry(), gauges: map[string]prometheus.Gauge{}, diskPath: diskPath, last: time.Now()}
-	security := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "ghole_dnssec_validation_total", Help: "Local DNSSEC outcomes; policy bypasses are explicitly separated."}, []string{"state"})
+	security := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "gdns_dnssec_validation_total", Help: "Local DNSSEC outcomes; policy bypasses are explicitly separated."}, []string{"state"})
 	m.registry.MustRegister(security)
 	m.dnssecCounters = map[string]prometheus.Counter{}
 	for _, state := range securityStates {
 		m.dnssecCounters[state] = security.WithLabelValues(state)
 	}
 
-	m.systemInfo = prometheus.NewGaugeVec(prometheus.GaugeOpts{Name: "ghole_system_info", Help: "Operating system and kernel version."}, []string{"os", "kernel_version"})
+	m.systemInfo = prometheus.NewGaugeVec(prometheus.GaugeOpts{Name: "gdns_system_info", Help: "Operating system and kernel version."}, []string{"os", "kernel_version"})
 	m.registry.MustRegister(m.systemInfo)
-	query := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "ghole_dns_queries_total", Help: "Completed DNS queries by transport and result."}, []string{"transport", "result"})
-	blocked := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "ghole_dns_blocked_total", Help: "Queries blocked by domain policy, including CNAME targets."}, []string{"transport"})
-	latency := prometheus.NewHistogramVec(prometheus.HistogramOpts{Name: "ghole_dns_response_duration_seconds", Help: "DNS processing time, including resolution, excluding response socket write.", Buckets: []float64{0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8}}, []string{"transport"})
+	query := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "gdns_dns_queries_total", Help: "Completed DNS queries by transport and result."}, []string{"transport", "result"})
+	blocked := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "gdns_dns_blocked_total", Help: "Queries blocked by domain policy, including CNAME targets."}, []string{"transport"})
+	latency := prometheus.NewHistogramVec(prometheus.HistogramOpts{Name: "gdns_dns_response_duration_seconds", Help: "DNS processing time, including resolution, excluding response socket write.", Buckets: []float64{0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8}}, []string{"transport"})
 	m.registry.MustRegister(query, blocked, latency, collectors.NewGoCollector(), collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
 	// Cache bounded label handles; no vector lookup, allocation or arbitrary labels per query.
 	for i, t := range transports {
@@ -100,12 +100,12 @@ func New(diskPath string) *Monitor {
 		m.blockedMetrics[i] = blocked.WithLabelValues(t)
 		m.durations[i] = latency.WithLabelValues(t)
 	}
-	for name, help := range map[string]string{"cpu_usage_ratio": "Host CPU utilization (0 to 1).", "logical_cpus": "Number of logical CPU cores.", "memory_total_bytes": "Total host memory bytes.", "memory_used_bytes": "Used host memory bytes.", "memory_available_bytes": "Available host memory bytes.", "disk_total_bytes": "Total bytes on the filesystem containing GHole data.", "disk_used_bytes": "Used bytes on the filesystem containing GHole data.", "disk_free_bytes": "Free bytes available on the filesystem containing GHole data.", "system_metrics_success": "Whether the latest host metrics collection succeeded."} {
-		g := prometheus.NewGauge(prometheus.GaugeOpts{Name: "ghole_system_" + name, Help: help})
+	for name, help := range map[string]string{"cpu_usage_ratio": "Host CPU utilization (0 to 1).", "logical_cpus": "Number of logical CPU cores.", "memory_total_bytes": "Total host memory bytes.", "memory_used_bytes": "Used host memory bytes.", "memory_available_bytes": "Available host memory bytes.", "disk_total_bytes": "Total bytes on the filesystem containing gdns data.", "disk_used_bytes": "Used bytes on the filesystem containing gdns data.", "disk_free_bytes": "Free bytes available on the filesystem containing gdns data.", "system_metrics_success": "Whether the latest host metrics collection succeeded."} {
+		g := prometheus.NewGauge(prometheus.GaugeOpts{Name: "gdns_system_" + name, Help: help})
 		m.gauges[name] = g
 		m.registry.MustRegister(g)
 	}
-	m.registry.MustRegister(prometheus.NewGaugeFunc(prometheus.GaugeOpts{Name: "ghole_system_sample_timestamp_seconds", Help: "Unix time of the latest host metrics sample."}, func() float64 {
+	m.registry.MustRegister(prometheus.NewGaugeFunc(prometheus.GaugeOpts{Name: "gdns_system_sample_timestamp_seconds", Help: "Unix time of the latest host metrics sample."}, func() float64 {
 		m.mu.RLock()
 		defer m.mu.RUnlock()
 		if m.system.SampledAt.IsZero() {

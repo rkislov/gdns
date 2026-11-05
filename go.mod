@@ -1,4 +1,4 @@
-module ghole
+module gdns
 
 go 1.27.0
 

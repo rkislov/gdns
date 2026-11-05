@@ -8,7 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"ghole/internal/core"
+	"gdns/internal/core"
 	"github.com/miekg/dns"
 	"net/http"
 	"net/http/httptest"

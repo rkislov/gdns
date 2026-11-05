@@ -5,7 +5,7 @@ package core
 
 import (
 	"fmt"
-	validation "ghole/internal/dnssec"
+	validation "gdns/internal/dnssec"
 	"github.com/miekg/dns"
 	"net"
 	"net/netip"
