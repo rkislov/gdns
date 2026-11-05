@@ -1,0 +1,38 @@
+File: core-before.test
+Build ID: ef1d325beaec9ddb0986bb6a5ca1b481e5e9a2aa
+Type: delay
+Time: 2026-11-06 00:25:14 MSK
+Showing nodes accounting for 1141.05ms, 100% of 1141.05ms total
+Dropped 26 nodes (cum <= 5.71ms)
+Showing top 30 nodes out of 54
+      flat  flat%   sum%        cum   cum%
+  666.76ms 58.43% 58.43%   666.76ms 58.43%  sync.(*Mutex).Unlock
+  474.29ms 41.57%   100%   474.29ms 41.57%  runtime.unlock (partial-inline)
+         0     0%   100%   728.04ms 63.80%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    61.28ms  5.37%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%   666.76ms 58.43%  gdns/internal/core.(*Engine).appendLog
+         0     0%   100%    51.79ms  4.54%  gdns/internal/core.(*cache).get
+         0     0%   100%   728.04ms 63.80%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0%   100%     7.79ms  0.68%  github.com/miekg/dns.(*A).copy
+         0     0%   100%    51.79ms  4.54%  github.com/miekg/dns.(*Msg).Copy (inline)
+         0     0%   100%    39.29ms  3.44%  github.com/miekg/dns.(*Msg).CopyTo
+         0     0%   100%    16.92ms  1.48%  github.com/miekg/dns.(*RRSIG).copy
+         0     0%   100%    35.11ms  3.08%  runtime.(*mcache).nextFree
+         0     0%   100%    35.11ms  3.08%  runtime.(*mcache).refill
+         0     0%   100%    35.11ms  3.08%  runtime.(*mcentral).cacheSpan
+         0     0%   100%    30.93ms  2.71%  runtime.(*mheap).freeSpan (inline)
+         0     0%   100%    30.93ms  2.71%  runtime.(*mheap).freeSpan.func1
+         0     0%   100%    30.93ms  2.71%  runtime.(*sweepLocked).sweep
+         0     0%   100%    30.93ms  2.71%  runtime.deductSweepCredit
+         0     0%   100%    85.60ms  7.50%  runtime.findRunnable
+         0     0%   100%   111.10ms  9.74%  runtime.forEachP (inline)
+         0     0%   100%   111.10ms  9.74%  runtime.forEachP.func1
+         0     0%   100%   111.10ms  9.74%  runtime.forEachPInternal
+         0     0%   100%    14.29ms  1.25%  runtime.gcAssistAlloc
+         0     0%   100%    99.56ms  8.73%  runtime.gcBgMarkWorker
+         0     0%   100%   113.85ms  9.98%  runtime.gcMarkDone
+         0     0%   100%    11.88ms  1.04%  runtime.gcStart
+         0     0%   100%    11.84ms  1.04%  runtime.gcStart.func2
+         0     0%   100%    10.36ms  0.91%  runtime.gcstopm
+         0     0%   100%    86.16ms  7.55%  runtime.gopreempt_m
+         0     0%   100%    89.18ms  7.82%  runtime.goschedImpl

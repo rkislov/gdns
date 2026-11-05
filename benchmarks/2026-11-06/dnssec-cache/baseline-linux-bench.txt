@@ -1,0 +1,17 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkAnswerFastPath/SecureCache/log=false           	  610737	      2449 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false           	  586808	      2232 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false           	  611566	      2236 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-3         	  505303	      2117 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-3         	  695484	      1847 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-3         	  537148	      2122 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	  660478	      2539 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	  518886	      2825 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true            	  453391	      2862 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-3          	  535257	      2166 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-3          	  443253	      2429 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-3          	  833794	      1992 ns/op	     464 B/op	       8 allocs/op
+PASS

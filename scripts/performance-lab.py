@@ -6,7 +6,7 @@ Never changes the production configuration, listeners, clocks or trust state.
 Raw configurations, tokens and the lab database stay private on the server.
 """
 import argparse,copy,json,os,pathlib,pwd,re,secrets,signal,socket,ssl,struct,subprocess,time,urllib.request
-P=argparse.ArgumentParser();P.add_argument('--binary',required=True);P.add_argument('--fixture',required=True);P.add_argument('--tag',required=True);P.add_argument('--workers',type=int,default=0);P.add_argument('--root',default='/var/lib/gdns/performance-lab');P.add_argument('--repeats',type=int,default=2);A=P.parse_args()
+P=argparse.ArgumentParser();P.add_argument('--binary',required=True);P.add_argument('--fixture',required=True);P.add_argument('--tag',required=True);P.add_argument('--workers',type=int,default=0);P.add_argument('--root',default='/var/lib/gdns/performance-lab');P.add_argument('--repeats',type=int,default=2);P.add_argument('--suite',choices=['full','dnssec-cache'],default='full');A=P.parse_args()
 root=pathlib.Path(A.root)/A.tag;root.mkdir(parents=True,exist_ok=True);root.chmod(0o700);account=pwd.getpwnam('gdns');os.chown(root.parent,account.pw_uid,account.pw_gid);root.parent.chmod(0o700);os.chown(root,account.pw_uid,account.pw_gid)
 rows=[];token=secrets.token_hex(32);processes=[]
 def call(path,data=None):
@@ -45,7 +45,7 @@ def cpu(p):
 def extract(text,key):
  m=re.search(r'^\s*'+re.escape(key)+r':\s*([0-9.]+)',text,re.M);return float(m.group(1)) if m else None
 def save():
- (root/'results.json').write_text(json.dumps({'tag':A.tag,'binary':subprocess.check_output([A.binary,'-version'],text=True).strip(),'configured_udp_workers':A.workers,'environment':{'os':subprocess.check_output(['uname','-srmo'],text=True).strip(),'vcpus':os.cpu_count(),'method':'isolated process; generator and signed fixture share the host; query journal and Prometheus enabled; no production settings changed'},'results':rows},indent=2)+'\n')
+ (root/'results.json').write_text(json.dumps({'tag':A.tag,'binary':subprocess.check_output([A.binary,'-version'],text=True).strip(),'configured_udp_workers':A.workers,'suite':A.suite,'environment':{'os':subprocess.check_output(['uname','-srmo'],text=True).strip(),'vcpus':os.cpu_count(),'method':'isolated process; generator and signed fixture share the host; query journal and Prometheus enabled; no production settings changed'},'results':rows},indent=2)+'\n')
 def run(p,label,name,rate,repeat,mode='udp'):
  corpus=root/(label+'.queries.txt');corpus.write_text(name+' A\n')
  args=['dnsperf','-m',mode,'-s','127.0.0.1','-p',str(1853 if mode=='dot' else 1153),'-D','-d',str(corpus),'-c','8','-T','2','-q','128','-Q',str(rate),'-l','5','-t','1']
@@ -79,24 +79,26 @@ try:
  p=spawn([A.binary,'-config',str(config),'-database',str(root/'gdns.db'),'-import-config','-metrics-listen','127.0.0.1:1190'],'server',{'GDNS_ADMIN_TOKEN':token})
  state=ready(p);print('Ready',A.tag,'workers',state.get('udp_workers',1),flush=True)
  probe('host.bench.invalid.',ip='192.0.2.123');probe('split.bench.invalid.',ip='10.28.0.10');probe('d999999.blocked.invalid.',rcode=3);probe('cache.bench.invalid.',ad=True,ip='192.0.2.77')
- for label,name in [('primary','host.bench.invalid.'),('split_28','split.bench.invalid.'),('blocked_million','d999999.blocked.invalid.'),('secure_cache','cache.bench.invalid.')]:
-  for rate in [5000,10000,20000,30000]:
+ cases=[('secure_cache','cache.bench.invalid.')] if A.suite=='dnssec-cache' else [('primary','host.bench.invalid.'),('split_28','split.bench.invalid.'),('blocked_million','d999999.blocked.invalid.'),('secure_cache','cache.bench.invalid.')]
+ for label,name in cases:
+  for rate in ([10000,20000,30000] if A.suite=='dnssec-cache' else [5000,10000,20000,30000]):
    healthy=True
    for repeat in range(A.repeats):healthy=run(p,label,name,rate,repeat) and healthy
    if not healthy:break
- for mode,rate in [('tcp',4000),('dot',2000)]:
-  for repeat in range(A.repeats):run(p,'primary','host.bench.invalid.',rate,repeat,mode)
- # Independent HTTP/2 measurement on the same loopback-only HTTPS listener.
- payload=root/'doh-query.bin';payload.write_bytes(wire('host.bench.invalid.'))
- req=urllib.request.Request('https://dev.kislovs.ru:1443/dns-query',data=payload.read_bytes(),headers={'Content-Type':'application/dns-message'})
- # The explicit TLS probe checks trust and SNI before h2load's throughput run.
- with socket.create_connection(('127.0.0.1',1443),timeout=10) as raw:
-  with ssl.create_default_context().wrap_socket(raw,server_hostname='dev.kislovs.ru') as tls:assert tls.version()
- for repeat in range(A.repeats):
-  args=['h2load','-n','20000','-c','4','-m','16','-t','1','--connect-to=127.0.0.1:1443','-d',str(payload),'-H','content-type: application/dns-message','https://dev.kislovs.ru:1443/dns-query']
-  startcpu=cpu(p);result=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=60);used=cpu(p)-startcpu
-  output=f'primary_doh_h2load_{repeat}.txt';(root/output).write_text(result.stdout);assert result.returncode==0 and '20000 succeeded' in result.stdout,result.stdout[-1500:]
-  m=re.search(r'finished in .*?,\s*([0-9.]+) req/s',result.stdout);rows.append({'case':'primary','transport':'doh','repeat':repeat,'completed':20000,'qps':float(m.group(1)) if m else None,'server_cpu_seconds':used,'output':output,'command':args});save();print('DoH',A.tag,repeat,rows[-1]['qps'],flush=True)
+ if A.suite=='full':
+  for mode,rate in [('tcp',4000),('dot',2000)]:
+   for repeat in range(A.repeats):run(p,'primary','host.bench.invalid.',rate,repeat,mode)
+  # Independent HTTP/2 measurement on the same loopback-only HTTPS listener.
+  payload=root/'doh-query.bin';payload.write_bytes(wire('host.bench.invalid.'))
+  req=urllib.request.Request('https://dev.kislovs.ru:1443/dns-query',data=payload.read_bytes(),headers={'Content-Type':'application/dns-message'})
+  # The explicit TLS probe checks trust and SNI before h2load's throughput run.
+  with socket.create_connection(('127.0.0.1',1443),timeout=10) as raw:
+   with ssl.create_default_context().wrap_socket(raw,server_hostname='dev.kislovs.ru') as tls:assert tls.version()
+  for repeat in range(A.repeats):
+   args=['h2load','-n','20000','-c','4','-m','16','-t','1','--connect-to=127.0.0.1:1443','-d',str(payload),'-H','content-type: application/dns-message','https://dev.kislovs.ru:1443/dns-query']
+   startcpu=cpu(p);result=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=60);used=cpu(p)-startcpu
+   output=f'primary_doh_h2load_{repeat}.txt';(root/output).write_text(result.stdout);assert result.returncode==0 and '20000 succeeded' in result.stdout,result.stdout[-1500:]
+   m=re.search(r'finished in .*?,\s*([0-9.]+) req/s',result.stdout);rows.append({'case':'primary','transport':'doh','repeat':repeat,'completed':20000,'qps':float(m.group(1)) if m else None,'server_cpu_seconds':used,'output':output,'command':args});save();print('DoH',A.tag,repeat,rows[-1]['qps'],flush=True)
  # Cold DNSSEC: bypass only the reply cache; validation and authenticated keys stay on.
  updated,_=call('config');updated['cache_size']=0;call('config',updated)
  for repeat in range(A.repeats):run(p,'dnssec_uncached','cache.bench.invalid.',500,repeat)

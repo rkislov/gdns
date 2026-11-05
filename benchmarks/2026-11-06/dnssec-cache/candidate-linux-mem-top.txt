@@ -1,0 +1,17 @@
+File: core-candidate.test
+Build ID: aa44fb774ef8e138c4fe6b9b1e95ac873e7a36d7
+Type: alloc_objects
+Time: 2026-11-06 00:31:52 MSK
+Showing nodes accounting for 26034011, 99.87% of 26066785 total
+Dropped 56 nodes (cum <= 130333)
+      flat  flat%   sum%        cum   cum%
+   4751504 18.23% 18.23%   16903680 64.85%  github.com/miekg/dns.(*Msg).CopyTo
+   4685966 17.98% 36.20%    4685966 17.98%  gdns/internal/core.responseCacheKey
+   4444365 17.05% 53.25%   21348045 81.90%  gdns/internal/core.(*cache).getReply
+   4407565 16.91% 70.16%    7913794 30.36%  github.com/miekg/dns.(*A).copy
+   4238382 16.26% 86.42%    4238382 16.26%  github.com/miekg/dns.(*RRSIG).copy
+   3506229 13.45% 99.87%    3506229 13.45%  github.com/miekg/dns.cloneSlice[go.shape.uint8,go.shape.[]uint8] (inline)
+         0     0% 99.87%   26034011 99.87%  gdns/internal/core.(*Engine).AnswerAs
+         0     0% 99.87%   26034011 99.87%  gdns/internal/core.(*Engine).Resolve
+         0     0% 99.87%   26034011 99.87%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0% 99.87%   26034011 99.87%  testing.(*B).RunParallel.func1

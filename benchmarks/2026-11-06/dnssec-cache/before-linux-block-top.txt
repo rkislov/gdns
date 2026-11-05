@@ -1,0 +1,31 @@
+File: core-before.test
+Build ID: ef1d325beaec9ddb0986bb6a5ca1b481e5e9a2aa
+Type: delay
+Time: 2026-11-06 00:25:14 MSK
+Showing nodes accounting for 24880.56ms, 100% of 24880.56ms total
+Dropped 8 nodes (cum <= 124.40ms)
+      flat  flat%   sum%        cum   cum%
+16348.61ms 65.71% 65.71% 16348.61ms 65.71%  runtime.chanrecv1
+ 8149.91ms 32.76% 98.46%  8149.91ms 32.76%  sync.(*WaitGroup).Wait
+  382.04ms  1.54%   100%   382.04ms  1.54%  sync.(*Mutex).Lock (inline)
+         0     0%   100%   382.04ms  1.54%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%   382.04ms  1.54%  gdns/internal/core.(*Engine).appendLog
+         0     0%   100%  8167.36ms 32.83%  gdns/internal/core.BenchmarkAnswerFastPath
+         0     0%   100%  8149.91ms 32.76%  gdns/internal/core.BenchmarkAnswerFastPath.func1
+         0     0%   100%   382.04ms  1.54%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0%   100%  8181.26ms 32.88%  main.main
+         0     0%   100%  8181.26ms 32.88%  runtime.main
+         0     0%   100% 16337.40ms 65.66%  testing.(*B).Run
+         0     0%   100%  8149.91ms 32.76%  testing.(*B).RunParallel
+         0     0%   100%   382.04ms  1.54%  testing.(*B).RunParallel.func1
+         0     0%   100%  8164.06ms 32.81%  testing.(*B).doBench
+         0     0%   100%  8149.91ms 32.76%  testing.(*B).doBench.gowrap1
+         0     0%   100%  8149.91ms 32.76%  testing.(*B).launch
+         0     0%   100%  8164.06ms 32.81%  testing.(*B).run
+         0     0%   100%  8173.34ms 32.85%  testing.(*B).run1
+         0     0%   100%  8167.36ms 32.83%  testing.(*B).run1.func1
+         0     0%   100% 24487.31ms 98.42%  testing.(*B).runN
+         0     0%   100%  8181.26ms 32.88%  testing.(*M).Run
+         0     0%   100%  8164.06ms 32.81%  testing.(*benchState).processBench
+         0     0%   100%  8170.04ms 32.84%  testing.runBenchmarks
+         0     0%   100%  8170.04ms 32.84%  testing.runBenchmarks.func1

@@ -5,6 +5,7 @@ package core
 import (
 	"github.com/miekg/dns"
 	"net/netip"
+	"sync"
 	"time"
 )
 
@@ -37,34 +38,53 @@ func renderLogs(entries []logEntry) []QueryLog {
 	}
 	return out
 }
+
+// Each writer holds a shared resize lock and owns only its destination slot.
+// Snapshots take the exclusive lock, waiting for all reserved IDs to publish.
+// This preserves contiguous anchors without dropping queued events.
+type logSlot struct {
+	mu    sync.Mutex
+	entry logEntry
+	_     [32]byte // Separate neighboring writers on common cache-line sizes.
+}
+
+// Caller must hold logMu exclusively.
+func (e *Engine) logRange() (newest uint64, count int) {
+	newest = e.logSequence.Load()
+	if e.logFloor > newest {
+		return newest, 0
+	}
+	return newest, min(e.logLimit, int(newest-e.logFloor+1))
+}
 func (e *Engine) resizeLogs(capacity int) {
 	e.logMu.Lock()
 	defer e.logMu.Unlock()
 	if capacity == e.logLimit {
 		return
 	}
-	n := min(capacity, len(e.logs))
-	ordered := make([]logEntry, n, capacity)
-	for i := 0; i < n; i++ {
-		idx := (e.next - 1 - i + len(e.logs)) % len(e.logs)
-		ordered[n-1-i] = e.logs[idx]
+	newest, count := e.logRange()
+	count = min(capacity, count)
+	slots := make([]logSlot, capacity)
+	for i := 0; i < count; i++ {
+		id := newest - uint64(i)
+		slots[(id-1)%uint64(capacity)].entry = e.logs[(id-1)%uint64(e.logLimit)].entry
 	}
-	e.logs = ordered
+	e.logs = slots
 	e.logLimit = capacity
-	e.next = n % capacity
+	e.logFloor = newest - uint64(count) + 1
 }
 func (e *Engine) appendLog(q logEntry) {
-	e.logMu.Lock()
-	defer e.logMu.Unlock()
-	e.logSequence++
-	q.id = e.logSequence
-	if len(e.logs) < e.logLimit {
-		e.logs = append(e.logs, q)
-		e.next = len(e.logs) % e.logLimit
-	} else {
-		e.logs[e.next] = q
-		e.next = (e.next + 1) % e.logLimit
+	e.logMu.RLock()
+	defer e.logMu.RUnlock()
+	q.id = e.logSequence.Add(1)
+	slot := &e.logs[(q.id-1)%uint64(e.logLimit)]
+	slot.mu.Lock()
+	// A descheduled writer can resume after its slot has already wrapped.
+	// Never overwrite a newer retained event with that older event.
+	if slot.entry.id < q.id {
+		slot.entry = q
 	}
+	slot.mu.Unlock()
 }
 
 // log is retained for internal callers supplying already formatted events.
@@ -75,10 +95,12 @@ func (e *Engine) log(q QueryLog) {
 }
 func (e *Engine) RecentLogs(limit int) []QueryLog {
 	e.logMu.Lock()
-	n := max(0, min(limit, len(e.logs)))
+	newest, count := e.logRange()
+	n := max(0, min(limit, count))
 	entries := make([]logEntry, n)
-	for i := 0; i < n; i++ {
-		entries[i] = e.logs[(e.next-1-i+len(e.logs))%len(e.logs)]
+	for i := range entries {
+		id := newest - uint64(i)
+		entries[i] = e.logs[(id-1)%uint64(e.logLimit)].entry
 	}
 	e.logMu.Unlock()
 	return renderLogs(entries)
@@ -88,11 +110,11 @@ func (e *Engine) Logs() []QueryLog { return e.RecentLogs(100000) }
 // IDs in the bounded ring are contiguous, even after a resize. Compute eligible
 // rows and offsets from IDs instead of scanning up to 100,000 entries under lock.
 func (e *Engine) QueryLogs(page, size int, anchor uint64) LogPage {
-	e.logMu.Lock()
 	page = max(1, page)
 	size = max(1, min(100, size))
-	n := len(e.logs)
-	newest := e.logSequence
+	entries := make([]logEntry, size)
+	e.logMu.Lock()
+	newest, n := e.logRange()
 	if anchor == 0 && n > 0 {
 		anchor = newest
 	}
@@ -108,10 +130,10 @@ func (e *Engine) QueryLogs(page, size int, anchor uint64) LogPage {
 	page = min(page, pages)
 	skip := (page - 1) * size
 	count := min(size, total-skip)
-	entries := make([]logEntry, count)
-	offset := int(newest-eligibleNewest) + skip
+	entries = entries[:count]
 	for i := 0; i < count; i++ {
-		entries[i] = e.logs[(e.next-1-offset-i+n)%n]
+		id := eligibleNewest - uint64(skip+i)
+		entries[i] = e.logs[(id-1)%uint64(e.logLimit)].entry
 	}
 	capacity := e.logLimit
 	e.logMu.Unlock()

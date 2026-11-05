@@ -1,0 +1,38 @@
+File: core-candidate.test
+Build ID: aa44fb774ef8e138c4fe6b9b1e95ac873e7a36d7
+Type: delay
+Time: 2026-11-06 00:31:52 MSK
+Showing nodes accounting for 277.53ms, 100% of 277.53ms total
+Dropped 47 nodes (cum <= 1.39ms)
+Showing top 30 nodes out of 53
+      flat  flat%   sum%        cum   cum%
+  277.53ms   100%   100%   277.53ms   100%  runtime.unlock (partial-inline)
+         0     0%   100%    69.45ms 25.02%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    69.45ms 25.02%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%    68.24ms 24.59%  gdns/internal/core.(*cache).getReply
+         0     0%   100%    69.45ms 25.02%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0%   100%    29.33ms 10.57%  github.com/miekg/dns.(*A).copy
+         0     0%   100%    43.73ms 15.76%  github.com/miekg/dns.(*Msg).CopyTo
+         0     0%   100%    12.90ms  4.65%  github.com/miekg/dns.(*RRSIG).copy
+         0     0%   100%    53.21ms 19.17%  runtime.(*mcache).nextFree
+         0     0%   100%    53.21ms 19.17%  runtime.(*mcache).refill
+         0     0%   100%    53.21ms 19.17%  runtime.(*mcentral).cacheSpan
+         0     0%   100%    53.13ms 19.14%  runtime.(*mheap).freeSpan (inline)
+         0     0%   100%    53.13ms 19.14%  runtime.(*mheap).freeSpan.func1
+         0     0%   100%    53.14ms 19.15%  runtime.(*sweepLocked).sweep
+         0     0%   100%     4.43ms  1.60%  runtime.deductAssistCredit
+         0     0%   100%    53.09ms 19.13%  runtime.deductSweepCredit
+         0     0%   100%   163.77ms 59.01%  runtime.findRunnable
+         0     0%   100%    20.98ms  7.56%  runtime.forEachP (inline)
+         0     0%   100%    20.98ms  7.56%  runtime.forEachP.func1
+         0     0%   100%    20.98ms  7.56%  runtime.forEachPInternal
+         0     0%   100%     6.72ms  2.42%  runtime.gcAssistAlloc
+         0     0%   100%    17.12ms  6.17%  runtime.gcBgMarkWorker
+         0     0%   100%    23.81ms  8.58%  runtime.gcMarkDone
+         0     0%   100%     2.77ms     1%  runtime.gcMarkDone.func2
+         0     0%   100%     9.53ms  3.43%  runtime.gcStart
+         0     0%   100%     9.53ms  3.43%  runtime.gcStart.func2
+         0     0%   100%   129.04ms 46.50%  runtime.gcstopm
+         0     0%   100%   118.18ms 42.58%  runtime.gopreempt_m
+         0     0%   100%   118.61ms 42.74%  runtime.goschedImpl
+         0     0%   100%    14.32ms  5.16%  runtime.incidlelocked
