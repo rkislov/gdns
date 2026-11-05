@@ -1,7 +1,8 @@
 // Copyright 2026 Кислов Роман Сергеевич
 // SPDX-License-Identifier: Apache-2.0
 
-// Package storage keeps administrative data in SQL. DNS resolution never queries SQL.
+// Package storage keeps administrative data and managed DNSSEC trust in SQL.
+// Ordinary DNS queries use memory; a newly authenticated revocation is persisted.
 package storage
 
 import (
@@ -12,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"ghole/internal/core"
+	validation "ghole/internal/dnssec"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/miekg/dns"
 	"hash"
@@ -106,6 +108,8 @@ func Open(ctx context.Context, driver, dsn string) (*Store, error) {
 		}
 	}
 	schema := []string{
+		`CREATE TABLE IF NOT EXISTS ghole_dnssec_managed (id INTEGER PRIMARY KEY CHECK(id=1), revision BIGINT NOT NULL, state TEXT NOT NULL)`,
+		`INSERT INTO ghole_dnssec_managed(id,revision,state) VALUES(1,0,'') ON CONFLICT(id) DO NOTHING`,
 		`CREATE TABLE IF NOT EXISTS ghole_state (id INTEGER PRIMARY KEY CHECK (id=1), version INTEGER NOT NULL, revision BIGINT NOT NULL, config TEXT NOT NULL)`,
 		`INSERT INTO ghole_state(id,version,revision,config) VALUES(1,1,0,'') ON CONFLICT(id) DO NOTHING`,
 		`CREATE TABLE IF NOT EXISTS ghole_zones (id INTEGER PRIMARY KEY, metadata TEXT NOT NULL)`,
@@ -458,4 +462,49 @@ func insert(ctx context.Context, tx *sql.Tx, table, columns string, rows [][]any
 		}
 	}
 	return nil
+}
+
+// LoadManaged and SaveManaged use an independent revision: a background probe
+// must not invalidate a web editor's configuration ETag or overwrite its data.
+func (s *Store) LoadManaged(ctx context.Context) (*validation.ManagedState, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var data string
+	var revision int64
+	if err := s.db.QueryRowContext(ctx, "SELECT revision,state FROM ghole_dnssec_managed WHERE id=1").Scan(&revision, &data); err != nil {
+		return nil, err
+	}
+	if data == "" {
+		return nil, nil
+	}
+	var state validation.ManagedState
+	if err := json.Unmarshal([]byte(data), &state); err != nil {
+		return nil, fmt.Errorf("invalid persisted RFC 5011 state: %w", err)
+	}
+	if state.Revision != revision {
+		return nil, fmt.Errorf("RFC 5011 revision mismatch")
+	}
+	return &state, nil
+}
+func (s *Store) SaveManaged(ctx context.Context, state validation.ManagedState) (int64, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	previous := state.Revision
+	state.Revision++
+	data, err := json.Marshal(state)
+	if err != nil {
+		return 0, err
+	}
+	result, err := s.db.ExecContext(ctx, "UPDATE ghole_dnssec_managed SET revision=$1,state=$2 WHERE id=1 AND revision=$3", state.Revision, string(data), previous)
+	if err != nil {
+		return 0, err
+	}
+	n, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	if n != 1 {
+		return 0, ErrConflict
+	}
+	return state.Revision, nil
 }

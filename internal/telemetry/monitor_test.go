@@ -5,6 +5,7 @@ package telemetry
 
 import (
 	"context"
+	validation "ghole/internal/dnssec"
 	"net/http/httptest"
 	"strings"
 	"sync"
@@ -84,4 +85,18 @@ func BenchmarkObserveDNS(b *testing.B) {
 			m.ObserveDNS("udp", "NOERROR", time.Microsecond)
 		}
 	})
+}
+
+func TestRFC5011Metrics(t *testing.T) {
+	m := New(t.TempDir())
+	m.RegisterRFC5011(func() validation.ManagedStatus {
+		return validation.ManagedStatus{Enabled: true, Initialized: true, State: "healthy", ActiveAnchors: 2, LastSuccess: time.Unix(100, 0), Keys: []validation.ManagedKey{{State: validation.Valid}, {State: validation.AddPending}}}
+	})
+	w := httptest.NewRecorder()
+	m.Handler().ServeHTTP(w, httptest.NewRequest("GET", "/metrics", nil))
+	for _, want := range []string{`ghole_dnssec_rfc5011_enabled 1`, `ghole_dnssec_rfc5011_active_anchors 2`, `ghole_dnssec_rfc5011_last_success_timestamp_seconds 100`, `ghole_dnssec_rfc5011_keys{state="AddPend"} 1`} {
+		if !strings.Contains(w.Body.String(), want) {
+			t.Fatal("missing RFC 5011 metric", want)
+		}
+	}
 }

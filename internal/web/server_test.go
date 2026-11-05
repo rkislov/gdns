@@ -148,6 +148,8 @@ func TestDNSSECHotConfiguration(t *testing.T) {
 	s := &Server{Engine: e, Running: &c, Token: strings.Repeat("a", 32), Persist: func(c core.Config) error { saved = c; return nil }}
 	h := s.Handler()
 	c.DNSSECValidation = true
+	c.DNSSEC.AutoUpdate.Enabled = true
+	c.DNSSEC.AutoUpdate.RefreshHours = 2
 	c.DNSSEC.ExemptZones = []string{"corp.internal."}
 	zero := uint16(0)
 	c.DNSSEC.MaxNSEC3Iterations = &zero
@@ -157,7 +159,7 @@ func TestDNSSECHotConfiguration(t *testing.T) {
 	r.Header.Set("If-Match", configETag(e.Config()))
 	w := httptest.NewRecorder()
 	h.ServeHTTP(w, r)
-	if w.Code != 200 || !saved.DNSSECValidation || !e.Config().DNSSECValidation || s.restartRequired() {
+	if w.Code != 200 || !saved.DNSSECValidation || !saved.DNSSEC.AutoUpdate.Enabled || saved.DNSSEC.AutoUpdate.RefreshHours != 2 || !e.Config().DNSSECValidation || s.restartRequired() {
 		t.Fatal("DNSSEC not applied live", w.Body.String())
 	}
 	r = httptest.NewRequest("GET", "/api/status", nil)
@@ -172,5 +174,26 @@ func TestDNSSECHotConfiguration(t *testing.T) {
 	h.ServeHTTP(w, r)
 	if w.Code != 401 {
 		t.Fatal("anchor fetch unauthenticated")
+	}
+}
+
+func TestRFC5011EndpointRequiresAuthAndEnabledSettings(t *testing.T) {
+	c := core.DefaultConfig()
+	e, _ := core.New(c)
+	s := &Server{Engine: e, Token: strings.Repeat("a", 32)}
+	h := s.Handler()
+	for _, tc := range []struct {
+		method, token string
+		want          int
+	}{{"POST", "", 401}, {"GET", s.Token, 405}, {"POST", s.Token, 400}} {
+		r := httptest.NewRequest(tc.method, "/api/dnssec/rfc5011/refresh", nil)
+		if tc.token != "" {
+			r.Header.Set("Authorization", "Bearer "+tc.token)
+		}
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != tc.want {
+			t.Fatal(w.Code, w.Body.String())
+		}
 	}
 }

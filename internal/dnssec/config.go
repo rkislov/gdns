@@ -18,19 +18,31 @@ var RootAnchors = []string{
 	". 3600 IN DS 38696 8 2 683D2D0ACB8C9B712A1948B27F741219298D0A450D612C483AF444A4C0FB2B16",
 }
 
+type AutoUpdateConfig struct {
+	Enabled      bool `json:"enabled"`
+	RefreshHours int  `json:"refresh_hours"`
+}
+
 type Config struct {
-	TrustAnchors       []string `json:"trust_anchors"`
-	ExemptZones        []string `json:"exempt_zones"`
-	MaxNSEC3Iterations *uint16  `json:"max_nsec3_iterations"`
-	TimeoutSeconds     int      `json:"timeout_seconds"`
-	IgnoreCD           bool     `json:"ignore_cd"`
+	AutoUpdate         AutoUpdateConfig `json:"auto_update"`
+	TrustAnchors       []string         `json:"trust_anchors"`
+	ExemptZones        []string         `json:"exempt_zones"`
+	MaxNSEC3Iterations *uint16          `json:"max_nsec3_iterations"`
+	TimeoutSeconds     int              `json:"timeout_seconds"`
+	IgnoreCD           bool             `json:"ignore_cd"`
 }
 
 func DefaultConfig() Config {
 	n := uint16(150)
-	return Config{TrustAnchors: append([]string{}, RootAnchors...), ExemptZones: []string{}, MaxNSEC3Iterations: &n, TimeoutSeconds: 15}
+	return Config{AutoUpdate: AutoUpdateConfig{RefreshHours: 24}, TrustAnchors: append([]string{}, RootAnchors...), ExemptZones: []string{}, MaxNSEC3Iterations: &n, TimeoutSeconds: 15}
 }
 func Normalize(c Config) (Config, error) {
+	if c.AutoUpdate.RefreshHours == 0 {
+		c.AutoUpdate.RefreshHours = 24
+	}
+	if c.AutoUpdate.RefreshHours < 1 || c.AutoUpdate.RefreshHours > 360 {
+		return c, fmt.Errorf("RFC 5011 refresh interval must be 1..360 hours")
+	}
 	if len(c.TrustAnchors) == 0 {
 		c.TrustAnchors = append([]string{}, RootAnchors...)
 	} else {
