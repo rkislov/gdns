@@ -15,6 +15,9 @@ import (
 func TestMetricsAndHistory(t *testing.T) {
 	m := New(t.TempDir())
 	m.ObserveDNS("doh", "NOERROR", time.Millisecond)
+	m.ObserveDNSSEC("secure")
+	m.ObserveDNSSEC("bogus")
+	m.ObserveDNSSEC("unbounded.example")
 	m.ObserveDNS("dot", "BLOCKED", 3*time.Millisecond)
 	now := m.last.Add(SampleInterval)
 	m.record(now, System{LogicalCores: 4})
@@ -26,7 +29,7 @@ func TestMetricsAndHistory(t *testing.T) {
 	w := httptest.NewRecorder()
 	m.Handler().ServeHTTP(w, httptest.NewRequest("GET", "/metrics", nil))
 	body := w.Body.String()
-	for _, want := range []string{`ghole_dns_queries_total{result="NOERROR",transport="doh"} 1`, `ghole_dns_blocked_total{transport="dot"} 1`, `ghole_dns_response_duration_seconds_count{transport="dot"} 1`, `go_goroutines`} {
+	for _, want := range []string{`ghole_dns_queries_total{result="NOERROR",transport="doh"} 1`, `ghole_dns_blocked_total{transport="dot"} 1`, `ghole_dns_response_duration_seconds_count{transport="dot"} 1`, `go_goroutines`, `ghole_dnssec_validation_total{state="secure"} 1`, `ghole_dnssec_validation_total{state="bogus"} 1`} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("metric missing: %s", want)
 		}

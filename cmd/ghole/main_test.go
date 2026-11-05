@@ -47,6 +47,7 @@ func TestJSONBootstrapAndExplicitImport(t *testing.T) {
 		t.Fatal("explicit import", err)
 	}
 	c.DNSSECValidation = true
+	c.DNSSEC.TrustAnchors = []string{"invalid"}
 	write()
 	if _, err = loadConfig(ctx, path, s, true); err == nil {
 		t.Fatal("invalid import succeeded")

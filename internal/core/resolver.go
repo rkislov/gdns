@@ -5,7 +5,9 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	validation "ghole/internal/dnssec"
 	"github.com/miekg/dns"
 	"golang.org/x/sync/singleflight"
 	"net"
@@ -16,12 +18,6 @@ import (
 	"time"
 )
 
-// DNSSECValidator is the boundary for a future local chain-of-trust validator.
-// Implementations must validate denial of existence and chains to configured anchors.
-// AD must never be set merely because an upstream sets it.
-type DNSSECValidator interface {
-	Validate(context.Context, *dns.Msg, *dns.Msg, []dns.RR) error
-}
 type runtimeState struct {
 	snap    *snapshot
 	cache   *cache
@@ -118,7 +114,12 @@ func (e *Engine) Answer(ctx context.Context, q *dns.Msg, ip netip.Addr) *dns.Msg
 func (e *Engine) AnswerAs(ctx context.Context, q *dns.Msg, ip netip.Addr, transport string) *dns.Msg {
 	start := time.Now()
 	e.Queries.Add(1)
-	ctx, cancel := context.WithTimeout(ctx, 6*time.Second)
+	timeout := 6 * time.Second
+	cfg := e.state.Load().snap.config
+	if cfg.DNSSECValidation {
+		timeout = time.Duration(cfg.DNSSEC.TimeoutSeconds) * time.Second
+	}
+	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	r, result := e.Resolve(ctx, q, ip.Unmap())
 	if observer := e.observer.Load(); observer != nil && observer.value != nil {
@@ -249,12 +250,12 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 		cached.Id = q.Id
 		cached.Question = q.Question
 		cached.Authoritative = false
-		cached.AuthenticatedData = false
+		e.observeDNSSEC(s, cached, q, name)
 		cached.RecursionAvailable = true
 		cached.RecursionDesired = q.RecursionDesired
 		cached.CheckingDisabled = q.CheckingDisabled
 		e.Hits.Add(1)
-		return cached, "CACHE"
+		return clientResponse(cached, q), "CACHE"
 	}
 	value, err, _ := st.flights.Do(key, func() (any, error) {
 		if cached := st.cache.get(key); cached != nil {
@@ -269,27 +270,35 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 		}
 		request := new(dns.Msg)
 		request.SetQuestion(name, question.Qtype)
-		request.CheckingDisabled = q.CheckingDisabled
-		request.SetEdns0(1232, do)
-		var answer *dns.Msg
-		var err error
-		budget := 80
-		switch {
-		case z != nil && z.Kind == "forward":
-			request.RecursionDesired = true
-			answer, err = exchange(ctx, request, z.Servers, &budget)
-		case z != nil && z.Kind == "stub":
-			answer, err = iterate(ctx, request, z.Servers, z.Name, 0, &budget)
-		case s.config.Mode == "forward":
-			request.RecursionDesired = true
-			answer, err = exchange(ctx, request, s.config.Upstreams, &budget)
-		default:
-			answer, err = iterate(ctx, request, roots, ".", 0, &budget)
+		validate := s.validator != nil && !s.config.DNSSEC.Exempt(name) && (!q.CheckingDisabled || s.config.DNSSEC.IgnoreCD)
+		request.CheckingDisabled = q.CheckingDisabled || validate
+		request.SetEdns0(1232, do || validate)
+		budget := 256
+		answer, err := lookup(ctx, request, s, z, &budget)
+		if err == nil && answer != nil {
+			answer.AuthenticatedData = false
 		}
+		if err == nil && validate {
+			route := "global"
+			if z != nil {
+				route = "view/" + z.viewKey
+			}
+			result, e := s.validator.Validate(ctx, request, answer, route, func(ctx context.Context, n string, typ uint16) (*dns.Msg, error) {
+				m := new(dns.Msg)
+				m.SetQuestion(n, typ)
+				m.CheckingDisabled = true
+				m.SetEdns0(1232, true)
+				return lookup(ctx, m, s, z, &budget)
+			})
+			err = e
+			if err == nil {
+				answer = result.Message
+			}
+		}
+
 		if err != nil || answer == nil {
 			return nil, err
 		}
-		answer.AuthenticatedData = false
 		// Blocked CNAME responses are not cached.
 		blocked := false
 		for _, rr := range answer.Answer {
@@ -310,8 +319,18 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 	if err != nil || answer == nil {
 		r.Rcode = dns.RcodeServerFailure
 		e.Failures.Add(1)
+		var failure *validation.Error
+		if errors.As(err, &failure) {
+			e.observeDNSSECState("bogus")
+			if q.IsEdns0() != nil {
+				r.SetEdns0(1232, do)
+				r.IsEdns0().Option = append(r.IsEdns0().Option, &dns.EDNS0_EDE{InfoCode: failure.Code, ExtraText: failure.Error()})
+			}
+			return r, "DNSSEC_BOGUS"
+		}
 		return r, "SERVFAIL"
 	}
+
 	for _, rr := range answer.Answer {
 		if c, ok := rr.(*dns.CNAME); ok && s.isBlocked(canonical(c.Target)) {
 			e.Blocked.Add(1)
@@ -325,12 +344,12 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 	answer.RecursionDesired = q.RecursionDesired
 	answer.RecursionAvailable = true
 	answer.Authoritative = false
-	answer.AuthenticatedData = false
+	e.observeDNSSEC(s, answer, q, name)
 	answer.CheckingDisabled = q.CheckingDisabled
 	if answer.Rcode == dns.RcodeServerFailure {
 		e.Failures.Add(1)
 	}
-	return answer, dns.RcodeToString[answer.Rcode]
+	return clientResponse(answer, q), dns.RcodeToString[answer.Rcode]
 }
 func copyRRs(in []dns.RR, name string) []dns.RR {
 	out := make([]dns.RR, 0, len(in))
@@ -405,7 +424,7 @@ func iterate(ctx context.Context, q *dns.Msg, servers []string, cut string, dept
 					return nil, e
 				}
 				m.Answer = append(m.Answer, tail.Answer...)
-				m.Ns = tail.Ns
+				m.Ns = append(m.Ns, tail.Ns...)
 				m.Rcode = tail.Rcode
 			}
 			return m, nil
@@ -489,4 +508,80 @@ func glueServers(records []dns.RR, names []string, cut string) []string {
 		}
 	}
 	return nextServers
+}
+
+func lookup(ctx context.Context, q *dns.Msg, s *snapshot, z *compiledZone, budget *int) (*dns.Msg, error) {
+	if z != nil && z.Kind == "forward" {
+		q.RecursionDesired = true
+		return exchange(ctx, q, z.Servers, budget)
+	}
+	if z != nil && z.Kind == "stub" && dns.IsSubDomain(z.Name, q.Question[0].Name) && !(q.Question[0].Qtype == dns.TypeDS && canonical(q.Question[0].Name) == z.Name) {
+		return iterate(ctx, q, z.Servers, z.Name, 0, budget)
+	}
+	if s.config.Mode == "forward" {
+		q.RecursionDesired = true
+		return exchange(ctx, q, s.config.Upstreams, budget)
+	}
+	return iterate(ctx, q, roots, ".", 0, budget)
+}
+func clientResponse(m, q *dns.Msg) *dns.Msg {
+	do := q.IsEdns0() != nil && q.IsEdns0().Do()
+	m.AuthenticatedData = m.AuthenticatedData && !q.CheckingDisabled && (do || q.AuthenticatedData)
+	m.CheckingDisabled = q.CheckingDisabled
+	if !do {
+		filter := func(records []dns.RR) []dns.RR {
+			out := records[:0]
+			for _, rr := range records {
+				switch rr.Header().Rrtype {
+				case dns.TypeRRSIG, dns.TypeNSEC, dns.TypeNSEC3, dns.TypeDNSKEY, dns.TypeDS:
+					if rr.Header().Rrtype != q.Question[0].Qtype {
+						continue
+					}
+				}
+				out = append(out, rr)
+			}
+			return out
+		}
+		m.Answer = filter(m.Answer)
+		m.Ns = filter(m.Ns)
+	}
+	m.Extra = nil
+	if q.IsEdns0() != nil {
+		m.SetEdns0(1232, do)
+	}
+	return m
+}
+func (e *Engine) observeDNSSECState(state string) {
+	if slot := e.observer.Load(); slot != nil && slot.value != nil {
+		if observer, ok := slot.value.(interface{ ObserveDNSSEC(string) }); ok {
+			observer.ObserveDNSSEC(state)
+		}
+	}
+}
+func (e *Engine) observeDNSSEC(s *snapshot, m, q *dns.Msg, name string) {
+	state := "insecure"
+	switch {
+	case !s.config.DNSSECValidation:
+		state = "disabled"
+	case s.config.DNSSEC.Exempt(name):
+		state = "exempt"
+	case q.CheckingDisabled && !s.config.DNSSEC.IgnoreCD:
+		state = "bypass"
+	case m.Rcode != dns.RcodeSuccess && m.Rcode != dns.RcodeNameError:
+		state = "indeterminate"
+	case len(q.Question) == 1 && q.Question[0].Qtype == dns.TypeRRSIG:
+		state = "indeterminate"
+	case m.AuthenticatedData:
+		state = "secure"
+	}
+	e.observeDNSSECState(state)
+}
+
+func (e *Engine) DNSSECStatus() map[string]any {
+	c := e.state.Load().snap.config
+	state := "disabled"
+	if c.DNSSECValidation {
+		state = "validating"
+	}
+	return map[string]any{"enabled": c.DNSSECValidation, "state": state, "trust_anchor_count": len(c.DNSSEC.TrustAnchors), "exempt_zones": append([]string{}, c.DNSSEC.ExemptZones...), "honor_cd": !c.DNSSEC.IgnoreCD}
 }

@@ -50,6 +50,16 @@ func (c *cache) get(k string) *dns.Msg {
 	if age >= e.ttl {
 		return nil
 	}
+	if e.msg.AuthenticatedData {
+		now := time.Now()
+		for _, records := range [][]dns.RR{e.msg.Answer, e.msg.Ns} {
+			for _, rr := range records {
+				if sig, ok := rr.(*dns.RRSIG); ok && !sig.ValidityPeriod(now) {
+					return nil
+				}
+			}
+		}
+	}
 	m := e.msg.Copy()
 	for _, set := range [][]dns.RR{m.Answer, m.Ns, m.Extra} {
 		for _, rr := range set {

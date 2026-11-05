@@ -67,6 +67,7 @@ func TestAdminPersistenceAndConcurrency(t *testing.T) {
 	w = request("GET", "/api/config", s.Token, "", nil)
 	etag = w.Header().Get("ETag")
 	c.DNSSECValidation = true
+	c.DNSSEC.TrustAnchors = []string{"invalid"}
 	b, _ = json.Marshal(c)
 	if w = request("PUT", "/api/config", s.Token, etag, b); w.Code != 400 {
 		t.Fatal("invalid config accepted")
@@ -76,6 +77,7 @@ func TestAdminPersistenceAndConcurrency(t *testing.T) {
 	}
 
 	c.DNSSECValidation = false
+	c.DNSSEC.TrustAnchors = nil
 	c.Blocked = []string{"new.example"}
 	b, _ = json.Marshal(c)
 	s.Path = t.TempDir()
@@ -136,5 +138,39 @@ func TestLogsAPIPageSizes(t *testing.T) {
 	h.ServeHTTP(w, r)
 	if w.Code != 400 {
 		t.Fatal("unbounded log page")
+	}
+}
+
+func TestDNSSECHotConfiguration(t *testing.T) {
+	c := core.DefaultConfig()
+	e, _ := core.New(c)
+	var saved core.Config
+	s := &Server{Engine: e, Running: &c, Token: strings.Repeat("a", 32), Persist: func(c core.Config) error { saved = c; return nil }}
+	h := s.Handler()
+	c.DNSSECValidation = true
+	c.DNSSEC.ExemptZones = []string{"corp.internal."}
+	zero := uint16(0)
+	c.DNSSEC.MaxNSEC3Iterations = &zero
+	b, _ := json.Marshal(c)
+	r := httptest.NewRequest("PUT", "/api/config", bytes.NewReader(b))
+	r.Header.Set("Authorization", "Bearer "+s.Token)
+	r.Header.Set("If-Match", configETag(e.Config()))
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != 200 || !saved.DNSSECValidation || !e.Config().DNSSECValidation || s.restartRequired() {
+		t.Fatal("DNSSEC not applied live", w.Body.String())
+	}
+	r = httptest.NewRequest("GET", "/api/status", nil)
+	r.Header.Set("Authorization", "Bearer "+s.Token)
+	w = httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `"state":"validating"`) {
+		t.Fatal(w.Body.String())
+	}
+	r = httptest.NewRequest("GET", "/api/dnssec/anchors", nil)
+	w = httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != 401 {
+		t.Fatal("anchor fetch unauthenticated")
 	}
 }

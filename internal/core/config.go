@@ -5,6 +5,7 @@ package core
 
 import (
 	"fmt"
+	validation "ghole/internal/dnssec"
 	"github.com/miekg/dns"
 	"net"
 	"net/netip"
@@ -14,22 +15,23 @@ import (
 )
 
 type Config struct {
-	DoHListen        string   `json:"doh_listen"`
-	DoTListen        string   `json:"dot_listen"`
-	TLSCertFile      string   `json:"tls_cert_file"`
-	TLSKeyFile       string   `json:"tls_key_file"`
-	DNSListen        string   `json:"dns_listen"`
-	HTTPListen       string   `json:"http_listen"`
-	Mode             string   `json:"mode"`
-	Upstreams        []string `json:"upstreams"`
-	AllowedClients   []string `json:"allowed_clients"`
-	QueryLogLimit    int      `json:"query_log_limit"`
-	QueryLog         bool     `json:"query_log"`
-	CacheSize        int      `json:"cache_size"`
-	DNSSECValidation bool     `json:"dnssec_validation"`
-	Zones            []Zone   `json:"zones"`
-	Blocked          []string `json:"blocked"`
-	Feeds            []Feed   `json:"feeds"`
+	DNSSEC           validation.Config `json:"dnssec"`
+	DoHListen        string            `json:"doh_listen"`
+	DoTListen        string            `json:"dot_listen"`
+	TLSCertFile      string            `json:"tls_cert_file"`
+	TLSKeyFile       string            `json:"tls_key_file"`
+	DNSListen        string            `json:"dns_listen"`
+	HTTPListen       string            `json:"http_listen"`
+	Mode             string            `json:"mode"`
+	Upstreams        []string          `json:"upstreams"`
+	AllowedClients   []string          `json:"allowed_clients"`
+	QueryLogLimit    int               `json:"query_log_limit"`
+	QueryLog         bool              `json:"query_log"`
+	CacheSize        int               `json:"cache_size"`
+	DNSSECValidation bool              `json:"dnssec_validation"`
+	Zones            []Zone            `json:"zones"`
+	Blocked          []string          `json:"blocked"`
+	Feeds            []Feed            `json:"feeds"`
 }
 type Zone struct {
 	RecordViews []RecordView `json:"record_views,omitempty"`
@@ -49,7 +51,7 @@ type Feed struct {
 }
 
 func DefaultConfig() Config {
-	return Config{
+	return Config{DNSSEC: validation.DefaultConfig(),
 		DNSListen: "127.0.0.1:1053", HTTPListen: "127.0.0.1:8080", Mode: "recursive", Upstreams: []string{"1.1.1.1:53", "9.9.9.9:53"},
 		AllowedClients: []string{"127.0.0.0/8", "::1/128", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"}, CacheSize: 10000, QueryLog: true, QueryLogLimit: 10000,
 		Zones: []Zone{{Name: "home.arpa.", Kind: "primary", Clients: []string{}, Records: []string{"home.arpa. 300 IN SOA ns.home.arpa. hostmaster.home.arpa. 1 3600 600 86400 300", "home.arpa. 300 IN NS ns.home.arpa.", "ns.home.arpa. 300 IN A 192.168.1.1", "router.home.arpa. 300 IN A 192.168.1.1"}, Servers: []string{}}}, Blocked: []string{}, Feeds: []Feed{},
@@ -72,13 +74,14 @@ type zoneViews struct {
 	lengths  []int
 }
 type snapshot struct {
-	config  Config
-	zones   map[string]*zoneViews
-	blocked map[string]struct{}
-	allowed []netip.Prefix
+	validator *validation.Validator
+	config    Config
+	zones     map[string]*zoneViews
+	blocked   map[string]struct{}
+	allowed   []netip.Prefix
 }
 
-func canonical(s string) string { return strings.ToLower(dns.Fqdn(strings.TrimSpace(s))) }
+func canonical(s string) string { return dns.CanonicalName(dns.Fqdn(strings.TrimSpace(s))) }
 func prefixes(values []string) (out []netip.Prefix, err error) {
 	for _, s := range values {
 		p, e := netip.ParsePrefix(s)
@@ -107,6 +110,12 @@ func validateServers(ss []string) error {
 	return nil
 }
 func cloneConfig(c Config) Config {
+	c.DNSSEC.TrustAnchors = slices.Clone(c.DNSSEC.TrustAnchors)
+	c.DNSSEC.ExemptZones = slices.Clone(c.DNSSEC.ExemptZones)
+	if c.DNSSEC.MaxNSEC3Iterations != nil {
+		v := *c.DNSSEC.MaxNSEC3Iterations
+		c.DNSSEC.MaxNSEC3Iterations = &v
+	}
 	c.Upstreams = slices.Clone(c.Upstreams)
 	c.AllowedClients = slices.Clone(c.AllowedClients)
 	c.Blocked = slices.Clone(c.Blocked)
@@ -142,9 +151,12 @@ func compile(c Config) (*snapshot, error) {
 	if c.CacheSize < 0 || c.CacheSize > 1000000 {
 		return nil, fmt.Errorf("cache_size must be 0..1000000")
 	}
-	if c.DNSSECValidation {
-		return nil, fmt.Errorf("local DNSSEC validator is not installed; validation cannot be enabled")
+	var err error
+	c.DNSSEC, err = validation.Normalize(c.DNSSEC)
+	if err != nil {
+		return nil, err
 	}
+
 	if (c.DoHListen != "" || c.DoTListen != "") && (c.TLSCertFile == "" || c.TLSKeyFile == "") {
 		return nil, fmt.Errorf("DoH/DoT require tls_cert_file and tls_key_file")
 	}
@@ -179,7 +191,12 @@ func compile(c Config) (*snapshot, error) {
 		return nil, fmt.Errorf("forward mode requires upstreams")
 	}
 	s := &snapshot{config: c, zones: map[string]*zoneViews{}, blocked: map[string]struct{}{}}
-	var err error
+	if c.DNSSECValidation {
+		s.validator, err = validation.New(c.DNSSEC)
+		if err != nil {
+			return nil, err
+		}
+	}
 	s.allowed, err = prefixes(c.AllowedClients)
 	if err != nil {
 		return nil, err

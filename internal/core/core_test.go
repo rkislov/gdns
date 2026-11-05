@@ -146,11 +146,15 @@ func TestCache(t *testing.T) {
 		t.Fatal("expired record")
 	}
 }
-func TestDNSSECNotPretended(t *testing.T) {
+func TestDNSSECConfiguration(t *testing.T) {
 	c := DefaultConfig()
 	c.DNSSECValidation = true
+	if _, err := New(c); err != nil {
+		t.Fatal(err)
+	}
+	c.DNSSEC.TrustAnchors = []string{"invalid"}
 	if _, err := New(c); err == nil {
-		t.Fatal("unimplemented validator silently enabled")
+		t.Fatal("invalid trust anchor accepted")
 	}
 }
 func fakeDNS(t *testing.T, handler dns.HandlerFunc) string {

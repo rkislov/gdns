@@ -32,4 +32,4 @@ p = Path('node_modules/tailwindcss/LICENSE')
 if not p.exists():
     raise SystemExit('Run npm ci before generating Tailwind license notices')
 parts.append('\n'+'='*72+'\nTailwind CSS '+json.loads(Path('node_modules/tailwindcss/package.json').read_text())['version']+'\n'+p.read_text())
-Path('THIRD_PARTY_NOTICES.txt').write_text('\n'.join(parts))
+Path('THIRD_PARTY_NOTICES.txt').write_text('\n'.join(line.rstrip() for line in '\n'.join(parts).splitlines())+'\n')
