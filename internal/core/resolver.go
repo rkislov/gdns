@@ -12,6 +12,7 @@ import (
 	"golang.org/x/sync/singleflight"
 	"net"
 	"net/netip"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -48,7 +49,7 @@ type Engine struct {
 	Hits         atomic.Uint64
 	Failures     atomic.Uint64
 	logMu        sync.Mutex
-	logs         []QueryLog
+	logs         []logEntry
 	next         int
 	logLimit     int
 	logSequence  uint64
@@ -90,7 +91,7 @@ func (e *Engine) Update(c Config, persist func(Config) error) error {
 func (e *Engine) Config() Config { return cloneConfig(e.state.Load().snap.config) }
 func (e *Engine) NeedsRestart(r Config) bool {
 	c := e.state.Load().snap.config
-	return c.DNSListen != r.DNSListen || c.HTTPListen != r.HTTPListen || c.DoHListen != r.DoHListen || c.DoTListen != r.DoTListen || c.TLSCertFile != r.TLSCertFile || c.TLSKeyFile != r.TLSKeyFile
+	return c.UDPWorkers != r.UDPWorkers || c.DNSListen != r.DNSListen || c.HTTPListen != r.HTTPListen || c.DoHListen != r.DoHListen || c.DoTListen != r.DoTListen || c.TLSCertFile != r.TLSCertFile || c.TLSKeyFile != r.TLSKeyFile
 }
 func (e *Engine) ServeDNS(w dns.ResponseWriter, q *dns.Msg) {
 	transport := "tcp"
@@ -100,9 +101,9 @@ func (e *Engine) ServeDNS(w dns.ResponseWriter, q *dns.Msg) {
 	e.ServeDNSAs(w, q, transport)
 }
 func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) {
-	host, _, _ := net.SplitHostPort(w.RemoteAddr().String())
-	ip, _ := netip.ParseAddr(host)
-	r := e.AnswerAs(context.Background(), q, ip.Unmap(), transport)
+	remote := w.RemoteAddr()
+	ip := ClientIP(remote)
+	r := e.AnswerAs(context.Background(), q, ip, transport)
 
 	if _, ok := w.RemoteAddr().(*net.UDPAddr); ok {
 		size := uint16(512)
@@ -127,19 +128,14 @@ func (e *Engine) Answer(ctx context.Context, q *dns.Msg, ip netip.Addr) *dns.Msg
 func (e *Engine) AnswerAs(ctx context.Context, q *dns.Msg, ip netip.Addr, transport string) *dns.Msg {
 	start := time.Now()
 	e.Queries.Add(1)
-	timeout := 6 * time.Second
-	cfg := e.state.Load().snap.config
-	if cfg.DNSSECValidation {
-		timeout = time.Duration(cfg.DNSSEC.TimeoutSeconds) * time.Second
-	}
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
 	r, result := e.Resolve(ctx, q, ip.Unmap())
+	end := time.Now()
+	duration := end.Sub(start)
 	if observer := e.observer.Load(); observer != nil && observer.value != nil {
-		observer.value.ObserveDNS(transport, result, time.Since(start))
+		observer.value.ObserveDNS(transport, result, duration)
 	}
 	if len(q.Question) > 0 && e.state.Load().snap.config.QueryLog {
-		e.log(QueryLog{Time: time.Now().UTC().Format(time.RFC3339), Client: ip.String(), Name: q.Question[0].Name, Type: dns.TypeToString[q.Question[0].Qtype], Result: result, Duration: float64(time.Since(start).Microseconds()) / 1000})
+		e.appendLog(logEntry{at: end.UnixNano(), client: ip, name: q.Question[0].Name, qtype: q.Question[0].Qtype, result: result, duration: float64(duration.Microseconds()) / 1000})
 	}
 	return r
 }
@@ -157,13 +153,8 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}()
 	st := e.state.Load()
 	s := st.snap
-	r := new(dns.Msg)
-	r.SetReply(q)
-	r.RecursionAvailable = true
-	r.AuthenticatedData = false
 	if len(q.Question) != 1 || q.Opcode != dns.OpcodeQuery {
-		r.Rcode = dns.RcodeFormatError
-		return r, "FORMERR"
+		return newReply(q, dns.RcodeFormatError), "FORMERR"
 	}
 	allowed := false
 	for _, p := range s.allowed {
@@ -173,21 +164,20 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 		}
 	}
 	if !allowed {
-		r.Rcode = dns.RcodeRefused
-		return r, "REFUSED"
+		return newReply(q, dns.RcodeRefused), "REFUSED"
 	}
 	question := q.Question[0]
 	name := canonical(question.Name)
 	if question.Qclass != dns.ClassINET || question.Qtype == dns.TypeAXFR || question.Qtype == dns.TypeIXFR {
-		r.Rcode = dns.RcodeRefused
-		return r, "REFUSED"
+		return newReply(q, dns.RcodeRefused), "REFUSED"
 	}
 	z := s.zone(name, ip)
 	if z != nil && z.Kind == "primary" {
+		r := newReply(q, dns.RcodeSuccess)
 		r.Authoritative = true
 		// A delegation belongs to the parent; DS remains authoritative there.
 		cut := ""
-		for n := name; n != z.Name && dns.IsSubDomain(z.Name, n); {
+		for n := name; n != z.Name && withinZone(z.Name, n); {
 			sets, _ := z.recordsFor(n, ip)
 			if len(sets[dns.TypeNS]) > 0 {
 				cut = n
@@ -204,7 +194,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 			r.Ns = copyRRs(sets[dns.TypeNS], "")
 			for _, rr := range r.Ns {
 				ns := canonical(rr.(*dns.NS).Ns)
-				if dns.IsSubDomain(cut, ns) {
+				if withinZone(cut, ns) {
 					glue, _ := z.recordsFor(ns, ip)
 					r.Extra = append(r.Extra, copyRRs(glue[dns.TypeA], "")...)
 					r.Extra = append(r.Extra, copyRRs(glue[dns.TypeAAAA], "")...)
@@ -257,18 +247,13 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}
 	if s.isBlocked(name) {
 		e.Blocked.Add(1)
-		r.Rcode = dns.RcodeNameError
-		return r, "BLOCKED"
+		return newReply(q, dns.RcodeNameError), "BLOCKED"
 	}
 	if !q.RecursionDesired {
-		r.Rcode = dns.RcodeRefused
-		return r, "REFUSED"
+		return newReply(q, dns.RcodeRefused), "REFUSED"
 	}
 	do := q.IsEdns0() != nil && q.IsEdns0().Do()
-	key := fmt.Sprintf("%s/%d/%t/%t", name, question.Qtype, do, q.CheckingDisabled)
-	if z != nil {
-		key += "/view/" + z.viewKey
-	}
+	key := responseCacheKey(name, question.Qtype, do, q.CheckingDisabled, z)
 	if cached := st.cache.get(key); cached != nil {
 		cached.Id = q.Id
 		cached.Question = q.Question
@@ -285,6 +270,12 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 			return cached, nil
 		}
 
+		timeout := 6 * time.Second
+		if s.config.DNSSECValidation {
+			timeout = time.Duration(s.config.DNSSEC.TimeoutSeconds) * time.Second
+		}
+		ctx, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
 		select {
 		case e.slots <- struct{}{}:
 			defer func() { <-e.slots }()
@@ -347,7 +338,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}
 
 	if err != nil || answer == nil {
-		r.Rcode = dns.RcodeServerFailure
+		r := newReply(q, dns.RcodeServerFailure)
 		e.Failures.Add(1)
 		var failure *validation.Error
 		if errors.As(err, &failure) {
@@ -364,8 +355,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	for _, rr := range answer.Answer {
 		if c, ok := rr.(*dns.CNAME); ok && s.isBlocked(canonical(c.Target)) {
 			e.Blocked.Add(1)
-			r.Rcode = dns.RcodeNameError
-			return r, "BLOCKED"
+			return newReply(q, dns.RcodeNameError), "BLOCKED"
 		}
 	}
 
@@ -381,6 +371,21 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}
 	return clientResponse(answer, q), dns.RcodeToString[answer.Rcode]
 }
+func responseCacheKey(name string, typ uint16, do, cd bool, z *compiledZone) string {
+	if z == nil {
+		return name + "/" + strconv.Itoa(int(typ)) + "/" + strconv.FormatBool(do) + "/" + strconv.FormatBool(cd)
+	}
+	return name + "/" + strconv.Itoa(int(typ)) + "/" + strconv.FormatBool(do) + "/" + strconv.FormatBool(cd) + "/view/" + z.viewKey
+}
+
+func newReply(q *dns.Msg, rcode int) *dns.Msg {
+	r := new(dns.Msg)
+	r.SetReply(q)
+	r.Rcode = rcode
+	r.RecursionAvailable = true
+	return r
+}
+
 func copyRRs(in []dns.RR, name string) []dns.RR {
 	out := make([]dns.RR, 0, len(in))
 	for _, rr := range in {
@@ -467,7 +472,7 @@ func iterate(ctx context.Context, q *dns.Msg, servers []string, cut string, dept
 		for _, rr := range m.Ns {
 			if ns, ok := rr.(*dns.NS); ok {
 				owner := canonical(ns.Hdr.Name)
-				if dns.IsSubDomain(cut, owner) && owner != cut && dns.IsSubDomain(owner, q.Question[0].Name) {
+				if withinZone(cut, owner) && owner != cut && withinZone(owner, q.Question[0].Name) {
 					if delegation == "" || len(owner) > len(delegation) {
 						delegation = owner
 						names = nil
@@ -522,7 +527,7 @@ func hasSOA(rrs []dns.RR) bool {
 func glueServers(records []dns.RR, names []string, cut string) []string {
 	nextServers := []string{}
 	for _, ns := range names {
-		if !dns.IsSubDomain(cut, ns) {
+		if !withinZone(cut, ns) {
 			continue
 		}
 		for _, rr := range records {
@@ -545,7 +550,7 @@ func lookup(ctx context.Context, q *dns.Msg, s *snapshot, z *compiledZone, budge
 		q.RecursionDesired = true
 		return exchange(ctx, q, z.Servers, budget)
 	}
-	if z != nil && z.Kind == "stub" && dns.IsSubDomain(z.Name, q.Question[0].Name) && !(q.Question[0].Qtype == dns.TypeDS && canonical(q.Question[0].Name) == z.Name) {
+	if z != nil && z.Kind == "stub" && withinZone(z.Name, q.Question[0].Name) && !(q.Question[0].Qtype == dns.TypeDS && canonical(q.Question[0].Name) == z.Name) {
 		return iterate(ctx, q, z.Servers, z.Name, 0, budget)
 	}
 	if s.config.Mode == "forward" {

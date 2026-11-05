@@ -168,11 +168,15 @@ func run() error {
 	if len(token) < 24 {
 		return fmt.Errorf("admin token must contain at least 24 characters")
 	}
-	udp, err := net.ListenPacket("udp", c.DNSListen)
+	udp, err := transport.ListenUDP(c.DNSListen, c.UDPWorkers)
 	if err != nil {
 		return err
 	}
-	defer udp.Close()
+	defer func() {
+		for _, conn := range udp {
+			conn.Close()
+		}
+	}()
 	tcp, err := net.Listen("tcp", c.DNSListen)
 	if err != nil {
 		return err
@@ -183,7 +187,10 @@ func run() error {
 		return err
 	}
 	defer listener.Close()
-	us := &dns.Server{PacketConn: udp, Handler: engine}
+	us := make([]*dns.Server, len(udp))
+	for i, conn := range udp {
+		us[i] = &dns.Server{PacketConn: conn, Handler: engine, UDPSize: 1232}
+	}
 	ts := &dns.Server{Listener: tcp, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: -1}
 	diskPath := *metricsDisk
 	if diskPath == "" {
@@ -214,8 +221,8 @@ func run() error {
 		mux.Handle("/metrics", monitor.Handler())
 		metricsServer = &http.Server{Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
 	}
-	running := core.Config{DNSListen: c.DNSListen, HTTPListen: c.HTTPListen, DoHListen: c.DoHListen, DoTListen: c.DoTListen, TLSCertFile: c.TLSCertFile, TLSKeyFile: c.TLSKeyFile}
-	admin := &web.Server{Monitor: monitor, Engine: engine, Path: *path, Token: token, Running: &running, StorageDriver: *driver, Persist: func(prepared core.Config) error {
+	running := core.Config{UDPWorkers: c.UDPWorkers, DNSListen: c.DNSListen, HTTPListen: c.HTTPListen, DoHListen: c.DoHListen, DoTListen: c.DoTListen, TLSCertFile: c.TLSCertFile, TLSKeyFile: c.TLSKeyFile}
+	admin := &web.Server{Monitor: monitor, Engine: engine, Path: *path, Token: token, Running: &running, StorageDriver: *driver, UDPWorkers: len(udp), Persist: func(prepared core.Config) error {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
 		return store.Save(ctx, prepared)
@@ -227,8 +234,10 @@ func run() error {
 	defer encrypted.Close()
 
 	hs := &http.Server{Handler: admin.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 40 * time.Second, WriteTimeout: 125 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
-	errs := make(chan error, 6)
-	go func() { errs <- us.ActivateAndServe() }()
+	errs := make(chan error, len(us)+5)
+	for _, server := range us {
+		go func() { errs <- server.ActivateAndServe() }()
+	}
 	go func() { errs <- ts.ActivateAndServe() }()
 	go func() { errs <- hs.Serve(listener) }()
 	encrypted.Start(errs)
@@ -236,7 +245,7 @@ func run() error {
 		go func() { errs <- metricsServer.Serve(metricsListener) }()
 		log.Printf("Prometheus http://%s/metrics", *metricsListen)
 	}
-	log.Printf("GHole DNS udp/tcp=%s web=http://%s mode=%s storage=%s", c.DNSListen, c.HTTPListen, c.Mode, *driver)
+	log.Printf("GHole DNS udp/tcp=%s web=http://%s mode=%s storage=%s udp_workers=%d", c.DNSListen, c.HTTPListen, c.Mode, *driver, len(us))
 	if c.DoHListen != "" {
 		log.Printf("DoH https://%s/dns-query", c.DoHListen)
 	}
@@ -256,7 +265,9 @@ func run() error {
 	}
 	encrypted.Shutdown(shutdown)
 	_ = hs.Shutdown(shutdown)
-	_ = us.ShutdownContext(shutdown)
+	for _, server := range us {
+		_ = server.ShutdownContext(shutdown)
+	}
 	_ = ts.ShutdownContext(shutdown)
 	if errors.Is(err, http.ErrServerClosed) {
 		return nil

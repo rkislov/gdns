@@ -4,6 +4,7 @@
 package transport
 
 import (
+	"context"
 	"encoding/base64"
 	"ghole/internal/core"
 	"github.com/miekg/dns"
@@ -13,6 +14,14 @@ import (
 	"net/http"
 	"net/netip"
 )
+
+// The context value is set from net.Conn, once per HTTP/2 connection.
+// It is private to this package and cannot be supplied by an HTTP header.
+type peerIPKey struct{}
+
+func peerContext(ctx context.Context, conn net.Conn) context.Context {
+	return context.WithValue(ctx, peerIPKey{}, core.ClientIP(conn.RemoteAddr()))
+}
 
 // DoHHandler serves RFC 8484 wire-format requests. It is mounted on a dedicated
 // TLS listener, separate from the admin API. Proxy headers never determine views.
@@ -56,13 +65,20 @@ func DoHHandler(engine *core.Engine) http.Handler {
 			http.Error(w, "invalid DNS query", 400)
 			return
 		}
-		host, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			http.Error(w, "invalid peer address", 400)
-			return
+		ip, ok := r.Context().Value(peerIPKey{}).(netip.Addr)
+		if !ok {
+			host, _, peerErr := net.SplitHostPort(r.RemoteAddr)
+			if peerErr != nil {
+				http.Error(w, "invalid peer address", 400)
+				return
+			}
+			ip, peerErr = netip.ParseAddr(host)
+			if peerErr != nil {
+				http.Error(w, "invalid peer address", 400)
+				return
+			}
 		}
-		ip, err := netip.ParseAddr(host)
-		if err != nil {
+		if !ip.IsValid() {
 			http.Error(w, "invalid peer address", 400)
 			return
 		}

@@ -1,0 +1,23 @@
+DNS Performance Testing Tool
+Version 2.14.0
+
+[Status] Command line: dnsperf -m udp -s 127.0.0.1 -p 1153 -D -d /var/lib/ghole/performance-lab/after-one/blocked_million.queries.txt -c 8 -T 2 -q 128 -Q 10000 -l 5 -t 1
+[Status] Sending queries (to 127.0.0.1:1153)
+[Status] Started at: Thu Nov  5 19:21:33 2026
+[Status] Stopping after 5.000000 seconds
+[Status] Testing complete (time limit)
+
+Statistics:
+
+  Queries sent:         49485
+  Queries completed:    49485 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NXDOMAIN 49485 (100.00%)
+  Average packet size:  request 52, response 41
+  Run time (s):         5.000253
+  Queries per second:   9896.499237
+
+  Average Latency (s):  0.004658 (min 0.000037, max 0.040469)
+  Latency StdDev (s):   0.005110
+

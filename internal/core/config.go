@@ -15,6 +15,7 @@ import (
 )
 
 type Config struct {
+	UDPWorkers       int               `json:"udp_workers"`
 	DNSSEC           validation.Config `json:"dnssec"`
 	DoHListen        string            `json:"doh_listen"`
 	DoTListen        string            `json:"dot_listen"`
@@ -139,6 +140,9 @@ func cloneConfig(c Config) Config {
 }
 func compile(c Config) (*snapshot, error) {
 	c = cloneConfig(c)
+	if c.UDPWorkers < 0 || c.UDPWorkers > 64 {
+		return nil, fmt.Errorf("udp_workers must be 0..64")
+	}
 	if c.QueryLogLimit == 0 {
 		c.QueryLogLimit = 10000
 	}

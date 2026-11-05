@@ -1,0 +1,30 @@
+DNS Performance Testing Tool
+Version 2.14.0
+
+[Status] Command line: dnsperf -m dot -s 127.0.0.1 -p 1853 -D -d /var/lib/ghole/performance-lab/after/primary.queries.txt -c 8 -T 2 -q 128 -Q 2000 -l 5 -t 1 -O tls-sni=dev.kislovs.ru
+[Status] Sending queries (to 127.0.0.1:1853)
+[Status] Started at: Thu Nov  5 19:09:59 2026
+[Status] Stopping after 5.000000 seconds
+[Status] Testing complete (time limit)
+
+Statistics:
+
+  Queries sent:         9992
+  Queries completed:    9992 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NOERROR 9992 (100.00%)
+  Average packet size:  request 47, response 70
+  Run time (s):         5.000335
+  Queries per second:   1998.266116
+
+  Average Latency (s):  0.001426 (min 0.000088, max 0.053813)
+  Latency StdDev (s):   0.003840
+
+Connection Statistics:
+
+  Connection attempts:  8 (8 successful, 100.00%)
+
+  Average Latency (s):  0.025941 (min 0.012598, max 0.039134)
+  Latency StdDev (s):   0.008962
+

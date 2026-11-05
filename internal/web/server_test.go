@@ -197,3 +197,21 @@ func TestRFC5011EndpointRequiresAuthAndEnabledSettings(t *testing.T) {
 		}
 	}
 }
+
+func TestUDPWorkerChangeRequiresRestart(t *testing.T) {
+	c := core.DefaultConfig()
+	e, _ := core.New(c)
+	s := &Server{Engine: e, Running: &c, Persist: func(core.Config) error { return nil }}
+	updated := e.Config()
+	updated.UDPWorkers = 1
+	if err := s.commit(updated); err != nil {
+		t.Fatal(err)
+	}
+	if !s.restartRequired() {
+		t.Fatal("UDP worker change silently marked active")
+	}
+	updated.UDPWorkers = 65
+	if err := s.commit(updated); err == nil {
+		t.Fatal("unbounded UDP workers accepted")
+	}
+}

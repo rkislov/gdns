@@ -46,12 +46,16 @@ func (c *cache) get(k string) *dns.Msg {
 	if !ok {
 		return nil
 	}
-	age := uint32(time.Since(e.at) / time.Second)
+	now := time.Now()
+	elapsed := now.Sub(e.at)
+	if elapsed < 0 {
+		return nil
+	}
+	age := uint32(elapsed / time.Second)
 	if age >= e.ttl {
 		return nil
 	}
 	if e.msg.AuthenticatedData {
-		now := time.Now()
 		for _, records := range [][]dns.RR{e.msg.Answer, e.msg.Ns} {
 			for _, rr := range records {
 				if sig, ok := rr.(*dns.RRSIG); ok && !sig.ValidityPeriod(now) {
@@ -108,5 +112,10 @@ func (c *cache) put(k string, m *dns.Msg) {
 			break
 		}
 	}
-	s.items[k] = cacheEntry{m.Copy(), time.Now(), ttl}
+	// The request question is restored by Resolve; Additional is rebuilt for
+	// the client. Do not allocate copies of either on every cache hit.
+	stored := *m
+	stored.Question = nil
+	stored.Extra = nil
+	s.items[k] = cacheEntry{stored.Copy(), time.Now(), ttl}
 }

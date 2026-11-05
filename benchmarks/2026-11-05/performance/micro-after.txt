@@ -1,0 +1,72 @@
+goos: darwin
+goarch: arm64
+pkg: ghole/internal/core
+cpu: Apple M4
+BenchmarkAnswerFastPath/Primary/log=false           	 2092933	       272.7 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false           	 2205624	       269.6 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false           	 2189190	       272.9 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-4         	 4845376	       121.5 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-4         	 4918270	       119.0 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-4         	 5015115	       129.6 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true            	 1978614	       306.2 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true            	 1877966	       299.4 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true            	 2005843	       298.7 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true-4          	 3617269	       166.2 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true-4          	 3658815	       165.5 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Primary/log=true-4          	 3519831	       166.6 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false             	 1988324	       297.0 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false             	 2020398	       297.4 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false             	 2037979	       295.4 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false-4           	 4826085	       127.3 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false-4           	 4647964	       127.3 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=false-4           	 4748364	       127.8 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true              	 1770926	       324.5 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true              	 1854207	       321.6 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true              	 1847164	       324.6 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true-4            	 3498240	       169.2 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true-4            	 3565466	       166.8 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Split/log=true-4            	 3593402	       169.9 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false           	 2815534	       211.3 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false           	 2805999	       213.6 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false           	 2823746	       212.0 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-4         	 5165791	       116.5 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-4         	 5183971	       115.8 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-4         	 5177473	       117.4 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true            	 2559676	       233.0 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true            	 2551081	       233.5 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true            	 2560383	       232.1 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true-4          	 3298354	       166.3 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true-4          	 3649216	       165.5 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=true-4          	 3565576	       167.0 ns/op	     168 B/op	       2 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false             	 1650692	       361.4 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false             	 1663665	       358.0 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false             	 1665285	       360.3 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4           	 3500568	       173.5 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4           	 3378200	       172.4 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4           	 3499845	       171.8 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true              	 1535388	       387.5 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true              	 1540380	       389.1 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true              	 1538476	       389.1 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true-4            	 2715877	       220.0 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true-4            	 2779326	       218.3 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/Cache/log=true-4            	 2731971	       222.1 ns/op	     352 B/op	       7 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false       	 1493289	       395.0 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false       	 1517140	       393.1 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false       	 1524135	       391.2 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4     	 3170091	       188.9 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4     	 3177237	       189.4 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4     	 3099656	       201.8 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true        	 1380838	       428.8 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true        	 1387225	       428.6 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true        	 1403108	       426.6 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-4      	 2470615	       241.7 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-4      	 2487429	       239.4 ns/op	     464 B/op	       8 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=true-4      	 2498805	       243.2 ns/op	     464 B/op	       8 allocs/op
+BenchmarkJournalPage100000                          	  334842	      1729 ns/op	    5592 B/op	      27 allocs/op
+BenchmarkJournalPage100000                          	  292938	      1723 ns/op	    5592 B/op	      27 allocs/op
+BenchmarkJournalPage100000                          	  348084	      1728 ns/op	    5592 B/op	      27 allocs/op
+BenchmarkJournalPage100000-4                        	  505722	      1216 ns/op	    5592 B/op	      27 allocs/op
+BenchmarkJournalPage100000-4                        	  491354	      1219 ns/op	    5592 B/op	      27 allocs/op
+BenchmarkJournalPage100000-4                        	  498331	      1220 ns/op	    5592 B/op	      27 allocs/op
+PASS
+ok  	ghole/internal/core	56.244s
