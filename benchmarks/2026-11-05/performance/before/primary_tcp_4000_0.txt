@@ -27,4 +27,3 @@ Connection Statistics:
 
   Average Latency (s):  0.005519 (min 0.001930, max 0.009026)
   Latency StdDev (s):   0.003165
-

@@ -20,4 +20,3 @@ Statistics:
 
   Average Latency (s):  0.003647 (min 0.000033, max 0.039082)
   Latency StdDev (s):   0.003726
-
