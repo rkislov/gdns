@@ -83,6 +83,30 @@ func New(c Config) (*Validator, error) {
 	return v, nil
 }
 
+// NewWithRootAnchors overrides only the root. An empty managed set is intentional:
+// it must never trigger Normalize's bootstrap defaults after a revocation.
+func NewWithRootAnchors(c Config, roots []string) (*Validator, error) {
+	v, err := New(c)
+	if err != nil {
+		return nil, err
+	}
+	delete(v.anchors, ".")
+	for _, line := range roots {
+		rr, err := dns.NewRR(line)
+		if err != nil {
+			return nil, err
+		}
+		if rr.Header().Name != "." {
+			return nil, fmt.Errorf("managed anchor is not root")
+		}
+		if key, ok := rr.(*dns.DNSKEY); ok {
+			rr = key.ToDS(dns.SHA256)
+		}
+		v.anchors["."] = append(v.anchors["."], rr)
+	}
+	return v, nil
+}
+
 type validationRun struct {
 	v                                    *Validator
 	ctx                                  context.Context

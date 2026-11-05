@@ -116,6 +116,20 @@ func (s *Server) Handler() http.Handler {
 				data["telemetry"] = s.Monitor.Snapshot()
 			}
 			jsonResponse(w, data)
+		case "/api/dnssec/rfc5011/refresh":
+			if r.Method != "POST" {
+				w.WriteHeader(405)
+				return
+			}
+			if !s.Engine.Config().DNSSEC.AutoUpdate.Enabled {
+				fail(w, fmt.Errorf("RFC 5011 automatic refresh is disabled"))
+				return
+			}
+			if err := s.Engine.RefreshRootAnchors(r.Context()); err != nil {
+				fail(w, err)
+				return
+			}
+			jsonResponse(w, s.Engine.DNSSECStatus())
 		case "/api/dnssec/anchors":
 			if r.Method != "GET" {
 				w.WriteHeader(405)

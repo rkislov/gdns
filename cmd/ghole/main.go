@@ -13,6 +13,7 @@ import (
 	"flag"
 	"fmt"
 	"ghole/internal/core"
+	validation "ghole/internal/dnssec"
 	"ghole/internal/storage"
 	"ghole/internal/telemetry"
 	"ghole/internal/transport"
@@ -68,6 +69,13 @@ func loadConfig(ctx context.Context, path string, store *storage.Store, importCo
 	if e != nil {
 		return c, e
 	}
+	manager, managedErr := validation.OpenManager(ctx, store.LoadManaged, store.SaveManaged)
+	if managedErr != nil {
+		return c, managedErr
+	}
+	if managedErr = manager.CheckSeeds(c.DNSSEC); managedErr != nil {
+		return c, managedErr
+	}
 	if e = store.Save(ctx, c); e != nil {
 		return c, e
 	}
@@ -111,6 +119,13 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	manager, err := validation.OpenManager(startup, store.LoadManaged, store.SaveManaged)
+	if err != nil {
+		return fmt.Errorf("load RFC 5011 state: %w", err)
+	}
+	if err = engine.SetRootManager(manager); err != nil {
+		return err
+	}
 	if *export != "" {
 		return web.Save(*export, c)
 	}
@@ -123,6 +138,10 @@ func run() error {
 		fmt.Printf("Configuration OK (storage=%s)\n", *driver)
 		return nil
 	}
+	anchorsCtx, anchorsStop := context.WithCancel(context.Background())
+	anchorsDone := make(chan struct{})
+	go func() { defer close(anchorsDone); manager.Run(anchorsCtx, engine.RefreshRootAnchors) }()
+	defer func() { anchorsStop(); <-anchorsDone }()
 	if err = os.MkdirAll(filepath.Dir(*path), 0700); err != nil {
 		return err
 	}
@@ -178,6 +197,7 @@ func run() error {
 		return err
 	}
 	monitor := telemetry.New(diskPath)
+	monitor.RegisterRFC5011(func() validation.ManagedStatus { return engine.RootTrustStatus() })
 	engine.SetObserver(monitor)
 	monitorCtx, monitorStop := context.WithCancel(context.Background())
 	defer monitorStop()

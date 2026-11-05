@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"ghole/internal/core"
+	validation "ghole/internal/dnssec"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -52,6 +53,8 @@ func testStore(t *testing.T, driver, dsn string) {
 	}
 	c := core.DefaultConfig()
 	c.DNSSECValidation = true
+	c.DNSSEC.AutoUpdate.Enabled = true
+	c.DNSSEC.AutoUpdate.RefreshHours = 2
 	c.DNSSEC.ExemptZones = []string{"corp.internal."}
 	c.DNSSEC.IgnoreCD = true
 	zero := uint16(0)
@@ -70,6 +73,27 @@ func testStore(t *testing.T, driver, dsn string) {
 	got, err := other.Load(ctx)
 	if err != nil || !reflect.DeepEqual(c, got) {
 		t.Fatalf("roundtrip: %v\nwant=%+v\ngot=%+v", err, c, got)
+	}
+	managed, err := s.LoadManaged(ctx)
+	if err != nil || managed != nil {
+		t.Fatal("unexpected initial RFC 5011 state", err)
+	}
+	state := validation.ManagedState{Version: 1, Seeds: validation.RootSeeds(c.DNSSEC), Keys: []validation.ManagedKey{}}
+	revision, err := s.SaveManaged(ctx, state)
+	if err != nil || revision != 1 {
+		t.Fatal("RFC 5011 state save", err)
+	}
+	loadedState, err := other.LoadManaged(ctx)
+	state.Revision = revision
+	if err != nil || !reflect.DeepEqual(*loadedState, state) {
+		t.Fatal("RFC 5011 roundtrip", err)
+	}
+	if _, err = s.SaveManaged(ctx, validation.ManagedState{}); !errors.Is(err, ErrConflict) {
+		t.Fatal("RFC 5011 CAS did not prevent stale update", err)
+	}
+	unchanged, err := other.Load(ctx)
+	if err != nil || !reflect.DeepEqual(unchanged, c) {
+		t.Fatal("managed state changed configuration revision", err)
 	}
 	broken := core.DefaultConfig()
 	broken.Zones[0].Records = []string{"invalid record"}

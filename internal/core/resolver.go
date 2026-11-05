@@ -37,18 +37,22 @@ type Observer interface {
 }
 type observerSlot struct{ value Observer }
 type Engine struct {
-	observer    atomic.Pointer[observerSlot]
-	state       atomic.Pointer[runtimeState]
-	Queries     atomic.Uint64
-	Blocked     atomic.Uint64
-	Hits        atomic.Uint64
-	Failures    atomic.Uint64
-	logMu       sync.Mutex
-	logs        []QueryLog
-	next        int
-	logLimit    int
-	logSequence uint64
-	slots       chan struct{}
+	updateMu     sync.Mutex
+	manager      atomic.Pointer[validation.Manager]
+	trustEpoch   atomic.Uint64
+	trustBlocked atomic.Bool
+	observer     atomic.Pointer[observerSlot]
+	state        atomic.Pointer[runtimeState]
+	Queries      atomic.Uint64
+	Blocked      atomic.Uint64
+	Hits         atomic.Uint64
+	Failures     atomic.Uint64
+	logMu        sync.Mutex
+	logs         []QueryLog
+	next         int
+	logLimit     int
+	logSequence  uint64
+	slots        chan struct{}
 }
 
 func New(c Config) (*Engine, error) {
@@ -61,8 +65,13 @@ func (e *Engine) Apply(c Config) error   { return e.Update(c, nil) }
 // Update prepares a new snapshot, persists it, then publishes it atomically.
 // The persistence callback must not mutate the supplied configuration.
 func (e *Engine) Update(c Config, persist func(Config) error) error {
+	e.updateMu.Lock()
+	defer e.updateMu.Unlock()
 	s, err := compile(c)
 	if err != nil {
+		return err
+	}
+	if err := e.prepareManaged(s); err != nil {
 		return err
 	}
 	if persist != nil {
@@ -72,6 +81,10 @@ func (e *Engine) Update(c Config, persist func(Config) error) error {
 	}
 	e.state.Store(&runtimeState{snap: s, cache: newCache(c.CacheSize)})
 	e.resizeLogs(s.config.QueryLogLimit)
+	e.trustEpoch.Add(1)
+	if m := e.manager.Load(); m != nil {
+		m.Wake()
+	}
 	return nil
 }
 func (e *Engine) Config() Config { return cloneConfig(e.state.Load().snap.config) }
@@ -131,7 +144,17 @@ func (e *Engine) AnswerAs(ctx context.Context, q *dns.Msg, ip netip.Addr, transp
 	return r
 }
 
-func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.Msg, string) {
+func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (response *dns.Msg, result string) {
+	epoch := e.trustEpoch.Load()
+	defer func() {
+		if epoch != e.trustEpoch.Load() || e.trustBlocked.Load() {
+			response = new(dns.Msg)
+			response.SetReply(q)
+			response.Rcode = dns.RcodeServerFailure
+			response.RecursionAvailable = true
+			result = "SERVFAIL"
+		}
+	}()
 	st := e.state.Load()
 	s := st.snap
 	r := new(dns.Msg)
@@ -275,6 +298,9 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 		request.SetEdns0(1232, do || validate)
 		budget := 256
 		answer, err := lookup(ctx, request, s, z, &budget)
+		if err == nil {
+			err = e.observeRootRevocation(ctx, answer)
+		}
 		if err == nil && answer != nil {
 			answer.AuthenticatedData = false
 		}
@@ -288,7 +314,11 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (*dns.M
 				m.SetQuestion(n, typ)
 				m.CheckingDisabled = true
 				m.SetEdns0(1232, true)
-				return lookup(ctx, m, s, z, &budget)
+				answer, err := lookup(ctx, m, s, z, &budget)
+				if err == nil {
+					err = e.observeRootRevocation(ctx, answer)
+				}
+				return answer, err
 			})
 			err = e
 			if err == nil {
@@ -583,5 +613,113 @@ func (e *Engine) DNSSECStatus() map[string]any {
 	if c.DNSSECValidation {
 		state = "validating"
 	}
-	return map[string]any{"enabled": c.DNSSECValidation, "state": state, "trust_anchor_count": len(c.DNSSEC.TrustAnchors), "exempt_zones": append([]string{}, c.DNSSEC.ExemptZones...), "honor_cd": !c.DNSSEC.IgnoreCD}
+	status := map[string]any{"enabled": c.DNSSECValidation, "state": state, "trust_anchor_count": len(c.DNSSEC.TrustAnchors), "exempt_zones": append([]string{}, c.DNSSEC.ExemptZones...), "honor_cd": !c.DNSSEC.IgnoreCD}
+	if m := e.manager.Load(); m != nil {
+		status["rfc5011"] = m.Status(c.DNSSEC)
+	}
+	return status
+}
+
+func (e *Engine) prepareManaged(s *snapshot) error {
+	m := e.manager.Load()
+	if m == nil {
+		return nil
+	}
+	if err := m.CheckSeeds(s.config.DNSSEC); err != nil {
+		return err
+	}
+	if roots, initialized := m.Roots(); initialized && s.config.DNSSECValidation {
+		v, err := validation.NewWithRootAnchors(s.config.DNSSEC, roots)
+		if err != nil {
+			return err
+		}
+		s.validator = v
+	}
+	return nil
+}
+func (e *Engine) SetRootManager(m *validation.Manager) error {
+	e.updateMu.Lock()
+	defer e.updateMu.Unlock()
+	e.manager.Store(m)
+	m.SetRevocationBarrier(func() { e.trustBlocked.Store(true); e.trustEpoch.Add(1) })
+	s, err := compile(e.state.Load().snap.config)
+	if err != nil {
+		return err
+	}
+	if err = e.prepareManaged(s); err != nil {
+		return err
+	}
+	e.state.Store(&runtimeState{snap: s, cache: newCache(s.config.CacheSize)})
+	e.trustEpoch.Add(1)
+	return nil
+}
+func (e *Engine) RefreshRootAnchors(ctx context.Context) error {
+	e.updateMu.Lock()
+	defer e.updateMu.Unlock()
+	m := e.manager.Load()
+	if m == nil {
+		return fmt.Errorf("RFC 5011 state store is unavailable")
+	}
+	s := e.state.Load().snap
+	before, initializedBefore := m.Roots()
+	probeCtx, cancel := context.WithTimeout(ctx, time.Duration(s.config.DNSSEC.TimeoutSeconds)*time.Second)
+	defer cancel()
+	err := m.Refresh(probeCtx, s.config.DNSSEC, func(ctx context.Context, name string, typ uint16) (*dns.Msg, error) {
+		q := new(dns.Msg)
+		q.SetQuestion(name, typ)
+		q.CheckingDisabled = true
+		q.SetEdns0(1232, true)
+		budget := 64
+		return lookup(ctx, q, s, nil, &budget)
+	})
+	after, initializedAfter := m.Roots()
+	if initializedBefore != initializedAfter || strings.Join(before, "\n") != strings.Join(after, "\n") {
+		next, compileErr := compile(s.config)
+		if compileErr != nil {
+			return compileErr
+		}
+		if compileErr = e.prepareManaged(next); compileErr != nil {
+			return compileErr
+		}
+		e.state.Store(&runtimeState{snap: next, cache: newCache(next.config.CacheSize)})
+		e.trustEpoch.Add(1)
+	}
+	e.trustBlocked.Store(false)
+	return err
+}
+
+func (e *Engine) observeRootRevocation(ctx context.Context, msg *dns.Msg) error {
+	m := e.manager.Load()
+	if m == nil || !m.NeedsRevocation(msg) {
+		return nil
+	}
+	e.updateMu.Lock()
+	defer e.updateMu.Unlock()
+	if !m.NeedsRevocation(msg) {
+		return nil
+	}
+	before, _ := m.Roots()
+	s := e.state.Load().snap
+	err := m.ObserveRevocation(ctx, s.config.DNSSEC, msg)
+	after, _ := m.Roots()
+	if strings.Join(before, "\n") != strings.Join(after, "\n") {
+		next, compileErr := compile(s.config)
+		if compileErr != nil {
+			return compileErr
+		}
+		if compileErr = e.prepareManaged(next); compileErr != nil {
+			return compileErr
+		}
+		e.state.Store(&runtimeState{snap: next, cache: newCache(next.config.CacheSize)})
+		e.trustEpoch.Add(1)
+	}
+	e.trustBlocked.Store(false)
+	return err
+}
+
+func (e *Engine) RootTrustStatus() validation.ManagedStatus {
+	if m := e.manager.Load(); m != nil {
+		return m.Status(e.state.Load().snap.config.DNSSEC)
+	}
+	return validation.ManagedStatus{State: "unavailable"}
 }
