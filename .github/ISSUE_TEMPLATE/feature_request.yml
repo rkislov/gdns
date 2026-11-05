@@ -1,0 +1,10 @@
+name: Предложение
+description: Предложить улучшение GHole
+title: '[Feature] '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую задачу нужно решить?
+    validations:
+      required: true

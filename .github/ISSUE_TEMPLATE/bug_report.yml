@@ -1,0 +1,17 @@
+name: Ошибка
+description: Сообщить о воспроизводимой ошибке GHole
+title: '[Bug] '
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Версия GHole и окружение
+      description: ОС, архитектура, SQLite/PostgreSQL, DNS-транспорт. Секреты не прикладывайте.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Шаги воспроизведения и ожидаемый результат
+    validations:
+      required: true

@@ -1,0 +1,37 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      GHOLE_TEST_POSTGRES_DSN: 'host=127.0.0.1 port=5432 user=postgres dbname=postgres password=postgres sslmode=disable'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go test -race ./...
+      - run: go vet ./...
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci && npm run css
+      - run: git diff --exit-code -- internal/web/static/style.css
+      - run: CGO_ENABLED=0 go build -trimpath -o /tmp/ghole ./cmd/ghole
+      - run: /tmp/ghole -version
