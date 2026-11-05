@@ -32,7 +32,13 @@ PYCONFIG
 done
 python3 - <<'PY'
 from pathlib import Path
-import hashlib
-files=sorted(p for p in Path('dist').iterdir() if p.suffix in ('.gz','.rpm','.deb'))
+import hashlib, os
+version=os.environ['VERSION']
+files=[]
+for arch in ('amd64','arm64'):
+    files.append(Path(f'dist/gdns_{version}_linux_{arch}.tar.gz'))
+    for distro,ext in (('altlinux','rpm'),('redos','rpm'),('astra','deb')):
+        files.append(Path(f'dist/gdns_{version}_{distro}_{arch}.{ext}'))
+files.sort()
 Path('dist/SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in files))
 PY

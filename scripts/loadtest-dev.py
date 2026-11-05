@@ -11,8 +11,8 @@ import datetime,json,os,re,subprocess,time,urllib.request
 from pathlib import Path
 
 BASE='http://127.0.0.1:8080/api/'
-TOKEN=Path('/var/lib/ghole/config.json.token').read_text().strip()
-OUT=Path('/var/lib/ghole/benchmarks/2026-11-05')
+TOKEN=Path('/var/lib/gdns/config.json.token').read_text().strip()
+OUT=Path('/var/lib/gdns/benchmarks/2026-11-05')
 OUT.mkdir(parents=True,exist_ok=True);OUT.chmod(0o700)
 rows=[]
 
@@ -41,7 +41,7 @@ def run(name,mode,rate,file,duration=10,outstanding=512):
     row={'name':name,'transport':mode,'target_qps':rate,'duration_seconds':duration,'started_utc':started,'exit_code':result.returncode,'sent':metric(text,'Queries sent'),'completed':metric(text,'Queries completed'),'lost':metric(text,'Queries lost'),'qps':metric(text,'Queries per second'),'average_ms':None,'command':args}
     value=metric(text,'Average Latency (s)');row['average_ms']=None if value is None else value*1000
     m=re.search(r'Response codes:\s*(.+)',text);row['response_codes']=m.group(1).strip() if m else None
-    row['process']=subprocess.check_output(['systemctl','show','ghole','-p','MemoryCurrent','-p','CPUUsageNSec','-p','TasksCurrent'],text=True).strip()
+    row['process']=subprocess.check_output(['systemctl','show','gdns','-p','MemoryCurrent','-p','CPUUsageNSec','-p','TasksCurrent'],text=True).strip()
     rows.append(row);save();print(json.dumps(row),flush=True)
     if result.returncode!=0:raise RuntimeError(name+' failed; see raw output')
     if not row['completed']:raise RuntimeError(name+' returned no replies')
