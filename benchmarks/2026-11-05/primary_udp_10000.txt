@@ -1,0 +1,1280 @@
+DNS Performance Testing Tool
+Version 2.14.0
+
+[Status] Command line: dnsperf -m udp -s 45.87.247.8 -a 127.0.0.1 -d /var/lib/ghole/benchmarks/2026-11-05/primary.txt -c 8 -T 2 -q 512 -Q 10000 -l 10 -t 1 -O latency-histogram -p 53
+[Status] Sending queries (to 45.87.247.8:53)
+[Status] Started at: Thu Nov  5 15:44:03 2026
+[Status] Stopping after 10.000000 seconds
+[Timeout] Query timed out: msg id 1680
+[Timeout] Query timed out: msg id 1681
+[Timeout] Query timed out: msg id 1682
+[Timeout] Query timed out: msg id 1683
+[Timeout] Query timed out: msg id 1684
+[Timeout] Query timed out: msg id 1685
+[Timeout] Query timed out: msg id 1681
+[Timeout] Query timed out: msg id 1682
+[Timeout] Query timed out: msg id 1683
+[Timeout] Query timed out: msg id 1684
+[Timeout] Query timed out: msg id 1685
+[Timeout] Query timed out: msg id 1686
+[Timeout] Query timed out: msg id 1687
+[Timeout] Query timed out: msg id 1686
+[Timeout] Query timed out: msg id 1687
+[Timeout] Query timed out: msg id 1688
+[Timeout] Query timed out: msg id 1689
+[Timeout] Query timed out: msg id 1690
+[Timeout] Query timed out: msg id 1691
+[Timeout] Query timed out: msg id 1692
+[Timeout] Query timed out: msg id 1693
+[Timeout] Query timed out: msg id 1694
+[Timeout] Query timed out: msg id 1695
+[Timeout] Query timed out: msg id 1696
+[Timeout] Query timed out: msg id 1697
+[Timeout] Query timed out: msg id 1698
+[Timeout] Query timed out: msg id 1699
+[Timeout] Query timed out: msg id 1700
+[Timeout] Query timed out: msg id 1701
+[Timeout] Query timed out: msg id 1688
+[Timeout] Query timed out: msg id 1689
+[Timeout] Query timed out: msg id 1690
+[Timeout] Query timed out: msg id 1691
+[Timeout] Query timed out: msg id 1692
+[Timeout] Query timed out: msg id 1693
+[Timeout] Query timed out: msg id 1694
+[Timeout] Query timed out: msg id 1695
+[Timeout] Query timed out: msg id 1696
+[Timeout] Query timed out: msg id 2007
+[Timeout] Query timed out: msg id 2420
+[Timeout] Query timed out: msg id 2421
+[Timeout] Query timed out: msg id 2422
+[Timeout] Query timed out: msg id 2423
+[Timeout] Query timed out: msg id 2424
+[Timeout] Query timed out: msg id 2425
+[Timeout] Query timed out: msg id 2426
+[Timeout] Query timed out: msg id 2427
+[Timeout] Query timed out: msg id 2428
+[Timeout] Query timed out: msg id 2429
+[Timeout] Query timed out: msg id 2407
+[Timeout] Query timed out: msg id 2408
+[Timeout] Query timed out: msg id 2409
+[Timeout] Query timed out: msg id 2410
+[Timeout] Query timed out: msg id 2411
+[Timeout] Query timed out: msg id 2412
+[Timeout] Query timed out: msg id 2413
+[Timeout] Query timed out: msg id 2414
+[Timeout] Query timed out: msg id 2415
+[Timeout] Query timed out: msg id 2416
+[Timeout] Query timed out: msg id 2417
+[Timeout] Query timed out: msg id 2418
+[Timeout] Query timed out: msg id 2419
+[Timeout] Query timed out: msg id 2420
+[Timeout] Query timed out: msg id 2421
+[Timeout] Query timed out: msg id 2422
+[Timeout] Query timed out: msg id 2423
+[Timeout] Query timed out: msg id 2424
+[Timeout] Query timed out: msg id 2425
+[Timeout] Query timed out: msg id 2426
+[Timeout] Query timed out: msg id 2427
+[Timeout] Query timed out: msg id 2428
+[Timeout] Query timed out: msg id 2429
+[Timeout] Query timed out: msg id 2430
+[Timeout] Query timed out: msg id 2431
+[Timeout] Query timed out: msg id 2432
+[Timeout] Query timed out: msg id 2433
+[Timeout] Query timed out: msg id 2434
+[Timeout] Query timed out: msg id 2435
+[Timeout] Query timed out: msg id 2436
+[Timeout] Query timed out: msg id 2437
+[Timeout] Query timed out: msg id 2438
+[Timeout] Query timed out: msg id 2439
+[Timeout] Query timed out: msg id 2440
+[Timeout] Query timed out: msg id 2441
+[Timeout] Query timed out: msg id 2430
+[Timeout] Query timed out: msg id 2431
+[Timeout] Query timed out: msg id 2432
+[Timeout] Query timed out: msg id 2433
+[Timeout] Query timed out: msg id 2434
+[Timeout] Query timed out: msg id 2435
+[Timeout] Query timed out: msg id 2436
+[Timeout] Query timed out: msg id 2437
+[Timeout] Query timed out: msg id 2438
+[Timeout] Query timed out: msg id 2439
+[Timeout] Query timed out: msg id 2440
+[Timeout] Query timed out: msg id 2441
+[Timeout] Query timed out: msg id 2442
+[Timeout] Query timed out: msg id 2443
+[Timeout] Query timed out: msg id 2444
+[Timeout] Query timed out: msg id 2445
+[Timeout] Query timed out: msg id 2446
+[Timeout] Query timed out: msg id 2447
+[Timeout] Query timed out: msg id 2448
+[Timeout] Query timed out: msg id 2449
+[Timeout] Query timed out: msg id 2450
+[Timeout] Query timed out: msg id 2451
+[Timeout] Query timed out: msg id 2452
+[Timeout] Query timed out: msg id 2453
+[Timeout] Query timed out: msg id 2442
+[Timeout] Query timed out: msg id 2443
+[Timeout] Query timed out: msg id 2444
+[Timeout] Query timed out: msg id 2445
+[Timeout] Query timed out: msg id 2446
+[Timeout] Query timed out: msg id 2447
+[Timeout] Query timed out: msg id 2448
+[Timeout] Query timed out: msg id 2449
+[Timeout] Query timed out: msg id 2450
+[Timeout] Query timed out: msg id 2451
+[Timeout] Query timed out: msg id 2452
+[Timeout] Query timed out: msg id 2453
+[Timeout] Query timed out: msg id 2454
+[Timeout] Query timed out: msg id 2455
+[Timeout] Query timed out: msg id 2456
+[Timeout] Query timed out: msg id 2457
+[Timeout] Query timed out: msg id 2454
+[Timeout] Query timed out: msg id 2458
+[Timeout] Query timed out: msg id 2459
+[Timeout] Query timed out: msg id 2460
+[Timeout] Query timed out: msg id 2461
+[Timeout] Query timed out: msg id 2462
+[Timeout] Query timed out: msg id 2463
+[Timeout] Query timed out: msg id 2464
+[Timeout] Query timed out: msg id 2455
+[Timeout] Query timed out: msg id 2456
+[Timeout] Query timed out: msg id 2457
+[Timeout] Query timed out: msg id 2458
+[Timeout] Query timed out: msg id 2459
+[Timeout] Query timed out: msg id 2460
+[Timeout] Query timed out: msg id 2461
+[Timeout] Query timed out: msg id 2462
+[Timeout] Query timed out: msg id 2463
+[Timeout] Query timed out: msg id 2464
+[Timeout] Query timed out: msg id 2465
+[Timeout] Query timed out: msg id 2466
+[Timeout] Query timed out: msg id 2467
+[Timeout] Query timed out: msg id 2468
+[Timeout] Query timed out: msg id 2469
+[Timeout] Query timed out: msg id 2470
+[Timeout] Query timed out: msg id 2471
+[Timeout] Query timed out: msg id 2472
+[Timeout] Query timed out: msg id 2473
+[Timeout] Query timed out: msg id 2474
+[Timeout] Query timed out: msg id 4981
+[Timeout] Query timed out: msg id 5079
+[Timeout] Query timed out: msg id 5080
+[Timeout] Query timed out: msg id 4982
+[Timeout] Query timed out: msg id 4983
+[Timeout] Query timed out: msg id 4984
+[Timeout] Query timed out: msg id 4985
+[Timeout] Query timed out: msg id 5081
+[Timeout] Query timed out: msg id 4986
+[Timeout] Query timed out: msg id 19049
+[Timeout] Query timed out: msg id 19050
+[Timeout] Query timed out: msg id 19051
+[Timeout] Query timed out: msg id 19052
+[Timeout] Query timed out: msg id 19053
+[Timeout] Query timed out: msg id 19054
+[Timeout] Query timed out: msg id 19055
+[Timeout] Query timed out: msg id 19056
+[Timeout] Query timed out: msg id 19057
+[Timeout] Query timed out: msg id 19058
+[Timeout] Query timed out: msg id 18881
+[Timeout] Query timed out: msg id 18882
+[Timeout] Query timed out: msg id 18883
+[Timeout] Query timed out: msg id 18884
+[Timeout] Query timed out: msg id 18885
+[Timeout] Query timed out: msg id 18886
+[Timeout] Query timed out: msg id 18887
+[Timeout] Query timed out: msg id 18888
+[Timeout] Query timed out: msg id 18889
+[Timeout] Query timed out: msg id 18890
+[Timeout] Query timed out: msg id 19059
+[Timeout] Query timed out: msg id 19060
+[Timeout] Query timed out: msg id 19061
+[Timeout] Query timed out: msg id 19062
+[Timeout] Query timed out: msg id 19063
+[Timeout] Query timed out: msg id 19064
+[Timeout] Query timed out: msg id 19065
+[Timeout] Query timed out: msg id 19066
+[Timeout] Query timed out: msg id 19067
+[Timeout] Query timed out: msg id 19068
+[Timeout] Query timed out: msg id 19069
+[Timeout] Query timed out: msg id 19070
+[Timeout] Query timed out: msg id 19071
+[Timeout] Query timed out: msg id 19072
+[Timeout] Query timed out: msg id 19073
+[Timeout] Query timed out: msg id 19074
+[Timeout] Query timed out: msg id 19075
+[Timeout] Query timed out: msg id 19076
+[Timeout] Query timed out: msg id 19077
+[Timeout] Query timed out: msg id 19078
+[Timeout] Query timed out: msg id 19079
+[Timeout] Query timed out: msg id 18891
+[Timeout] Query timed out: msg id 18892
+[Timeout] Query timed out: msg id 18893
+[Timeout] Query timed out: msg id 18894
+[Timeout] Query timed out: msg id 18895
+[Timeout] Query timed out: msg id 18896
+[Timeout] Query timed out: msg id 18897
+[Timeout] Query timed out: msg id 18898
+[Timeout] Query timed out: msg id 18899
+[Timeout] Query timed out: msg id 18900
+[Timeout] Query timed out: msg id 18901
+[Timeout] Query timed out: msg id 18902
+[Timeout] Query timed out: msg id 18903
+[Timeout] Query timed out: msg id 18904
+[Timeout] Query timed out: msg id 18905
+[Timeout] Query timed out: msg id 18906
+[Timeout] Query timed out: msg id 18907
+[Timeout] Query timed out: msg id 18908
+[Timeout] Query timed out: msg id 18909
+[Timeout] Query timed out: msg id 18910
+[Timeout] Query timed out: msg id 18911
+[Timeout] Query timed out: msg id 19080
+[Timeout] Query timed out: msg id 19081
+[Timeout] Query timed out: msg id 19082
+[Timeout] Query timed out: msg id 19083
+[Timeout] Query timed out: msg id 19084
+[Timeout] Query timed out: msg id 19085
+[Timeout] Query timed out: msg id 19086
+[Timeout] Query timed out: msg id 19087
+[Timeout] Query timed out: msg id 19088
+[Timeout] Query timed out: msg id 19089
+[Timeout] Query timed out: msg id 18912
+[Timeout] Query timed out: msg id 18913
+[Timeout] Query timed out: msg id 18914
+[Timeout] Query timed out: msg id 18915
+[Timeout] Query timed out: msg id 18916
+[Timeout] Query timed out: msg id 18917
+[Timeout] Query timed out: msg id 18918
+[Timeout] Query timed out: msg id 18919
+[Timeout] Query timed out: msg id 18920
+[Timeout] Query timed out: msg id 18921
+[Timeout] Query timed out: msg id 18922
+[Timeout] Query timed out: msg id 18923
+[Timeout] Query timed out: msg id 26024
+[Timeout] Query timed out: msg id 26025
+[Timeout] Query timed out: msg id 26026
+[Timeout] Query timed out: msg id 26027
+[Timeout] Query timed out: msg id 26028
+[Timeout] Query timed out: msg id 26183
+[Timeout] Query timed out: msg id 26184
+[Timeout] Query timed out: msg id 26185
+[Timeout] Query timed out: msg id 26186
+[Timeout] Query timed out: msg id 26187
+[Timeout] Query timed out: msg id 26188
+[Timeout] Query timed out: msg id 26189
+[Timeout] Query timed out: msg id 26190
+[Timeout] Query timed out: msg id 26191
+[Timeout] Query timed out: msg id 26192
+[Timeout] Query timed out: msg id 26193
+[Timeout] Query timed out: msg id 26892
+[Timeout] Query timed out: msg id 26893
+[Timeout] Query timed out: msg id 26894
+[Timeout] Query timed out: msg id 26895
+[Timeout] Query timed out: msg id 26896
+[Timeout] Query timed out: msg id 26897
+[Timeout] Query timed out: msg id 26898
+[Timeout] Query timed out: msg id 26899
+[Timeout] Query timed out: msg id 26900
+[Timeout] Query timed out: msg id 26901
+[Timeout] Query timed out: msg id 26902
+[Timeout] Query timed out: msg id 26903
+[Timeout] Query timed out: msg id 26904
+[Timeout] Query timed out: msg id 26905
+[Timeout] Query timed out: msg id 26906
+[Timeout] Query timed out: msg id 27063
+[Timeout] Query timed out: msg id 27064
+[Timeout] Query timed out: msg id 27065
+[Timeout] Query timed out: msg id 27066
+[Timeout] Query timed out: msg id 27067
+[Timeout] Query timed out: msg id 27068
+[Timeout] Query timed out: msg id 27069
+[Timeout] Query timed out: msg id 27070
+[Timeout] Query timed out: msg id 27071
+[Timeout] Query timed out: msg id 27072
+[Timeout] Query timed out: msg id 27073
+[Timeout] Query timed out: msg id 27074
+[Timeout] Query timed out: msg id 27075
+[Timeout] Query timed out: msg id 26907
+[Timeout] Query timed out: msg id 26908
+[Timeout] Query timed out: msg id 26909
+[Timeout] Query timed out: msg id 26910
+[Timeout] Query timed out: msg id 26911
+[Timeout] Query timed out: msg id 26912
+[Timeout] Query timed out: msg id 27076
+[Timeout] Query timed out: msg id 27077
+[Timeout] Query timed out: msg id 27078
+[Timeout] Query timed out: msg id 27079
+[Timeout] Query timed out: msg id 27080
+[Timeout] Query timed out: msg id 27081
+[Timeout] Query timed out: msg id 27082
+[Timeout] Query timed out: msg id 27083
+[Timeout] Query timed out: msg id 27084
+[Timeout] Query timed out: msg id 27085
+[Timeout] Query timed out: msg id 27086
+[Timeout] Query timed out: msg id 27087
+[Timeout] Query timed out: msg id 27088
+[Timeout] Query timed out: msg id 27089
+[Timeout] Query timed out: msg id 27090
+[Timeout] Query timed out: msg id 27091
+[Timeout] Query timed out: msg id 27092
+[Timeout] Query timed out: msg id 27093
+[Timeout] Query timed out: msg id 27094
+[Timeout] Query timed out: msg id 27095
+[Timeout] Query timed out: msg id 27096
+[Timeout] Query timed out: msg id 27097
+[Timeout] Query timed out: msg id 27098
+[Timeout] Query timed out: msg id 26913
+[Timeout] Query timed out: msg id 26914
+[Timeout] Query timed out: msg id 26915
+[Timeout] Query timed out: msg id 26916
+[Timeout] Query timed out: msg id 26917
+[Timeout] Query timed out: msg id 26918
+[Timeout] Query timed out: msg id 26919
+[Timeout] Query timed out: msg id 26920
+[Timeout] Query timed out: msg id 26921
+[Timeout] Query timed out: msg id 26922
+[Timeout] Query timed out: msg id 26923
+[Timeout] Query timed out: msg id 26924
+[Timeout] Query timed out: msg id 26925
+[Timeout] Query timed out: msg id 26926
+[Timeout] Query timed out: msg id 26927
+[Timeout] Query timed out: msg id 26928
+[Timeout] Query timed out: msg id 26929
+[Timeout] Query timed out: msg id 26930
+[Timeout] Query timed out: msg id 26931
+[Timeout] Query timed out: msg id 26932
+[Timeout] Query timed out: msg id 27848
+[Timeout] Query timed out: msg id 27724
+[Timeout] Query timed out: msg id 27725
+[Timeout] Query timed out: msg id 27849
+[Timeout] Query timed out: msg id 27850
+[Timeout] Query timed out: msg id 27851
+[Timeout] Query timed out: msg id 27852
+[Timeout] Query timed out: msg id 27853
+[Timeout] Query timed out: msg id 27854
+[Timeout] Query timed out: msg id 27855
+[Timeout] Query timed out: msg id 27856
+[Timeout] Query timed out: msg id 27857
+[Timeout] Query timed out: msg id 27858
+[Timeout] Query timed out: msg id 27859
+[Timeout] Query timed out: msg id 27860
+[Timeout] Query timed out: msg id 27861
+[Timeout] Query timed out: msg id 27862
+[Timeout] Query timed out: msg id 27863
+[Timeout] Query timed out: msg id 27864
+[Timeout] Query timed out: msg id 27865
+[Timeout] Query timed out: msg id 27866
+[Timeout] Query timed out: msg id 27867
+[Timeout] Query timed out: msg id 27868
+[Timeout] Query timed out: msg id 27869
+[Timeout] Query timed out: msg id 27870
+[Timeout] Query timed out: msg id 27871
+[Timeout] Query timed out: msg id 27872
+[Timeout] Query timed out: msg id 27726
+[Timeout] Query timed out: msg id 27727
+[Timeout] Query timed out: msg id 27728
+[Timeout] Query timed out: msg id 27729
+[Timeout] Query timed out: msg id 27730
+[Timeout] Query timed out: msg id 27731
+[Timeout] Query timed out: msg id 27732
+[Timeout] Query timed out: msg id 27873
+[Timeout] Query timed out: msg id 27874
+[Timeout] Query timed out: msg id 27875
+[Timeout] Query timed out: msg id 27876
+[Timeout] Query timed out: msg id 27877
+[Timeout] Query timed out: msg id 27878
+[Timeout] Query timed out: msg id 27879
+[Timeout] Query timed out: msg id 27880
+[Timeout] Query timed out: msg id 27881
+[Timeout] Query timed out: msg id 27882
+[Timeout] Query timed out: msg id 27883
+[Timeout] Query timed out: msg id 27884
+[Timeout] Query timed out: msg id 27885
+[Timeout] Query timed out: msg id 27886
+[Timeout] Query timed out: msg id 27887
+[Timeout] Query timed out: msg id 27888
+[Timeout] Query timed out: msg id 27733
+[Timeout] Query timed out: msg id 27734
+[Timeout] Query timed out: msg id 27735
+[Timeout] Query timed out: msg id 27736
+[Timeout] Query timed out: msg id 27737
+[Timeout] Query timed out: msg id 27738
+[Timeout] Query timed out: msg id 27739
+[Timeout] Query timed out: msg id 27740
+[Timeout] Query timed out: msg id 27741
+[Timeout] Query timed out: msg id 27742
+[Timeout] Query timed out: msg id 27889
+[Timeout] Query timed out: msg id 27890
+[Timeout] Query timed out: msg id 27891
+[Timeout] Query timed out: msg id 27892
+[Timeout] Query timed out: msg id 27893
+[Timeout] Query timed out: msg id 27894
+[Timeout] Query timed out: msg id 27895
+[Timeout] Query timed out: msg id 27743
+[Timeout] Query timed out: msg id 27744
+[Timeout] Query timed out: msg id 27745
+[Timeout] Query timed out: msg id 27746
+[Timeout] Query timed out: msg id 27747
+[Timeout] Query timed out: msg id 27748
+[Timeout] Query timed out: msg id 27749
+[Timeout] Query timed out: msg id 27750
+[Timeout] Query timed out: msg id 27751
+[Timeout] Query timed out: msg id 27752
+[Timeout] Query timed out: msg id 27753
+[Timeout] Query timed out: msg id 27754
+[Timeout] Query timed out: msg id 27755
+[Timeout] Query timed out: msg id 27756
+[Timeout] Query timed out: msg id 27757
+[Timeout] Query timed out: msg id 27758
+[Timeout] Query timed out: msg id 27759
+[Timeout] Query timed out: msg id 27760
+[Timeout] Query timed out: msg id 27761
+[Timeout] Query timed out: msg id 27762
+[Timeout] Query timed out: msg id 27763
+[Timeout] Query timed out: msg id 27764
+[Timeout] Query timed out: msg id 27765
+[Timeout] Query timed out: msg id 27766
+[Timeout] Query timed out: msg id 27767
+[Timeout] Query timed out: msg id 27896
+[Timeout] Query timed out: msg id 27897
+[Timeout] Query timed out: msg id 27898
+[Timeout] Query timed out: msg id 27899
+[Timeout] Query timed out: msg id 27900
+[Timeout] Query timed out: msg id 27901
+[Timeout] Query timed out: msg id 27902
+[Timeout] Query timed out: msg id 27903
+[Timeout] Query timed out: msg id 27904
+[Timeout] Query timed out: msg id 27905
+[Timeout] Query timed out: msg id 27906
+[Timeout] Query timed out: msg id 27907
+[Timeout] Query timed out: msg id 27908
+[Timeout] Query timed out: msg id 27909
+[Timeout] Query timed out: msg id 27910
+[Timeout] Query timed out: msg id 27911
+[Timeout] Query timed out: msg id 27912
+[Timeout] Query timed out: msg id 27768
+[Timeout] Query timed out: msg id 27769
+[Timeout] Query timed out: msg id 27770
+[Timeout] Query timed out: msg id 29322
+[Timeout] Query timed out: msg id 29323
+[Timeout] Query timed out: msg id 29324
+[Timeout] Query timed out: msg id 29325
+[Timeout] Query timed out: msg id 29326
+[Timeout] Query timed out: msg id 29327
+[Timeout] Query timed out: msg id 29328
+[Timeout] Query timed out: msg id 29329
+[Timeout] Query timed out: msg id 29330
+[Timeout] Query timed out: msg id 29331
+[Timeout] Query timed out: msg id 29332
+[Timeout] Query timed out: msg id 29333
+[Timeout] Query timed out: msg id 29334
+[Timeout] Query timed out: msg id 29335
+[Timeout] Query timed out: msg id 29336
+[Timeout] Query timed out: msg id 29337
+[Timeout] Query timed out: msg id 29338
+[Timeout] Query timed out: msg id 29339
+[Timeout] Query timed out: msg id 29340
+[Timeout] Query timed out: msg id 29341
+[Timeout] Query timed out: msg id 29342
+[Timeout] Query timed out: msg id 29343
+[Timeout] Query timed out: msg id 29344
+[Timeout] Query timed out: msg id 29345
+[Timeout] Query timed out: msg id 29346
+[Timeout] Query timed out: msg id 29347
+[Timeout] Query timed out: msg id 29348
+[Timeout] Query timed out: msg id 29349
+[Timeout] Query timed out: msg id 29350
+[Timeout] Query timed out: msg id 29351
+[Timeout] Query timed out: msg id 29352
+[Timeout] Query timed out: msg id 29353
+[Timeout] Query timed out: msg id 29354
+[Timeout] Query timed out: msg id 29355
+[Timeout] Query timed out: msg id 29356
+[Timeout] Query timed out: msg id 29357
+[Timeout] Query timed out: msg id 29358
+[Timeout] Query timed out: msg id 29359
+[Timeout] Query timed out: msg id 29360
+[Timeout] Query timed out: msg id 29361
+[Timeout] Query timed out: msg id 29362
+[Timeout] Query timed out: msg id 29363
+[Timeout] Query timed out: msg id 29364
+[Timeout] Query timed out: msg id 29365
+[Timeout] Query timed out: msg id 29366
+[Timeout] Query timed out: msg id 29367
+[Timeout] Query timed out: msg id 29368
+[Timeout] Query timed out: msg id 29369
+[Timeout] Query timed out: msg id 29370
+[Timeout] Query timed out: msg id 29371
+[Timeout] Query timed out: msg id 29372
+[Timeout] Query timed out: msg id 29373
+[Timeout] Query timed out: msg id 29374
+[Timeout] Query timed out: msg id 29375
+[Timeout] Query timed out: msg id 29376
+[Timeout] Query timed out: msg id 29377
+[Timeout] Query timed out: msg id 29378
+[Timeout] Query timed out: msg id 29379
+[Timeout] Query timed out: msg id 29339
+[Timeout] Query timed out: msg id 29340
+[Timeout] Query timed out: msg id 29341
+[Timeout] Query timed out: msg id 29342
+[Timeout] Query timed out: msg id 29455
+[Timeout] Query timed out: msg id 29456
+[Timeout] Query timed out: msg id 29457
+[Timeout] Query timed out: msg id 29458
+[Timeout] Query timed out: msg id 29459
+[Timeout] Query timed out: msg id 29460
+[Timeout] Query timed out: msg id 29461
+[Timeout] Query timed out: msg id 29462
+[Timeout] Query timed out: msg id 29463
+[Timeout] Query timed out: msg id 29464
+[Timeout] Query timed out: msg id 29465
+[Timeout] Query timed out: msg id 29343
+[Timeout] Query timed out: msg id 29344
+[Timeout] Query timed out: msg id 29345
+[Timeout] Query timed out: msg id 29346
+[Timeout] Query timed out: msg id 29347
+[Timeout] Query timed out: msg id 29348
+[Timeout] Query timed out: msg id 29349
+[Timeout] Query timed out: msg id 29350
+[Timeout] Query timed out: msg id 29541
+[Timeout] Query timed out: msg id 29542
+[Timeout] Query timed out: msg id 29543
+[Timeout] Query timed out: msg id 29544
+[Timeout] Query timed out: msg id 29545
+[Timeout] Query timed out: msg id 29546
+[Timeout] Query timed out: msg id 29547
+[Timeout] Query timed out: msg id 29548
+[Timeout] Query timed out: msg id 29549
+[Timeout] Query timed out: msg id 29640
+[Timeout] Query timed out: msg id 29641
+[Timeout] Query timed out: msg id 29642
+[Timeout] Query timed out: msg id 29643
+[Timeout] Query timed out: msg id 29644
+[Timeout] Query timed out: msg id 36742
+[Timeout] Query timed out: msg id 36743
+[Timeout] Query timed out: msg id 36744
+[Timeout] Query timed out: msg id 36745
+[Timeout] Query timed out: msg id 36746
+[Timeout] Query timed out: msg id 36747
+[Timeout] Query timed out: msg id 36748
+[Timeout] Query timed out: msg id 36749
+[Timeout] Query timed out: msg id 36661
+[Timeout] Query timed out: msg id 36662
+[Timeout] Query timed out: msg id 36663
+[Timeout] Query timed out: msg id 36664
+[Timeout] Query timed out: msg id 36665
+[Timeout] Query timed out: msg id 36666
+[Timeout] Query timed out: msg id 36667
+[Timeout] Query timed out: msg id 36668
+[Timeout] Query timed out: msg id 36669
+[Timeout] Query timed out: msg id 36670
+[Timeout] Query timed out: msg id 36671
+[Timeout] Query timed out: msg id 36672
+[Timeout] Query timed out: msg id 36673
+[Timeout] Query timed out: msg id 36674
+[Timeout] Query timed out: msg id 36675
+[Timeout] Query timed out: msg id 36676
+[Timeout] Query timed out: msg id 36677
+[Timeout] Query timed out: msg id 36678
+[Timeout] Query timed out: msg id 36679
+[Timeout] Query timed out: msg id 36680
+[Timeout] Query timed out: msg id 36681
+[Timeout] Query timed out: msg id 36682
+[Timeout] Query timed out: msg id 36683
+[Timeout] Query timed out: msg id 36684
+[Timeout] Query timed out: msg id 36685
+[Timeout] Query timed out: msg id 36686
+[Timeout] Query timed out: msg id 36687
+[Timeout] Query timed out: msg id 36688
+[Timeout] Query timed out: msg id 36689
+[Timeout] Query timed out: msg id 36690
+[Timeout] Query timed out: msg id 36691
+[Timeout] Query timed out: msg id 36692
+[Timeout] Query timed out: msg id 36693
+[Timeout] Query timed out: msg id 36694
+[Timeout] Query timed out: msg id 36695
+[Timeout] Query timed out: msg id 36696
+[Timeout] Query timed out: msg id 36697
+[Timeout] Query timed out: msg id 36698
+[Timeout] Query timed out: msg id 36699
+[Timeout] Query timed out: msg id 36700
+[Timeout] Query timed out: msg id 36701
+[Timeout] Query timed out: msg id 36702
+[Timeout] Query timed out: msg id 36703
+[Timeout] Query timed out: msg id 36704
+[Timeout] Query timed out: msg id 36705
+[Timeout] Query timed out: msg id 36706
+[Timeout] Query timed out: msg id 36707
+[Timeout] Query timed out: msg id 36708
+[Timeout] Query timed out: msg id 36709
+[Timeout] Query timed out: msg id 36710
+[Timeout] Query timed out: msg id 36711
+[Timeout] Query timed out: msg id 36712
+[Timeout] Query timed out: msg id 36713
+[Timeout] Query timed out: msg id 36750
+[Timeout] Query timed out: msg id 36751
+[Timeout] Query timed out: msg id 36752
+[Timeout] Query timed out: msg id 36753
+[Timeout] Query timed out: msg id 36754
+[Timeout] Query timed out: msg id 36755
+[Timeout] Query timed out: msg id 36756
+[Timeout] Query timed out: msg id 36757
+[Timeout] Query timed out: msg id 36758
+[Timeout] Query timed out: msg id 36759
+[Timeout] Query timed out: msg id 36760
+[Timeout] Query timed out: msg id 36761
+[Timeout] Query timed out: msg id 36762
+[Timeout] Query timed out: msg id 36763
+[Timeout] Query timed out: msg id 36764
+[Timeout] Query timed out: msg id 36765
+[Timeout] Query timed out: msg id 36766
+[Timeout] Query timed out: msg id 36767
+[Timeout] Query timed out: msg id 36768
+[Timeout] Query timed out: msg id 36769
+[Timeout] Query timed out: msg id 36770
+[Timeout] Query timed out: msg id 36771
+[Timeout] Query timed out: msg id 36772
+[Timeout] Query timed out: msg id 36773
+[Timeout] Query timed out: msg id 36774
+[Timeout] Query timed out: msg id 36775
+[Timeout] Query timed out: msg id 36776
+[Timeout] Query timed out: msg id 36777
+[Timeout] Query timed out: msg id 36778
+[Timeout] Query timed out: msg id 36779
+[Timeout] Query timed out: msg id 36780
+[Timeout] Query timed out: msg id 36781
+[Timeout] Query timed out: msg id 36782
+[Timeout] Query timed out: msg id 36783
+[Timeout] Query timed out: msg id 36784
+[Timeout] Query timed out: msg id 36785
+[Timeout] Query timed out: msg id 36786
+[Timeout] Query timed out: msg id 36787
+[Timeout] Query timed out: msg id 36788
+[Timeout] Query timed out: msg id 36789
+[Timeout] Query timed out: msg id 36790
+[Timeout] Query timed out: msg id 36791
+[Timeout] Query timed out: msg id 36792
+[Timeout] Query timed out: msg id 36793
+[Timeout] Query timed out: msg id 36794
+[Timeout] Query timed out: msg id 36714
+[Timeout] Query timed out: msg id 36715
+[Timeout] Query timed out: msg id 36716
+[Timeout] Query timed out: msg id 36717
+[Timeout] Query timed out: msg id 36718
+[Timeout] Query timed out: msg id 36795
+[Timeout] Query timed out: msg id 36796
+[Timeout] Query timed out: msg id 36797
+[Timeout] Query timed out: msg id 36798
+[Timeout] Query timed out: msg id 36799
+[Timeout] Query timed out: msg id 36800
+[Timeout] Query timed out: msg id 36801
+[Timeout] Query timed out: msg id 36802
+[Timeout] Query timed out: msg id 36803
+[Timeout] Query timed out: msg id 36804
+[Timeout] Query timed out: msg id 36805
+[Timeout] Query timed out: msg id 36806
+[Timeout] Query timed out: msg id 36807
+[Timeout] Query timed out: msg id 36808
+[Timeout] Query timed out: msg id 36809
+[Timeout] Query timed out: msg id 36810
+[Timeout] Query timed out: msg id 36811
+[Timeout] Query timed out: msg id 36812
+[Timeout] Query timed out: msg id 36813
+[Timeout] Query timed out: msg id 36814
+[Timeout] Query timed out: msg id 36815
+[Timeout] Query timed out: msg id 36816
+[Timeout] Query timed out: msg id 36719
+[Timeout] Query timed out: msg id 36720
+[Timeout] Query timed out: msg id 36721
+[Timeout] Query timed out: msg id 36722
+[Timeout] Query timed out: msg id 36723
+[Timeout] Query timed out: msg id 36724
+[Timeout] Query timed out: msg id 36725
+[Timeout] Query timed out: msg id 36726
+[Timeout] Query timed out: msg id 36727
+[Timeout] Query timed out: msg id 36728
+[Timeout] Query timed out: msg id 36729
+[Timeout] Query timed out: msg id 36730
+[Timeout] Query timed out: msg id 36731
+[Timeout] Query timed out: msg id 36732
+[Timeout] Query timed out: msg id 36733
+[Timeout] Query timed out: msg id 36734
+[Timeout] Query timed out: msg id 36735
+[Timeout] Query timed out: msg id 36736
+[Timeout] Query timed out: msg id 36737
+[Timeout] Query timed out: msg id 36738
+[Timeout] Query timed out: msg id 36739
+[Timeout] Query timed out: msg id 36740
+[Timeout] Query timed out: msg id 36741
+[Timeout] Query timed out: msg id 36742
+[Timeout] Query timed out: msg id 36743
+[Timeout] Query timed out: msg id 36744
+[Timeout] Query timed out: msg id 36745
+[Timeout] Query timed out: msg id 36746
+[Timeout] Query timed out: msg id 36817
+[Timeout] Query timed out: msg id 36818
+[Timeout] Query timed out: msg id 36819
+[Timeout] Query timed out: msg id 36820
+[Timeout] Query timed out: msg id 36821
+[Timeout] Query timed out: msg id 36822
+[Timeout] Query timed out: msg id 36823
+[Timeout] Query timed out: msg id 36824
+[Timeout] Query timed out: msg id 36825
+[Timeout] Query timed out: msg id 36826
+[Timeout] Query timed out: msg id 36827
+[Timeout] Query timed out: msg id 36828
+[Timeout] Query timed out: msg id 36747
+[Timeout] Query timed out: msg id 36748
+[Timeout] Query timed out: msg id 36749
+[Timeout] Query timed out: msg id 36750
+[Timeout] Query timed out: msg id 36751
+[Timeout] Query timed out: msg id 36752
+[Timeout] Query timed out: msg id 36753
+[Timeout] Query timed out: msg id 36754
+[Timeout] Query timed out: msg id 36755
+[Timeout] Query timed out: msg id 36756
+[Timeout] Query timed out: msg id 36757
+[Timeout] Query timed out: msg id 36758
+[Timeout] Query timed out: msg id 36759
+[Timeout] Query timed out: msg id 36760
+[Timeout] Query timed out: msg id 36761
+[Timeout] Query timed out: msg id 36762
+[Timeout] Query timed out: msg id 36763
+[Timeout] Query timed out: msg id 36764
+[Timeout] Query timed out: msg id 36765
+[Timeout] Query timed out: msg id 36766
+[Timeout] Query timed out: msg id 36767
+[Timeout] Query timed out: msg id 36768
+[Timeout] Query timed out: msg id 36829
+[Timeout] Query timed out: msg id 36830
+[Timeout] Query timed out: msg id 36831
+[Timeout] Query timed out: msg id 36832
+[Timeout] Query timed out: msg id 36833
+[Timeout] Query timed out: msg id 36834
+[Timeout] Query timed out: msg id 36835
+[Timeout] Query timed out: msg id 36836
+[Timeout] Query timed out: msg id 36837
+[Timeout] Query timed out: msg id 36838
+[Timeout] Query timed out: msg id 36839
+[Timeout] Query timed out: msg id 36840
+[Timeout] Query timed out: msg id 36841
+[Timeout] Query timed out: msg id 36842
+[Timeout] Query timed out: msg id 36843
+[Timeout] Query timed out: msg id 36844
+[Timeout] Query timed out: msg id 36845
+[Timeout] Query timed out: msg id 36846
+[Timeout] Query timed out: msg id 36847
+[Timeout] Query timed out: msg id 36848
+[Timeout] Query timed out: msg id 36849
+[Timeout] Query timed out: msg id 38411
+[Timeout] Query timed out: msg id 38412
+[Timeout] Query timed out: msg id 38498
+[Timeout] Query timed out: msg id 38499
+[Timeout] Query timed out: msg id 38500
+[Timeout] Query timed out: msg id 38413
+[Timeout] Query timed out: msg id 38414
+[Timeout] Query timed out: msg id 38415
+[Timeout] Query timed out: msg id 38501
+[Timeout] Query timed out: msg id 38502
+[Timeout] Query timed out: msg id 38503
+[Timeout] Query timed out: msg id 38504
+[Timeout] Query timed out: msg id 38505
+[Timeout] Query timed out: msg id 38506
+[Timeout] Query timed out: msg id 38507
+[Timeout] Query timed out: msg id 38416
+[Timeout] Query timed out: msg id 38417
+[Timeout] Query timed out: msg id 38418
+[Timeout] Query timed out: msg id 38419
+[Timeout] Query timed out: msg id 38420
+[Timeout] Query timed out: msg id 38421
+[Timeout] Query timed out: msg id 38422
+[Timeout] Query timed out: msg id 38508
+[Timeout] Query timed out: msg id 38509
+[Timeout] Query timed out: msg id 38423
+[Timeout] Query timed out: msg id 38510
+[Timeout] Query timed out: msg id 38511
+[Timeout] Query timed out: msg id 38512
+[Timeout] Query timed out: msg id 38513
+[Timeout] Query timed out: msg id 38514
+[Timeout] Query timed out: msg id 38515
+[Timeout] Query timed out: msg id 38516
+[Timeout] Query timed out: msg id 38517
+[Timeout] Query timed out: msg id 38518
+[Timeout] Query timed out: msg id 38519
+[Timeout] Query timed out: msg id 38520
+[Timeout] Query timed out: msg id 38521
+[Timeout] Query timed out: msg id 38522
+[Timeout] Query timed out: msg id 38523
+[Timeout] Query timed out: msg id 38524
+[Timeout] Query timed out: msg id 38525
+[Timeout] Query timed out: msg id 38526
+[Timeout] Query timed out: msg id 38527
+[Timeout] Query timed out: msg id 38528
+[Timeout] Query timed out: msg id 38529
+[Timeout] Query timed out: msg id 38530
+[Timeout] Query timed out: msg id 38531
+[Timeout] Query timed out: msg id 38532
+[Timeout] Query timed out: msg id 38533
+[Timeout] Query timed out: msg id 38534
+[Timeout] Query timed out: msg id 38535
+[Timeout] Query timed out: msg id 38536
+[Timeout] Query timed out: msg id 38537
+[Timeout] Query timed out: msg id 38538
+[Timeout] Query timed out: msg id 38539
+[Timeout] Query timed out: msg id 38424
+[Timeout] Query timed out: msg id 38425
+[Timeout] Query timed out: msg id 38426
+[Timeout] Query timed out: msg id 38427
+[Timeout] Query timed out: msg id 38428
+[Timeout] Query timed out: msg id 38429
+[Timeout] Query timed out: msg id 38430
+[Timeout] Query timed out: msg id 38431
+[Timeout] Query timed out: msg id 38432
+[Timeout] Query timed out: msg id 38433
+[Timeout] Query timed out: msg id 38434
+[Timeout] Query timed out: msg id 38435
+[Timeout] Query timed out: msg id 38436
+[Timeout] Query timed out: msg id 38437
+[Timeout] Query timed out: msg id 38438
+[Timeout] Query timed out: msg id 38439
+[Timeout] Query timed out: msg id 38440
+[Timeout] Query timed out: msg id 38441
+[Timeout] Query timed out: msg id 38442
+[Timeout] Query timed out: msg id 38443
+[Timeout] Query timed out: msg id 38444
+[Timeout] Query timed out: msg id 38445
+[Timeout] Query timed out: msg id 38446
+[Timeout] Query timed out: msg id 38447
+[Timeout] Query timed out: msg id 38448
+[Timeout] Query timed out: msg id 38449
+[Timeout] Query timed out: msg id 38450
+[Timeout] Query timed out: msg id 38451
+[Timeout] Query timed out: msg id 38452
+[Timeout] Query timed out: msg id 42298
+[Timeout] Query timed out: msg id 42299
+[Timeout] Query timed out: msg id 42221
+[Timeout] Query timed out: msg id 42222
+[Timeout] Query timed out: msg id 42300
+[Timeout] Query timed out: msg id 42301
+[Timeout] Query timed out: msg id 42302
+[Timeout] Query timed out: msg id 42303
+[Timeout] Query timed out: msg id 42304
+[Timeout] Query timed out: msg id 42305
+[Timeout] Query timed out: msg id 42306
+[Timeout] Query timed out: msg id 42307
+[Timeout] Query timed out: msg id 42308
+[Timeout] Query timed out: msg id 42309
+[Timeout] Query timed out: msg id 42310
+[Timeout] Query timed out: msg id 42311
+[Timeout] Query timed out: msg id 42312
+[Timeout] Query timed out: msg id 42313
+[Timeout] Query timed out: msg id 42314
+[Timeout] Query timed out: msg id 42315
+[Timeout] Query timed out: msg id 42316
+[Timeout] Query timed out: msg id 42317
+[Timeout] Query timed out: msg id 42223
+[Timeout] Query timed out: msg id 42318
+[Timeout] Query timed out: msg id 42319
+[Timeout] Query timed out: msg id 42320
+[Timeout] Query timed out: msg id 42321
+[Timeout] Query timed out: msg id 42224
+[Timeout] Query timed out: msg id 42322
+[Timeout] Query timed out: msg id 42225
+[Timeout] Query timed out: msg id 42226
+[Timeout] Query timed out: msg id 42227
+[Timeout] Query timed out: msg id 42228
+[Timeout] Query timed out: msg id 42229
+[Timeout] Query timed out: msg id 42230
+[Timeout] Query timed out: msg id 42323
+[Timeout] Query timed out: msg id 42324
+[Timeout] Query timed out: msg id 42325
+[Timeout] Query timed out: msg id 42326
+[Timeout] Query timed out: msg id 42327
+[Timeout] Query timed out: msg id 42328
+[Timeout] Query timed out: msg id 42231
+[Timeout] Query timed out: msg id 42232
+[Timeout] Query timed out: msg id 42329
+[Timeout] Query timed out: msg id 42330
+[Timeout] Query timed out: msg id 42233
+[Timeout] Query timed out: msg id 42331
+[Timeout] Query timed out: msg id 42234
+[Timeout] Query timed out: msg id 42235
+[Timeout] Query timed out: msg id 42332
+[Timeout] Query timed out: msg id 42333
+[Timeout] Query timed out: msg id 42236
+[Timeout] Query timed out: msg id 42237
+[Timeout] Query timed out: msg id 42334
+[Timeout] Query timed out: msg id 42335
+[Timeout] Query timed out: msg id 42336
+[Timeout] Query timed out: msg id 42238
+[Timeout] Query timed out: msg id 42239
+[Timeout] Query timed out: msg id 42337
+[Timeout] Query timed out: msg id 42240
+[Timeout] Query timed out: msg id 42241
+[Timeout] Query timed out: msg id 42338
+[Timeout] Query timed out: msg id 42242
+[Timeout] Query timed out: msg id 42243
+[Status] Testing complete (time limit)
+
+Statistics:
+
+  Queries sent:         99474
+  Queries completed:    98565 (99.09%)
+  Queries lost:         909 (0.91%)
+
+  Response codes:       NOERROR 98565 (100.00%)
+  Average packet size:  request 36, response 70
+  Run time (s):         10.000139
+  Queries per second:   9856.362997
+
+  Average Latency (s):  0.007941 (min 0.000039, max 0.097848)
+  Latency StdDev (s):   0.009163
+  Latency bucket (s):   answer count
+  0.000039 - 0.000039:  1
+  0.000040 - 0.000040:  1
+  0.000044 - 0.000044:  3
+  0.000045 - 0.000045:  7
+  0.000046 - 0.000046:  3
+  0.000047 - 0.000047:  4
+  0.000048 - 0.000048:  6
+  0.000049 - 0.000049:  6
+  0.000050 - 0.000050:  5
+  0.000051 - 0.000051:  4
+  0.000052 - 0.000052:  10
+  0.000053 - 0.000053:  10
+  0.000054 - 0.000054:  13
+  0.000055 - 0.000055:  11
+  0.000056 - 0.000056:  34
+  0.000057 - 0.000057:  27
+  0.000058 - 0.000058:  23
+  0.000059 - 0.000059:  38
+  0.000060 - 0.000060:  29
+  0.000061 - 0.000061:  42
+  0.000062 - 0.000062:  46
+  0.000063 - 0.000063:  40
+  0.000064 - 0.000065:  111
+  0.000066 - 0.000067:  89
+  0.000068 - 0.000069:  111
+  0.000070 - 0.000071:  118
+  0.000072 - 0.000073:  139
+  0.000074 - 0.000075:  176
+  0.000076 - 0.000077:  126
+  0.000078 - 0.000079:  147
+  0.000080 - 0.000081:  160
+  0.000082 - 0.000083:  147
+  0.000084 - 0.000085:  167
+  0.000086 - 0.000087:  150
+  0.000088 - 0.000089:  150
+  0.000090 - 0.000091:  176
+  0.000092 - 0.000093:  163
+  0.000094 - 0.000095:  160
+  0.000096 - 0.000097:  151
+  0.000098 - 0.000099:  164
+  0.000100 - 0.000101:  148
+  0.000102 - 0.000103:  177
+  0.000104 - 0.000105:  149
+  0.000106 - 0.000107:  145
+  0.000108 - 0.000109:  139
+  0.000110 - 0.000111:  129
+  0.000112 - 0.000113:  143
+  0.000114 - 0.000115:  131
+  0.000116 - 0.000117:  135
+  0.000118 - 0.000119:  145
+  0.000120 - 0.000121:  115
+  0.000122 - 0.000123:  152
+  0.000124 - 0.000125:  132
+  0.000126 - 0.000127:  132
+  0.000128 - 0.000131:  273
+  0.000132 - 0.000135:  269
+  0.000136 - 0.000139:  295
+  0.000140 - 0.000143:  254
+  0.000144 - 0.000147:  253
+  0.000148 - 0.000151:  205
+  0.000152 - 0.000155:  222
+  0.000156 - 0.000159:  217
+  0.000160 - 0.000163:  194
+  0.000164 - 0.000167:  224
+  0.000168 - 0.000171:  196
+  0.000172 - 0.000175:  203
+  0.000176 - 0.000179:  192
+  0.000180 - 0.000183:  200
+  0.000184 - 0.000187:  166
+  0.000188 - 0.000191:  185
+  0.000192 - 0.000195:  184
+  0.000196 - 0.000199:  173
+  0.000200 - 0.000203:  157
+  0.000204 - 0.000207:  144
+  0.000208 - 0.000211:  146
+  0.000212 - 0.000215:  150
+  0.000216 - 0.000219:  155
+  0.000220 - 0.000223:  144
+  0.000224 - 0.000227:  134
+  0.000228 - 0.000231:  111
+  0.000232 - 0.000235:  126
+  0.000236 - 0.000239:  127
+  0.000240 - 0.000243:  137
+  0.000244 - 0.000247:  111
+  0.000248 - 0.000251:  102
+  0.000252 - 0.000255:  94
+  0.000256 - 0.000263:  163
+  0.000264 - 0.000271:  190
+  0.000272 - 0.000279:  184
+  0.000280 - 0.000287:  204
+  0.000288 - 0.000295:  195
+  0.000296 - 0.000303:  206
+  0.000304 - 0.000311:  177
+  0.000312 - 0.000319:  174
+  0.000320 - 0.000327:  203
+  0.000328 - 0.000335:  185
+  0.000336 - 0.000343:  203
+  0.000344 - 0.000351:  187
+  0.000352 - 0.000359:  190
+  0.000360 - 0.000367:  177
+  0.000368 - 0.000375:  172
+  0.000376 - 0.000383:  176
+  0.000384 - 0.000391:  172
+  0.000392 - 0.000399:  149
+  0.000400 - 0.000407:  145
+  0.000408 - 0.000415:  161
+  0.000416 - 0.000423:  162
+  0.000424 - 0.000431:  158
+  0.000432 - 0.000439:  134
+  0.000440 - 0.000447:  130
+  0.000448 - 0.000455:  143
+  0.000456 - 0.000463:  127
+  0.000464 - 0.000471:  112
+  0.000472 - 0.000479:  119
+  0.000480 - 0.000487:  113
+  0.000488 - 0.000495:  131
+  0.000496 - 0.000503:  166
+  0.000504 - 0.000511:  114
+  0.000512 - 0.000527:  248
+  0.000528 - 0.000543:  250
+  0.000544 - 0.000559:  242
+  0.000560 - 0.000575:  238
+  0.000576 - 0.000591:  227
+  0.000592 - 0.000607:  215
+  0.000608 - 0.000623:  228
+  0.000624 - 0.000639:  212
+  0.000640 - 0.000655:  226
+  0.000656 - 0.000671:  207
+  0.000672 - 0.000687:  198
+  0.000688 - 0.000703:  234
+  0.000704 - 0.000719:  200
+  0.000720 - 0.000735:  215
+  0.000736 - 0.000751:  223
+  0.000752 - 0.000767:  204
+  0.000768 - 0.000783:  205
+  0.000784 - 0.000799:  186
+  0.000800 - 0.000815:  187
+  0.000816 - 0.000831:  219
+  0.000832 - 0.000847:  184
+  0.000848 - 0.000863:  180
+  0.000864 - 0.000879:  170
+  0.000880 - 0.000895:  191
+  0.000896 - 0.000911:  172
+  0.000912 - 0.000927:  188
+  0.000928 - 0.000943:  171
+  0.000944 - 0.000959:  186
+  0.000960 - 0.000975:  180
+  0.000976 - 0.000991:  192
+  0.000992 - 0.001007:  174
+  0.001008 - 0.001023:  191
+  0.001024 - 0.001055:  374
+  0.001056 - 0.001087:  317
+  0.001088 - 0.001119:  337
+  0.001120 - 0.001151:  371
+  0.001152 - 0.001183:  343
+  0.001184 - 0.001215:  363
+  0.001216 - 0.001247:  381
+  0.001248 - 0.001279:  318
+  0.001280 - 0.001311:  331
+  0.001312 - 0.001343:  351
+  0.001344 - 0.001375:  331
+  0.001376 - 0.001407:  305
+  0.001408 - 0.001439:  393
+  0.001440 - 0.001471:  297
+  0.001472 - 0.001503:  286
+  0.001504 - 0.001535:  271
+  0.001536 - 0.001567:  360
+  0.001568 - 0.001599:  317
+  0.001600 - 0.001631:  323
+  0.001632 - 0.001663:  308
+  0.001664 - 0.001695:  281
+  0.001696 - 0.001727:  292
+  0.001728 - 0.001759:  273
+  0.001760 - 0.001791:  296
+  0.001792 - 0.001823:  284
+  0.001824 - 0.001855:  292
+  0.001856 - 0.001887:  278
+  0.001888 - 0.001919:  295
+  0.001920 - 0.001951:  258
+  0.001952 - 0.001983:  301
+  0.001984 - 0.002015:  258
+  0.002016 - 0.002047:  280
+  0.002048 - 0.002111:  539
+  0.002112 - 0.002175:  525
+  0.002176 - 0.002239:  554
+  0.002240 - 0.002303:  524
+  0.002304 - 0.002367:  526
+  0.002368 - 0.002431:  558
+  0.002432 - 0.002495:  543
+  0.002496 - 0.002559:  558
+  0.002560 - 0.002623:  531
+  0.002624 - 0.002687:  515
+  0.002688 - 0.002751:  493
+  0.002752 - 0.002815:  537
+  0.002816 - 0.002879:  481
+  0.002880 - 0.002943:  427
+  0.002944 - 0.003007:  442
+  0.003008 - 0.003071:  415
+  0.003072 - 0.003135:  385
+  0.003136 - 0.003199:  432
+  0.003200 - 0.003263:  362
+  0.003264 - 0.003327:  390
+  0.003328 - 0.003391:  445
+  0.003392 - 0.003455:  408
+  0.003456 - 0.003519:  392
+  0.003520 - 0.003583:  385
+  0.003584 - 0.003647:  412
+  0.003648 - 0.003711:  391
+  0.003712 - 0.003775:  411
+  0.003776 - 0.003839:  368
+  0.003840 - 0.003903:  337
+  0.003904 - 0.003967:  416
+  0.003968 - 0.004031:  350
+  0.004032 - 0.004095:  332
+  0.004096 - 0.004223:  732
+  0.004224 - 0.004351:  683
+  0.004352 - 0.004479:  624
+  0.004480 - 0.004607:  574
+  0.004608 - 0.004735:  568
+  0.004736 - 0.004863:  571
+  0.004864 - 0.004991:  537
+  0.004992 - 0.005119:  477
+  0.005120 - 0.005247:  544
+  0.005248 - 0.005375:  584
+  0.005376 - 0.005503:  519
+  0.005504 - 0.005631:  510
+  0.005632 - 0.005759:  533
+  0.005760 - 0.005887:  567
+  0.005888 - 0.006015:  590
+  0.006016 - 0.006143:  578
+  0.006144 - 0.006271:  574
+  0.006272 - 0.006399:  619
+  0.006400 - 0.006527:  523
+  0.006528 - 0.006655:  568
+  0.006656 - 0.006783:  495
+  0.006784 - 0.006911:  562
+  0.006912 - 0.007039:  454
+  0.007040 - 0.007167:  501
+  0.007168 - 0.007295:  471
+  0.007296 - 0.007423:  481
+  0.007424 - 0.007551:  466
+  0.007552 - 0.007679:  461
+  0.007680 - 0.007807:  471
+  0.007808 - 0.007935:  450
+  0.007936 - 0.008063:  431
+  0.008064 - 0.008191:  517
+  0.008192 - 0.008447:  813
+  0.008448 - 0.008703:  789
+  0.008704 - 0.008959:  755
+  0.008960 - 0.009215:  765
+  0.009216 - 0.009471:  803
+  0.009472 - 0.009727:  776
+  0.009728 - 0.009983:  728
+  0.009984 - 0.010239:  777
+  0.010240 - 0.010495:  733
+  0.010496 - 0.010751:  777
+  0.010752 - 0.011007:  768
+  0.011008 - 0.011263:  725
+  0.011264 - 0.011519:  557
+  0.011520 - 0.011775:  591
+  0.011776 - 0.012031:  608
+  0.012032 - 0.012287:  529
+  0.012288 - 0.012543:  582
+  0.012544 - 0.012799:  597
+  0.012800 - 0.013055:  754
+  0.013056 - 0.013311:  609
+  0.013312 - 0.013567:  635
+  0.013568 - 0.013823:  494
+  0.013824 - 0.014079:  475
+  0.014080 - 0.014335:  553
+  0.014336 - 0.014591:  539
+  0.014592 - 0.014847:  459
+  0.014848 - 0.015103:  438
+  0.015104 - 0.015359:  422
+  0.015360 - 0.015615:  391
+  0.015616 - 0.015871:  379
+  0.015872 - 0.016127:  355
+  0.016128 - 0.016383:  364
+  0.016384 - 0.016895:  710
+  0.016896 - 0.017407:  667
+  0.017408 - 0.017919:  804
+  0.017920 - 0.018431:  526
+  0.018432 - 0.018943:  545
+  0.018944 - 0.019455:  557
+  0.019456 - 0.019967:  527
+  0.019968 - 0.020479:  532
+  0.020480 - 0.020991:  604
+  0.020992 - 0.021503:  541
+  0.021504 - 0.022015:  529
+  0.022016 - 0.022527:  500
+  0.022528 - 0.023039:  480
+  0.023040 - 0.023551:  349
+  0.023552 - 0.024063:  381
+  0.024064 - 0.024575:  403
+  0.024576 - 0.025087:  251
+  0.025088 - 0.025599:  204
+  0.025600 - 0.026111:  229
+  0.026112 - 0.026623:  252
+  0.026624 - 0.027135:  301
+  0.027136 - 0.027647:  236
+  0.027648 - 0.028159:  216
+  0.028160 - 0.028671:  252
+  0.028672 - 0.029183:  195
+  0.029184 - 0.029695:  212
+  0.029696 - 0.030207:  287
+  0.030208 - 0.030719:  211
+  0.030720 - 0.031231:  162
+  0.031232 - 0.031743:  184
+  0.031744 - 0.032255:  222
+  0.032256 - 0.032767:  237
+  0.032768 - 0.033791:  279
+  0.033792 - 0.034815:  308
+  0.034816 - 0.035839:  143
+  0.035840 - 0.036863:  212
+  0.036864 - 0.037887:  176
+  0.037888 - 0.038911:  142
+  0.038912 - 0.039935:  196
+  0.039936 - 0.040959:  168
+  0.040960 - 0.041983:  148
+  0.041984 - 0.043007:  89
+  0.043008 - 0.044031:  154
+  0.044032 - 0.045055:  128
+  0.045056 - 0.046079:  45
+  0.046080 - 0.047103:  64
+  0.047104 - 0.048127:  29
+  0.048128 - 0.049151:  26
+  0.049152 - 0.050175:  51
+  0.050176 - 0.051199:  11
+  0.051200 - 0.052223:  99
+  0.052224 - 0.053247:  39
+  0.053248 - 0.054271:  22
+  0.054272 - 0.055295:  3
+  0.055296 - 0.056319:  2
+  0.056320 - 0.057343:  3
+  0.057344 - 0.058367:  2
+  0.058368 - 0.059391:  7
+  0.060416 - 0.061439:  3
+  0.061440 - 0.062463:  2
+  0.062464 - 0.063487:  2
+  0.064512 - 0.065535:  1
+  0.065536 - 0.067583:  3
+  0.069632 - 0.071679:  11
+  0.071680 - 0.073727:  1
+  0.075776 - 0.077823:  14
+  0.077824 - 0.079871:  2
+  0.081920 - 0.083967:  1
+  0.096256 - 0.098303:  1
+

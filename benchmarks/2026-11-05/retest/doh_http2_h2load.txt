@@ -1,0 +1,26 @@
+starting benchmark...
+spawning thread #0: 8 total client(s). 10000 total requests
+TLS Protocol: TLSv1.3
+Cipher: TLS_CHACHA20_POLY1305_SHA256
+Server Temp Key: X25519 253 bits
+Application protocol: h2
+progress: 10% done
+progress: 20% done
+progress: 30% done
+progress: 40% done
+progress: 50% done
+progress: 60% done
+progress: 70% done
+progress: 80% done
+progress: 90% done
+progress: 100% done
+
+finished in 1.48s, 6776.73 req/s, 623.72KB/s
+requests: 10000 total, 10000 started, 10000 done, 10000 succeeded, 0 failed, 0 errored, 0 timeout
+status codes: 10000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 920.39KB (942480) total, 59.52KB (60952) headers (space savings 95.77%), 683.59KB (700000) data
+                     min         max         mean         sd        +/- sd
+time for request:      336us     43.65ms      8.13ms      5.64ms    73.58%
+time for connect:    21.47ms     43.48ms     33.99ms      8.07ms    50.00%
+time to 1st byte:    51.69ms     53.24ms     52.43ms       484us    62.50%
+req/s           :     848.79      959.16      884.42       44.64    75.00%

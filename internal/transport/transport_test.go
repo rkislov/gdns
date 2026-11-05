@@ -193,3 +193,45 @@ func TestDoHValidationAndPeerACL(t *testing.T) {
 		t.Fatal("spoofed proxy header bypassed ACL", err, m)
 	}
 }
+
+func TestDoTPersistentConnectionBeyondThousandQueries(t *testing.T) {
+	c := core.DefaultConfig()
+	e, err := core.New(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cert, key, pool := certificate(t)
+	c.DoTListen = "127.0.0.1:0"
+	c.TLSCertFile = cert
+	c.TLSKeyFile = key
+	s, err := Listen(c, e)
+	if err != nil {
+		t.Fatal(err)
+	}
+	errs := make(chan error, 1)
+	s.Start(errs)
+	defer func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		s.Shutdown(ctx)
+	}()
+	client := &dns.Client{Net: "tcp-tls", Timeout: 3 * time.Second, TLSConfig: &tls.Config{RootCAs: pool, ServerName: "localhost", MinVersion: tls.VersionTLS12}}
+	conn, err := client.Dial(s.dotListener.Addr().String())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	_ = conn.SetDeadline(time.Now().Add(5 * time.Second))
+	for i := 0; i < 1100; i++ {
+		q := new(dns.Msg)
+		q.SetQuestion("router.home.arpa.", dns.TypeA)
+		q.Id = uint16(i)
+		if err = conn.WriteMsg(q); err != nil {
+			t.Fatalf("write query %d: %v", i, err)
+		}
+		answer, err := conn.ReadMsg()
+		if err != nil || answer.Id != q.Id || len(answer.Answer) != 1 {
+			t.Fatalf("persistent query %d failed: %v", i, err)
+		}
+	}
+}

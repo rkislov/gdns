@@ -15,3 +15,5 @@ ghole.json.token
 *.pem
 *.p12
 .env
+__pycache__/
+*.pyc
