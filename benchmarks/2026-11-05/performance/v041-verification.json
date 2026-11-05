@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-11-05T16:50:54.913798+00:00",
+  "version": "GHole 0.4.1 (cef0eac; 2026-11-05T16:48:16Z)",
+  "binary_sha256": "7b57e7519f681316c365a19cd0b942cfb7c5ea414378414bd49b9dad9851e0c3",
+  "service": "active",
+  "udp_workers": 3,
+  "udp_sockets": 3,
+  "restart_required": false,
+  "config_preserved": true,
+  "managed_state_preserved": true,
+  "managed_revision": 3,
+  "rfc5011_state": "healthy",
+  "rfc5011_last_success": "2026-11-05T18:04:40.359577626+03:00",
+  "rfc5011_next_probe": "2026-11-06T18:04:40.359577626+03:00",
+  "pagination_sizes": [
+    10,
+    25,
+    50,
+    100
+  ],
+  "https_ui": true,
+  "prometheus": true,
+  "certbot_timer": "active",
+  "dnssec_transport_checks": 32,
+  "pre_backup": "/var/backups/ghole/pre-performance-20261105",
+  "post_backup": "/var/backups/ghole/post-performance-20261105"
+}

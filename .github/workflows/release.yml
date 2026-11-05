@@ -20,6 +20,7 @@ jobs:
           cache: npm
       - run: go test -race ./... && go vet ./...
       - run: npm ci && npm run css && python3 scripts/third-party-notices.py
+      - run: git diff --exit-code -- internal/web/static/style.css THIRD_PARTY_NOTICES.txt
       - run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.45.1
       - run: VERSION="${GITHUB_REF_NAME#v}" scripts/release.sh
       - name: Publish prerelease assets
