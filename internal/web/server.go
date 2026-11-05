@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"ghole/internal/core"
+	validation "ghole/internal/dnssec"
 	"ghole/internal/telemetry"
 	"io/fs"
 	"net/http"
@@ -110,11 +111,23 @@ func (s *Server) Handler() http.Handler {
 				w.WriteHeader(405)
 				return
 			}
-			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "restart_required": s.restartRequired(), "dnssec": "not validated", "logs": s.Engine.RecentLogs(8)}
+			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "restart_required": s.restartRequired(), "dnssec": s.Engine.DNSSECStatus(), "logs": s.Engine.RecentLogs(8)}
 			if s.Monitor != nil {
 				data["telemetry"] = s.Monitor.Snapshot()
 			}
 			jsonResponse(w, data)
+		case "/api/dnssec/anchors":
+			if r.Method != "GET" {
+				w.WriteHeader(405)
+				return
+			}
+			anchors, err := validation.FetchIANA(r.Context())
+			if err != nil {
+				fail(w, err)
+				return
+			}
+			jsonResponse(w, map[string]any{"anchors": anchors, "source": validation.IANAURL, "retrieved_at": time.Now().UTC().Format(time.RFC3339)})
+
 		case "/api/logs":
 			if r.Method != "GET" {
 				w.WriteHeader(405)

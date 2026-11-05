@@ -51,6 +51,11 @@ func testStore(t *testing.T, driver, dsn string) {
 		t.Fatalf("empty: %v", err)
 	}
 	c := core.DefaultConfig()
+	c.DNSSECValidation = true
+	c.DNSSEC.ExemptZones = []string{"corp.internal."}
+	c.DNSSEC.IgnoreCD = true
+	zero := uint16(0)
+	c.DNSSEC.MaxNSEC3Iterations = &zero
 	c.Blocked = []string{"bad.example"}
 	c.Zones[0].RecordViews = []core.RecordView{{Clients: []string{"10.0.0.0/8"}, Records: []string{"router.home.arpa. 300 IN A 10.0.0.1"}}}
 	domains := make([]string, 600)

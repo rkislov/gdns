@@ -46,12 +46,15 @@ type Point struct {
 	AverageMS *float64  `json:"average_ms"`
 }
 type Snapshot struct {
-	System          System  `json:"system"`
-	History         []Point `json:"history"`
-	IntervalSeconds int     `json:"interval_seconds"`
+	System          System            `json:"system"`
+	History         []Point           `json:"history"`
+	IntervalSeconds int               `json:"interval_seconds"`
+	DNSSEC          map[string]uint64 `json:"dnssec"`
 }
 type totals struct{ queries, blocked, nanos uint64 }
 type Monitor struct {
+	dnssecCounters          map[string]prometheus.Counter
+	dnssecTotals            [8]atomic.Uint64
 	systemInfo              *prometheus.GaugeVec
 	registry                *prometheus.Registry
 	queryMetrics            [4]map[string]prometheus.Counter
@@ -69,10 +72,19 @@ type Monitor struct {
 }
 
 var transports = []string{"udp", "tcp", "dot", "doh"}
-var results = []string{"NOERROR", "NXDOMAIN", "SERVFAIL", "REFUSED", "FORMERR", "NOTIMP", "BLOCKED", "CACHE", "BUSY", "DELEGATION", "OTHER"}
+var results = []string{"NOERROR", "NXDOMAIN", "SERVFAIL", "REFUSED", "FORMERR", "NOTIMP", "BLOCKED", "CACHE", "BUSY", "DELEGATION", "DNSSEC_BOGUS", "OTHER"}
+
+var securityStates = []string{"secure", "insecure", "bogus", "indeterminate", "disabled", "bypass", "exempt", "other"}
 
 func New(diskPath string) *Monitor {
 	m := &Monitor{registry: prometheus.NewRegistry(), gauges: map[string]prometheus.Gauge{}, diskPath: diskPath, last: time.Now()}
+	security := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "ghole_dnssec_validation_total", Help: "Local DNSSEC outcomes; policy bypasses are explicitly separated."}, []string{"state"})
+	m.registry.MustRegister(security)
+	m.dnssecCounters = map[string]prometheus.Counter{}
+	for _, state := range securityStates {
+		m.dnssecCounters[state] = security.WithLabelValues(state)
+	}
+
 	m.systemInfo = prometheus.NewGaugeVec(prometheus.GaugeOpts{Name: "ghole_system_info", Help: "Operating system and kernel version."}, []string{"os", "kernel_version"})
 	m.registry.MustRegister(m.systemInfo)
 	query := prometheus.NewCounterVec(prometheus.CounterOpts{Name: "ghole_dns_queries_total", Help: "Completed DNS queries by transport and result."}, []string{"transport", "result"})
@@ -140,7 +152,11 @@ func (m *Monitor) Snapshot() Snapshot {
 	defer m.mu.RUnlock()
 	s := m.system
 	s.Errors = append([]string{}, s.Errors...)
-	return Snapshot{s, append([]Point{}, m.history...), int(SampleInterval / time.Second)}
+	security := map[string]uint64{}
+	for i, state := range securityStates {
+		security[state] = m.dnssecTotals[i].Load()
+	}
+	return Snapshot{System: s, History: append([]Point{}, m.history...), IntervalSeconds: int(SampleInterval / time.Second), DNSSEC: security}
 }
 func (m *Monitor) Run(ctx context.Context) {
 	m.Sample(ctx)
@@ -223,4 +239,16 @@ func (m *Monitor) record(now time.Time, system System) {
 	m.mu.Unlock()
 	m.previous = current
 	m.last = now
+}
+
+func (m *Monitor) ObserveDNSSEC(state string) {
+	i := len(securityStates) - 1
+	for j, s := range securityStates {
+		if s == state {
+			i = j
+			break
+		}
+	}
+	m.dnssecTotals[i].Add(1)
+	m.dnssecCounters[securityStates[i]].Inc()
 }
