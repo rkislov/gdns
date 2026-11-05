@@ -6,8 +6,8 @@ Never changes the production configuration, listeners, clocks or trust state.
 Raw configurations, tokens and the lab database stay private on the server.
 """
 import argparse,copy,json,os,pathlib,pwd,re,secrets,signal,socket,ssl,struct,subprocess,time,urllib.request
-P=argparse.ArgumentParser();P.add_argument('--binary',required=True);P.add_argument('--fixture',required=True);P.add_argument('--tag',required=True);P.add_argument('--workers',type=int,default=0);P.add_argument('--root',default='/var/lib/ghole/performance-lab');P.add_argument('--repeats',type=int,default=2);A=P.parse_args()
-root=pathlib.Path(A.root)/A.tag;root.mkdir(parents=True,exist_ok=True);root.chmod(0o700);account=pwd.getpwnam('ghole');os.chown(root.parent,account.pw_uid,account.pw_gid);root.parent.chmod(0o700);os.chown(root,account.pw_uid,account.pw_gid)
+P=argparse.ArgumentParser();P.add_argument('--binary',required=True);P.add_argument('--fixture',required=True);P.add_argument('--tag',required=True);P.add_argument('--workers',type=int,default=0);P.add_argument('--root',default='/var/lib/gdns/performance-lab');P.add_argument('--repeats',type=int,default=2);A=P.parse_args()
+root=pathlib.Path(A.root)/A.tag;root.mkdir(parents=True,exist_ok=True);root.chmod(0o700);account=pwd.getpwnam('gdns');os.chown(root.parent,account.pw_uid,account.pw_gid);root.parent.chmod(0o700);os.chown(root,account.pw_uid,account.pw_gid)
 rows=[];token=secrets.token_hex(32);processes=[]
 def call(path,data=None):
  h={'Authorization':'Bearer '+token};method='GET'
@@ -63,7 +63,7 @@ def run(p,label,name,rate,repeat,mode='udp'):
  # Stop escalating after >=1% losses; a bounded overload probe is enough.
  return row['lost']/row['sent']<.01
 try:
- main_token=pathlib.Path('/var/lib/ghole/config.json.token').read_text().strip()
+ main_token=pathlib.Path('/var/lib/gdns/config.json.token').read_text().strip()
  original=json.load(urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8080/api/config',headers={'Authorization':'Bearer '+main_token})))
  helper=spawn([A.fixture,'-listen','127.0.0.1:1154','-anchor',str(root/'fixture.anchor')],'fixture',{'GOMAXPROCS':'1'})
  for _ in range(100):
@@ -76,7 +76,7 @@ try:
  c['zones'] += [{'name':'bench.invalid.','kind':'primary','clients':[],'servers':[],'records':['bench.invalid. 3600 IN SOA ns.bench.invalid. hostmaster.bench.invalid. 1 3600 600 86400 3600','host.bench.invalid. 3600 IN A 192.0.2.123','split.bench.invalid. 3600 IN A 192.0.2.10'],'record_views':[{'clients':['127.0.0.0/28'],'records':['split.bench.invalid. 3600 IN A 10.28.0.10']}]},{'name':'cache.bench.invalid.','kind':'forward','clients':[],'records':[],'servers':['127.0.0.1:1154']}]
  c['feeds'].append({'name':'performance-lab-synthetic','enabled':True,'domains':['d'+str(i)+'.blocked.invalid' for i in range(1000000)],'url':''})
  config=root/'config.private.json';config.write_text(json.dumps(c,separators=(',',':')));config.chmod(0o600);os.chown(config,account.pw_uid,account.pw_gid)
- p=spawn([A.binary,'-config',str(config),'-database',str(root/'ghole.db'),'-import-config','-metrics-listen','127.0.0.1:1190'],'server',{'GHOLE_ADMIN_TOKEN':token})
+ p=spawn([A.binary,'-config',str(config),'-database',str(root/'gdns.db'),'-import-config','-metrics-listen','127.0.0.1:1190'],'server',{'GDNS_ADMIN_TOKEN':token})
  state=ready(p);print('Ready',A.tag,'workers',state.get('udp_workers',1),flush=True)
  probe('host.bench.invalid.',ip='192.0.2.123');probe('split.bench.invalid.',ip='10.28.0.10');probe('d999999.blocked.invalid.',rcode=3);probe('cache.bench.invalid.',ad=True,ip='192.0.2.77')
  for label,name in [('primary','host.bench.invalid.'),('split_28','split.bench.invalid.'),('blocked_million','d999999.blocked.invalid.'),('secure_cache','cache.bench.invalid.')]:

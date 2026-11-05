@@ -12,12 +12,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"ghole/internal/core"
-	validation "ghole/internal/dnssec"
-	"ghole/internal/storage"
-	"ghole/internal/telemetry"
-	"ghole/internal/transport"
-	"ghole/internal/web"
+	"gdns/internal/core"
+	validation "gdns/internal/dnssec"
+	"gdns/internal/storage"
+	"gdns/internal/telemetry"
+	"gdns/internal/transport"
+	"gdns/internal/web"
 	"github.com/miekg/dns"
 	"log"
 	"net"
@@ -83,9 +83,9 @@ func loadConfig(ctx context.Context, path string, store *storage.Store, importCo
 }
 func run() error {
 	showVersion := flag.Bool("version", false, "print build version and exit")
-	path := flag.String("config", "ghole.json", "initial/import JSON configuration; token path prefix")
+	path := flag.String("config", "gdns.json", "initial/import JSON configuration; token path prefix")
 	driver := flag.String("storage", "sqlite", "sqlite or postgres")
-	database := flag.String("database", "", "SQLite path or PostgreSQL DSN (prefer GHOLE_DATABASE_URL)")
+	database := flag.String("database", "", "SQLite path or PostgreSQL DSN (prefer GDNS_DATABASE_URL)")
 	doImport := flag.Bool("import-config", false, "replace database configuration from -config JSON")
 	export := flag.String("export-config", "", "export database configuration to a private JSON file and exit")
 	check := flag.Bool("check", false, "validate stored configuration and certificates, then exit")
@@ -93,13 +93,13 @@ func run() error {
 	metricsDisk := flag.String("metrics-disk-path", "", "filesystem path to monitor; defaults to SQLite/config directory")
 	flag.Parse()
 	if *showVersion {
-		fmt.Printf("GHole %s (%s; %s)\n", version, commit, buildDate)
+		fmt.Printf("gdns %s (%s; %s)\n", version, commit, buildDate)
 		return nil
 	}
 	dsn := *database
 	if dsn == "" {
 		if *driver == "postgres" {
-			dsn = os.Getenv("GHOLE_DATABASE_URL")
+			dsn = compatibleEnv("GDNS_DATABASE_URL", "GHOLE_DATABASE_URL")
 		} else {
 			dsn = *path + ".db"
 		}
@@ -145,7 +145,7 @@ func run() error {
 	if err = os.MkdirAll(filepath.Dir(*path), 0700); err != nil {
 		return err
 	}
-	token := strings.TrimSpace(os.Getenv("GHOLE_ADMIN_TOKEN"))
+	token := strings.TrimSpace(compatibleEnv("GDNS_ADMIN_TOKEN", "GHOLE_ADMIN_TOKEN"))
 	if token == "" {
 		tokenPath := *path + ".token"
 		b, e := os.ReadFile(tokenPath)
@@ -245,7 +245,7 @@ func run() error {
 		go func() { errs <- metricsServer.Serve(metricsListener) }()
 		log.Printf("Prometheus http://%s/metrics", *metricsListen)
 	}
-	log.Printf("GHole DNS udp/tcp=%s web=http://%s mode=%s storage=%s udp_workers=%d", c.DNSListen, c.HTTPListen, c.Mode, *driver, len(us))
+	log.Printf("gdns DNS udp/tcp=%s web=http://%s mode=%s storage=%s udp_workers=%d", c.DNSListen, c.HTTPListen, c.Mode, *driver, len(us))
 	if c.DoHListen != "" {
 		log.Printf("DoH https://%s/dns-query", c.DoHListen)
 	}
@@ -273,4 +273,12 @@ func run() error {
 		return nil
 	}
 	return err
+}
+
+// Explicit gdns environment values take precedence; legacy deployments keep working.
+func compatibleEnv(current, legacy string) string {
+	if value := os.Getenv(current); value != "" {
+		return value
+	}
+	return os.Getenv(legacy)
 }

@@ -3,7 +3,7 @@
 package telemetry
 
 import (
-	validation "ghole/internal/dnssec"
+	validation "gdns/internal/dnssec"
 	"github.com/prometheus/client_golang/prometheus"
 	"time"
 )
@@ -15,9 +15,9 @@ type managedCollector struct {
 }
 
 func (m *Monitor) RegisterRFC5011(source func() validation.ManagedStatus) {
-	c := &managedCollector{source: source, keys: prometheus.NewDesc("ghole_dnssec_rfc5011_keys", "Managed root key states.", []string{"state"}, nil)}
+	c := &managedCollector{source: source, keys: prometheus.NewDesc("gdns_dnssec_rfc5011_keys", "Managed root key states.", []string{"state"}, nil)}
 	for _, metric := range []struct{ name, help string }{{"enabled", "Automatic root anchor polling is enabled."}, {"initialized", "Managed root state is persisted."}, {"active_anchors", "Currently usable managed root anchors."}, {"last_success_timestamp_seconds", "Last authenticated root DNSKEY observation."}, {"next_probe_timestamp_seconds", "Next scheduled root DNSKEY probe."}, {"error", "Root anchor management requires attention."}} {
-		c.desc = append(c.desc, prometheus.NewDesc("ghole_dnssec_rfc5011_"+metric.name, metric.help, nil, nil))
+		c.desc = append(c.desc, prometheus.NewDesc("gdns_dnssec_rfc5011_"+metric.name, metric.help, nil, nil))
 	}
 	m.registry.MustRegister(c)
 }

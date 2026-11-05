@@ -14,9 +14,9 @@ import (
 	"crypto/x509/pkix"
 	"encoding/base64"
 	"encoding/pem"
-	"ghole/internal/core"
-	"ghole/internal/telemetry"
-	"ghole/internal/web"
+	"gdns/internal/core"
+	"gdns/internal/telemetry"
+	"gdns/internal/web"
 	"github.com/miekg/dns"
 	"io"
 	"math/big"
@@ -150,7 +150,7 @@ func TestEncryptedTransports(t *testing.T) {
 	}
 	w := httptest.NewRecorder()
 	monitor.Handler().ServeHTTP(w, httptest.NewRequest("GET", "/metrics", nil))
-	for _, want := range []string{`ghole_dns_queries_total{result="NOERROR",transport="doh"} 2`, `ghole_dns_queries_total{result="NOERROR",transport="dot"} 1`} {
+	for _, want := range []string{`gdns_dns_queries_total{result="NOERROR",transport="doh"} 2`, `gdns_dns_queries_total{result="NOERROR",transport="dot"} 1`} {
 		if !strings.Contains(w.Body.String(), want) {
 			t.Fatalf("encrypted transport metrics missing: %s", want)
 		}

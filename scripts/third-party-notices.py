@@ -11,7 +11,7 @@ while data.strip():
     module, end = decoder.raw_decode(data.lstrip())
     modules.append(module)
     data = data.lstrip()[end:]
-parts = ['GHole third-party notices\nGenerated from pinned go.mod modules and Tailwind CSS.\n']
+parts = ['gdns third-party notices\nGenerated from pinned go.mod modules and Tailwind CSS.\n']
 gorooot=Path(subprocess.check_output(['go','env','GOROOT']).decode().strip())
 parts.append('Go toolchain / standard library\n'+(gorooot/'LICENSE').read_text())
 for module in modules:

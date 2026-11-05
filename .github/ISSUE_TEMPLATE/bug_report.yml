@@ -1,11 +1,11 @@
 name: Ошибка
-description: Сообщить о воспроизводимой ошибке GHole
+description: Сообщить о воспроизводимой ошибке gdns
 title: '[Bug] '
 body:
   - type: textarea
     id: environment
     attributes:
-      label: Версия GHole и окружение
+      label: Версия gdns и окружение
       description: ОС, архитектура, SQLite/PostgreSQL, DNS-транспорт. Секреты не прикладывайте.
     validations:
       required: true

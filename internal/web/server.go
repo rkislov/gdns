@@ -10,9 +10,9 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"ghole/internal/core"
-	validation "ghole/internal/dnssec"
-	"ghole/internal/telemetry"
+	"gdns/internal/core"
+	validation "gdns/internal/dnssec"
+	"gdns/internal/telemetry"
 	"io/fs"
 	"net/http"
 	"os"
@@ -46,7 +46,7 @@ func Save(path string, c core.Config) error {
 	if e = os.MkdirAll(dir, 0700); e != nil {
 		return e
 	}
-	f, e := os.CreateTemp(dir, ".ghole-*")
+	f, e := os.CreateTemp(dir, ".gdns-*")
 	if e != nil {
 		return e
 	}

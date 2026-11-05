@@ -1,4 +1,4 @@
-GHole third-party notices
+gdns third-party notices
 Generated from pinned go.mod modules and Tailwind CSS.
 
 Go toolchain / standard library

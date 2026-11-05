@@ -8,8 +8,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"ghole/internal/core"
-	validation "ghole/internal/dnssec"
+	"gdns/internal/core"
+	validation "gdns/internal/dnssec"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -17,18 +17,18 @@ import (
 	"time"
 )
 
-func TestSQLite(t *testing.T) { testStore(t, "sqlite", filepath.Join(t.TempDir(), "ghole.db")) }
+func TestSQLite(t *testing.T) { testStore(t, "sqlite", filepath.Join(t.TempDir(), "gdns.db")) }
 func TestPostgreSQL(t *testing.T) {
-	dsn := os.Getenv("GHOLE_TEST_POSTGRES_DSN")
+	dsn := os.Getenv("GDNS_TEST_POSTGRES_DSN")
 	if dsn == "" {
-		t.Skip("set GHOLE_TEST_POSTGRES_DSN for PostgreSQL integration tests")
+		t.Skip("set GDNS_TEST_POSTGRES_DSN for PostgreSQL integration tests")
 	}
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	schema := fmt.Sprintf("ghole_test_%d", time.Now().UnixNano())
+	schema := fmt.Sprintf("gdns_test_%d", time.Now().UnixNano())
 	if _, err = db.Exec("CREATE SCHEMA " + schema); err != nil {
 		t.Fatal(err)
 	}

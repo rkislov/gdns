@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	validation "ghole/internal/dnssec"
+	validation "gdns/internal/dnssec"
 	"github.com/miekg/dns"
 	"golang.org/x/sync/singleflight"
 	"net"

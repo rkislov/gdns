@@ -6,7 +6,7 @@ package transport
 import (
 	"context"
 	"encoding/base64"
-	"ghole/internal/core"
+	"gdns/internal/core"
 	"github.com/miekg/dns"
 	"io"
 	"mime"

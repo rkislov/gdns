@@ -18,7 +18,7 @@ jobs:
           --health-cmd pg_isready --health-interval 5s
           --health-timeout 5s --health-retries 10
     env:
-      GHOLE_TEST_POSTGRES_DSN: 'host=127.0.0.1 port=5432 user=postgres dbname=postgres password=postgres sslmode=disable'
+      GDNS_TEST_POSTGRES_DSN: 'host=127.0.0.1 port=5432 user=postgres dbname=postgres password=postgres sslmode=disable'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -33,5 +33,5 @@ jobs:
           cache: npm
       - run: npm ci && npm run css
       - run: git diff --exit-code -- internal/web/static/style.css
-      - run: CGO_ENABLED=0 go build -trimpath -o /tmp/ghole ./cmd/ghole
-      - run: /tmp/ghole -version
+      - run: CGO_ENABLED=0 go build -trimpath -o /tmp/gdns ./cmd/gdns
+      - run: /tmp/gdns -version

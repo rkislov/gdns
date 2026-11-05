@@ -4,9 +4,9 @@ set -eu
 case "${1:-}" in
   remove|purge|0)
     if [ -d /run/systemd/system ]; then
-      systemctl stop ghole.service || true
-      systemctl disable ghole.service || true
+      systemctl stop gdns.service || true
+      systemctl disable gdns.service || true
     fi
     ;;
 esac
-# Preserve /var/lib/ghole and the service account, including on purge.
+# Preserve /var/lib/gdns and the service account, including on purge.

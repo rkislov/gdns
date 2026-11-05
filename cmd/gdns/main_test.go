@@ -6,8 +6,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"ghole/internal/core"
-	"ghole/internal/storage"
+	"gdns/internal/core"
+	"gdns/internal/storage"
 	"os"
 	"path/filepath"
 	"testing"
@@ -55,5 +55,21 @@ func TestJSONBootstrapAndExplicitImport(t *testing.T) {
 	got, err = s.Load(ctx)
 	if err != nil || got.DNSSECValidation {
 		t.Fatal("invalid import changed database", err)
+	}
+}
+
+func TestLegacyEnvironmentCompatibility(t *testing.T) {
+	for _, pair := range [][2]string{{"GDNS_ADMIN_TOKEN", "GHOLE_ADMIN_TOKEN"}, {"GDNS_DATABASE_URL", "GHOLE_DATABASE_URL"}} {
+		t.Run(pair[0], func(t *testing.T) {
+			t.Setenv(pair[0], "")
+			t.Setenv(pair[1], "legacy")
+			if compatibleEnv(pair[0], pair[1]) != "legacy" {
+				t.Fatal("legacy deployment value lost")
+			}
+			t.Setenv(pair[0], "current")
+			if compatibleEnv(pair[0], pair[1]) != "current" {
+				t.Fatal("new setting must take precedence")
+			}
+		})
 	}
 }

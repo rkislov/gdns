@@ -1,6 +1,6 @@
 .PHONY: build css test bench clean
 build:
-	CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o bin/ghole ./cmd/ghole
+	CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o bin/gdns ./cmd/gdns
 css:
 	npm ci
 	npm run css

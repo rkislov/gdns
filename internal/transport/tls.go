@@ -6,7 +6,7 @@ package transport
 import (
 	"context"
 	"crypto/tls"
-	"ghole/internal/core"
+	"gdns/internal/core"
 	"github.com/miekg/dns"
 	"net"
 	"net/http"

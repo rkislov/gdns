@@ -32,7 +32,7 @@ def exchange(mode,data):
   s=context.wrap_socket(raw,server_hostname=HOST) if mode=='dot' else raw
   with s:
    s.sendall(struct.pack('!H',len(data))+data);return exact(s,struct.unpack('!H',exact(s,2))[0])
-cases=[('secure','cloudflare.com',True,False,False,0,True),('insecure','www.github.com',True,False,False,0,False),('bogus','dnssec-failed.org',True,False,False,2,False),('cd','dnssec-failed.org',True,True,False,0,False),('bogus-no-do','dnssec-failed.org',False,False,False,2,False),('secure-no-do','cloudflare.com',False,False,True,0,True),('nxdomain','ghole-does-not-exist-20261105.se',True,False,False,3,True),('primary','router.home.arpa',True,False,False,0,False)]
+cases=[('secure','cloudflare.com',True,False,False,0,True),('insecure','www.github.com',True,False,False,0,False),('bogus','dnssec-failed.org',True,False,False,2,False),('cd','dnssec-failed.org',True,True,False,0,False),('bogus-no-do','dnssec-failed.org',False,False,False,2,False),('secure-no-do','cloudflare.com',False,False,True,0,True),('nxdomain','gdns-does-not-exist-20261105.se',True,False,False,3,True),('primary','router.home.arpa',True,False,False,0,False)]
 results=[]
 for mode in ['udp','tcp','dot','doh']:
  for label,name,do,cd,ad,rcode,want_ad in cases:

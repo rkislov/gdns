@@ -1,4 +1,4 @@
-# Установка Linux-сборок GHole
+# Установка Linux-сборок gdns
 
 Copyright 2026 Кислов Роман Сергеевич. Лицензия Apache-2.0.
 
@@ -9,31 +9,31 @@ Copyright 2026 Кислов Роман Сергеевич. Лицензия Apac
 ## Альт Linux
 
 ```sh
-sudo apt-get install ./ghole_0.1.0_altlinux_amd64.rpm
+sudo apt-get install ./gdns_0.5.0_altlinux_amd64.rpm
 ```
 
-Если местная версия APT не поддерживает установку локального RPM, используйте `sudo rpm -Uvh ./ghole_0.1.0_altlinux_amd64.rpm` при установленных systemd и средствах управления пользователями. Не используйте `--nodeps` в рабочей системе.
+Если местная версия APT не поддерживает установку локального RPM, используйте `sudo rpm -Uvh ./gdns_0.5.0_altlinux_amd64.rpm` при установленных systemd и средствах управления пользователями. Не используйте `--nodeps` в рабочей системе.
 
 ## РЕД ОС
 
 ```sh
-sudo dnf install ./ghole_0.1.0_redos_amd64.rpm
+sudo dnf install ./gdns_0.5.0_redos_amd64.rpm
 ```
 
 ## Astra Linux
 
 ```sh
-sudo apt install ./ghole_0.1.0_astra_amd64.deb
+sudo apt install ./gdns_0.5.0_astra_amd64.deb
 ```
 
 ## Первый запуск
 
-Установка создаёт системного пользователя `ghole` и systemd unit, но не запускает сервер автоматически и не меняет системный DNS.
+Установка создаёт системного пользователя `gdns` и systemd unit, но не запускает сервер автоматически и не меняет системный DNS.
 
 ```sh
-sudo systemctl enable --now ghole
-sudo systemctl status ghole
-sudo cat /var/lib/ghole/config.json.token
+sudo systemctl enable --now gdns
+sudo systemctl status gdns
+sudo cat /var/lib/gdns/config.json.token
 ```
 
 По умолчанию DNS слушает `127.0.0.1:1053`, панель `127.0.0.1:8080`, Prometheus `127.0.0.1:9090`. Для удалённой первоначальной настройки используйте SSH-туннель, не открывая административный HTTP в интернет:
@@ -42,31 +42,31 @@ sudo cat /var/lib/ghole/config.json.token
 ssh -L 8080:127.0.0.1:8080 user@server
 ```
 
-Конфигурация и записи сохраняются в `/var/lib/ghole/ghole.db`. Веб-токен создаётся с правами 0600. Файл `/var/lib/ghole/config.json`, если он существует при создании пустой базы, служит первоначальным импортом; после инициализации редактируйте настройки через веб либо выполняйте явный импорт.
+Конфигурация и записи сохраняются в `/var/lib/gdns/gdns.db`. Веб-токен создаётся с правами 0600. Файл `/var/lib/gdns/config.json`, если он существует при создании пустой базы, служит первоначальным импортом; после инициализации редактируйте настройки через веб либо выполняйте явный импорт.
 
 В настройках можно изменить DNS-адрес на адрес нужного интерфейса и порт 53. Unit выдаёт только capability `CAP_NET_BIND_SERVICE`, без запуска процесса от root. Убедитесь, что порт не занят systemd-resolved / BIND / dnsmasq. Настройте `allowed_clients` для доверенных сетей: не открывайте рекурсию всем адресам.
 
 ## HTTPS, DoH и DoT
 
-Разместите PEM-сертификат и ключ в `/etc/ghole/tls`, предоставив чтение группе `ghole` (ключ 0640, директория 0750). Укажите пути и адреса DoH/DoT через веб, затем перезапустите службу. При включённом DoH нативный HTTPS listener обслуживает и `/dns-query`, и защищённую токеном панель. Это сохраняет фактический IP клиента для split DNS.
+Разместите PEM-сертификат и ключ в `/etc/gdns/tls`, предоставив чтение группе `gdns` (ключ 0640, директория 0750). Укажите пути и адреса DoH/DoT через веб, затем перезапустите службу. При включённом DoH нативный HTTPS listener обслуживает и `/dns-query`, и защищённую токеном панель. Это сохраняет фактический IP клиента для split DNS.
 
 Сертификат должен соответствовать имени сервера и быть доверенным клиенту. Процесс автоматически сертификаты не выпускает. После обновления файлов сертификата нужен перезапуск.
 
 ## PostgreSQL
 
-Создайте systemd drop-in командой `sudo systemctl edit ghole`:
+Создайте systemd drop-in командой `sudo systemctl edit gdns`:
 
 ```ini
 [Service]
-EnvironmentFile=/etc/ghole/ghole.env
+EnvironmentFile=/etc/gdns/gdns.env
 ExecStart=
-ExecStart=/usr/bin/ghole -config /var/lib/ghole/config.json -storage postgres
+ExecStart=/usr/bin/gdns -config /var/lib/gdns/config.json -storage postgres
 ```
 
-В `/etc/ghole/ghole.env` (root:root 0600) задайте `GHOLE_DATABASE_URL` с `sslmode=verify-full`. Выполните `systemctl daemon-reload` и `systemctl restart ghole`. Перенос существующих данных описан в README.
+В `/etc/gdns/gdns.env` (root:root 0600) задайте `GDNS_DATABASE_URL` с `sslmode=verify-full`. Выполните `systemctl daemon-reload` и `systemctl restart gdns`. Перенос существующих данных описан в README.
 
 ## Средства защиты ОС
 
 Пакеты не отключают SELinux, AppArmor, мандатный контроль Astra, контроль целостности или замкнутую программную среду. При запрете выполнения/доступа настройте разрешения штатными средствами соответствующей редакции ОС. Совместимость этих политик требует отдельной проверки в вашей среде.
 
-Удаление пакета останавливает службу и сохраняет базу и пользователя. Не удаляйте `/var/lib/ghole` без резервной копии.
+Удаление пакета останавливает службу и сохраняет базу и пользователя. Не удаляйте `/var/lib/gdns` без резервной копии.
