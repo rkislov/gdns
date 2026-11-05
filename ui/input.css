@@ -1,5 +1,5 @@
 /* Copyright 2026 Кислов Роман Сергеевич; SPDX-License-Identifier: Apache-2.0 */
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @source "../internal/web/static/*.html";
 @source "../internal/web/static/*.js";
 @theme { --color-ink: #101c2c; --color-muted: #748298; --color-accent: #087f73; }
