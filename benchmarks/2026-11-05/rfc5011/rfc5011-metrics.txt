@@ -1,0 +1,11 @@
+ghole_dnssec_rfc5011_active_anchors 2
+ghole_dnssec_rfc5011_enabled 1
+ghole_dnssec_rfc5011_error 0
+ghole_dnssec_rfc5011_initialized 1
+ghole_dnssec_rfc5011_keys{state="AddPend"} 0
+ghole_dnssec_rfc5011_keys{state="Missing"} 0
+ghole_dnssec_rfc5011_keys{state="Removed"} 0
+ghole_dnssec_rfc5011_keys{state="Revoked"} 0
+ghole_dnssec_rfc5011_keys{state="Valid"} 2
+ghole_dnssec_rfc5011_last_success_timestamp_seconds 1.79389108e+09
+ghole_dnssec_rfc5011_next_probe_timestamp_seconds 1.79397748e+09

@@ -1,0 +1,52 @@
+{
+  "version": "0.3.0",
+  "commit": "9ccec54",
+  "restart_preserved_full_state": true,
+  "manual_refresh_preserved_schedule": true,
+  "config_etag_unchanged_by_refresh": true,
+  "other_settings_preserved": true,
+  "managed_revision": 3,
+  "rfc5011": {
+    "initialized": true,
+    "enabled": true,
+    "state": "healthy",
+    "last_attempt": "2026-11-05T18:04:40.359577626+03:00",
+    "last_success": "2026-11-05T18:04:40.359577626+03:00",
+    "next_probe": "2026-11-06T18:04:40.359577626+03:00",
+    "active_anchors": 2,
+    "keys": [
+      {
+        "id": "d053b6dee49c5892d33a9adbe8ea68a8180071d776448bfaafffd943d3dd2e8e",
+        "key": ".\t172800\tIN\tDNSKEY\t257 3 8 AwEAAaz/tAm8yTn4Mfeh5eyI96WSVexTBAvkMgJzkKTOiW1vkIbzxeF3+/4RgWOq7HrxRixHlFlExOLAJr5emLvN7SWXgnLh4+B5xQlNVz8Og8kvArMtNROxVQuCaSnIDdD5LKyWbRd2n9WGe2R8PzgCmr3EgVLrjyBxWezF0jLHwVN8efS3rCj/EWgvIWgb9tarpVUDK/b58Da+sqqls3eNbuv7pr+eoZG+SrDK6nWeL3c6H5Apxz7LjVc1uTIdsIXxuOLYA4/ilBmSVIzuDWfdRUfhHdY6+cn8HFRm+2hM8AnXGXws9555KrUB5qihylGa8subX2Nn6UwNR1AkUTV74bU=",
+        "tag": 20326,
+        "state": "Valid",
+        "first_seen": "2026-11-05T18:04:40.359577626+03:00",
+        "last_seen": "2026-11-05T18:04:40.359577626+03:00",
+        "accept_after": "2026-12-05T18:04:40.359577626+03:00",
+        "revoked_at": "0001-01-01T00:00:00Z",
+        "missing_since": "0001-01-01T00:00:00Z",
+        "hold_down_seconds": 2592000,
+        "validators": [
+          "3d4d24972dba25d7f7b665c7ba0761cec7264fccb43741393083243b4ac4032e"
+        ]
+      },
+      {
+        "id": "3d4d24972dba25d7f7b665c7ba0761cec7264fccb43741393083243b4ac4032e",
+        "key": ".\t172800\tIN\tDNSKEY\t257 3 8 AwEAAa96jeuknZlaeSrvyAJj6ZHv28hhOKkx3rLGXVaC6rXTsDc449/cidltpkyGwCJNnOAlFNKF2jBosZBU5eeHspaQWOmOElZsjICMQMC3aeHbGiShvZsx4wMYSjH8e7Vrhbu6irwCzVBApESjbUdpWWmEnhathWu1jo+siFUiRAAxm9qyJNg/wOZqqzL/dL/q8PkcRU5oUKEpUge71M3ej2/7CPqpdVwuMoTvoB+ZOT4YeGyxMvHmbrxlFzGOHOijtzN+u1TQNatX2XBuzZNQ1K+s2CXkPIZo7s6JgZyvaBevYtxPvYLw4z9mR7K2vaF18UYH9Z9GNUUeayffKC73PYc=",
+        "tag": 38696,
+        "state": "Valid",
+        "first_seen": "2026-11-05T18:04:40.359577626+03:00",
+        "last_seen": "2026-11-05T18:04:40.359577626+03:00",
+        "accept_after": "2026-12-05T18:04:40.359577626+03:00",
+        "revoked_at": "0001-01-01T00:00:00Z",
+        "missing_since": "0001-01-01T00:00:00Z",
+        "hold_down_seconds": 2592000,
+        "validators": [
+          "3d4d24972dba25d7f7b665c7ba0761cec7264fccb43741393083243b4ac4032e"
+        ]
+      }
+    ],
+    "add_hold_down_days": 30,
+    "remove_hold_down_days": 30
+  }
+}

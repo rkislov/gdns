@@ -1,0 +1,18 @@
+{
+  "restart_preserved_state": true,
+  "repeat_refresh_respected_cooldown": true,
+  "query_load_did_not_write_managed_state": true,
+  "managed_revision": 3,
+  "keys": [
+    [
+      20326,
+      "Valid"
+    ],
+    [
+      38696,
+      "Valid"
+    ]
+  ],
+  "last_success": "2026-11-05T17:56:39.06471982+03:00",
+  "next_probe": "2026-11-06T17:56:39.06471982+03:00"
+}
