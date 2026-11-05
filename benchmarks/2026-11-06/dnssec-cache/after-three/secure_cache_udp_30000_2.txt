@@ -1,0 +1,22 @@
+DNS Performance Testing Tool
+Version 2.14.0
+
+[Status] Command line: dnsperf -m udp -s 127.0.0.1 -p 1153 -D -d /var/lib/gdns/cache-profile-lab-20261106/after-three/secure_cache.queries.txt -c 8 -T 2 -q 128 -Q 30000 -l 5 -t 1
+[Status] Sending queries (to 127.0.0.1:1153)
+[Status] Started at: Fri Nov  6 00:42:10 2026
+[Status] Stopping after 5.000000 seconds
+[Status] Testing complete (time limit)
+
+Statistics:
+
+  Queries sent:         138128
+  Queries completed:    138128 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NOERROR 138128 (100.00%)
+  Average packet size:  request 48, response 217
+  Run time (s):         5.004392
+  Queries per second:   27601.354970
+
+  Average Latency (s):  0.003315 (min 0.000034, max 0.031511)
+  Latency StdDev (s):   0.002876

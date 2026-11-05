@@ -1,0 +1,138 @@
+[
+  {
+    "workers": 1,
+    "case": "secure_cache",
+    "target_qps": 10000,
+    "before": {
+      "qps": 9831.372783333332,
+      "average_ms": 4.47,
+      "server_cpu_us_per_completed": 96.42143751904388,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 9810.746686333334,
+      "average_ms": 3.5456666666666665,
+      "server_cpu_us_per_completed": 96.17275828625294,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 1,
+    "case": "secure_cache",
+    "target_qps": 20000,
+    "before": {
+      "qps": 19204.65013,
+      "average_ms": 3.502,
+      "server_cpu_us_per_completed": 60.673759726360984,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 19343.93970733333,
+      "average_ms": 3.3183333333333334,
+      "server_cpu_us_per_completed": 59.046031100791645,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 1,
+    "case": "secure_cache",
+    "target_qps": 30000,
+    "before": {
+      "qps": 26539.994312666666,
+      "average_ms": 3.8753333333333333,
+      "server_cpu_us_per_completed": 54.01050594692822,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 26066.906405666665,
+      "average_ms": 4.045,
+      "server_cpu_us_per_completed": 55.522607824290844,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 1,
+    "case": "dnssec_uncached",
+    "target_qps": 500,
+    "before": {
+      "qps": 499.75286066666666,
+      "average_ms": 2.257,
+      "server_cpu_us_per_completed": 797.4396586211482,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 499.05571199999997,
+      "average_ms": 2.2296666666666667,
+      "server_cpu_us_per_completed": 756.0000000000022,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 3,
+    "case": "secure_cache",
+    "target_qps": 10000,
+    "before": {
+      "qps": 9873.018463333334,
+      "average_ms": 3.5733333333333333,
+      "server_cpu_us_per_completed": 93.2251444618458,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 9931.498908,
+      "average_ms": 3.08,
+      "server_cpu_us_per_completed": 91.36463343462593,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 3,
+    "case": "secure_cache",
+    "target_qps": 20000,
+    "before": {
+      "qps": 19130.57434766667,
+      "average_ms": 3.592,
+      "server_cpu_us_per_completed": 62.85015895344914,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 19229.534174333334,
+      "average_ms": 3.486666666666667,
+      "server_cpu_us_per_completed": 62.609792351695845,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 3,
+    "case": "secure_cache",
+    "target_qps": 30000,
+    "before": {
+      "qps": 26294.710829,
+      "average_ms": 3.727666666666667,
+      "server_cpu_us_per_completed": 56.750903257800424,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 26225.373340666665,
+      "average_ms": 3.747666666666667,
+      "server_cpu_us_per_completed": 55.45910493827159,
+      "lost": 0.0
+    }
+  },
+  {
+    "workers": 3,
+    "case": "dnssec_uncached",
+    "target_qps": 500,
+    "before": {
+      "qps": 499.13166966666665,
+      "average_ms": 2.56,
+      "server_cpu_us_per_completed": 814.4192256341819,
+      "lost": 0.0
+    },
+    "after": {
+      "qps": 499.86244566666664,
+      "average_ms": 2.0563333333333333,
+      "server_cpu_us_per_completed": 804.000000000004,
+      "lost": 0.0
+    }
+  }
+]
