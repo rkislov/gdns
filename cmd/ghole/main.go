@@ -165,7 +165,7 @@ func run() error {
 	}
 	defer listener.Close()
 	us := &dns.Server{PacketConn: udp, Handler: engine}
-	ts := &dns.Server{Listener: tcp, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: 100}
+	ts := &dns.Server{Listener: tcp, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: -1}
 	diskPath := *metricsDisk
 	if diskPath == "" {
 		diskPath = filepath.Dir(*path)
