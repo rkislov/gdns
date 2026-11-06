@@ -9,21 +9,21 @@ Copyright 2026 Кислов Роман Сергеевич. Лицензия Apac
 ## Альт Linux
 
 ```sh
-sudo apt-get install ./gdns_0.5.0_altlinux_amd64.rpm
+sudo apt-get install ./gdns_0.6.1_altlinux_amd64.rpm
 ```
 
-Если местная версия APT не поддерживает установку локального RPM, используйте `sudo rpm -Uvh ./gdns_0.5.0_altlinux_amd64.rpm` при установленных systemd и средствах управления пользователями. Не используйте `--nodeps` в рабочей системе.
+Если местная версия APT не поддерживает установку локального RPM, используйте `sudo rpm -Uvh ./gdns_0.6.1_altlinux_amd64.rpm` при установленных systemd и средствах управления пользователями. Не используйте `--nodeps` в рабочей системе.
 
 ## РЕД ОС
 
 ```sh
-sudo dnf install ./gdns_0.5.0_redos_amd64.rpm
+sudo dnf install ./gdns_0.6.1_redos_amd64.rpm
 ```
 
 ## Astra Linux
 
 ```sh
-sudo apt install ./gdns_0.5.0_astra_amd64.deb
+sudo apt install ./gdns_0.6.1_astra_amd64.deb
 ```
 
 ## Первый запуск
