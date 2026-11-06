@@ -110,6 +110,8 @@ func Open(ctx context.Context, driver, dsn string) (*Store, error) {
 		}
 	}
 	schema := []string{
+		`CREATE TABLE IF NOT EXISTS gdns_auth_state (id INTEGER PRIMARY KEY CHECK(id=1), revision BIGINT NOT NULL, state TEXT NOT NULL)`,
+		`INSERT INTO gdns_auth_state(id,revision,state) VALUES(1,0,'') ON CONFLICT(id) DO NOTHING`,
 		`CREATE TABLE IF NOT EXISTS ghole_dnssec_managed (id INTEGER PRIMARY KEY CHECK(id=1), revision BIGINT NOT NULL, state TEXT NOT NULL)`,
 		`INSERT INTO ghole_dnssec_managed(id,revision,state) VALUES(1,0,'') ON CONFLICT(id) DO NOTHING`,
 		`CREATE TABLE IF NOT EXISTS ghole_state (id INTEGER PRIMARY KEY CHECK (id=1), version INTEGER NOT NULL, revision BIGINT NOT NULL, config TEXT NOT NULL)`,

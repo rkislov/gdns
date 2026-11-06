@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"gdns/internal/access"
 	"gdns/internal/core"
 	validation "gdns/internal/dnssec"
 	"os"
@@ -50,6 +51,29 @@ func testStore(t *testing.T, driver, dsn string) {
 	s := open()
 	if _, err := s.Load(ctx); !errors.Is(err, ErrEmpty) {
 		t.Fatalf("empty: %v", err)
+	}
+	authConfig, authRev, authErr := s.LoadAccess(ctx)
+	if !errors.Is(authErr, access.ErrEmpty) || authRev != 0 {
+		t.Fatal("unexpected initial access config", authErr)
+	}
+	hash, hashErr := access.HashPassword("storage-test-password-123")
+	if hashErr != nil {
+		t.Fatal(hashErr)
+	}
+	authConfig.Users = []access.User{{Username: "admin", Role: "admin", PasswordHash: hash}}
+	authRev, authErr = s.SaveAccess(ctx, authConfig, 0)
+	if authErr != nil || authRev != 1 {
+		t.Fatal("access save", authErr)
+	}
+	loadedAuth, loadedRev, authErr := s.LoadAccess(ctx)
+	if authErr != nil || loadedRev != 1 || !reflect.DeepEqual(loadedAuth, authConfig) {
+		t.Fatal("access roundtrip", authErr)
+	}
+	if _, authErr = s.SaveAccess(ctx, authConfig, 0); !errors.Is(authErr, ErrConflict) {
+		t.Fatal("access stale writer accepted", authErr)
+	}
+	if _, err := s.Load(ctx); !errors.Is(err, ErrEmpty) {
+		t.Fatal("access changed DNS config")
 	}
 	c := core.DefaultConfig()
 	c.DNSSECValidation = true

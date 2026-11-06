@@ -12,6 +12,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"gdns/internal/access"
 	"gdns/internal/core"
 	validation "gdns/internal/dnssec"
 	"gdns/internal/storage"
@@ -168,6 +169,10 @@ func run() error {
 	if len(token) < 24 {
 		return fmt.Errorf("admin token must contain at least 24 characters")
 	}
+	accessManager, err := access.Open(startup, store.LoadAccess, store.SaveAccess, *path+".admin-password")
+	if err != nil {
+		return fmt.Errorf("access configuration: %w", err)
+	}
 	udp, err := transport.ListenUDP(c.DNSListen, c.UDPWorkers)
 	if err != nil {
 		return err
@@ -222,7 +227,7 @@ func run() error {
 		metricsServer = &http.Server{Handler: mux, ReadHeaderTimeout: 5 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
 	}
 	running := core.Config{UDPWorkers: c.UDPWorkers, DNSListen: c.DNSListen, HTTPListen: c.HTTPListen, DoHListen: c.DoHListen, DoTListen: c.DoTListen, TLSCertFile: c.TLSCertFile, TLSKeyFile: c.TLSKeyFile}
-	admin := &web.Server{Monitor: monitor, Engine: engine, Path: *path, Token: token, Running: &running, StorageDriver: *driver, UDPWorkers: len(udp), Persist: func(prepared core.Config) error {
+	admin := &web.Server{Access: accessManager, Monitor: monitor, Engine: engine, Path: *path, Token: token, Running: &running, StorageDriver: *driver, UDPWorkers: len(udp), Persist: func(prepared core.Config) error {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
 		return store.Save(ctx, prepared)
