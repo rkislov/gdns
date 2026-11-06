@@ -39,7 +39,7 @@ func ListenWithAdmin(c core.Config, e *core.Engine, admin http.Handler) (*Server
 			return nil, err
 		}
 		s.dotListener = tls.NewListener(l, cfg.Clone())
-		s.dot = &dns.Server{Listener: s.dotListener, Net: "tcp-tls", Handler: dns.HandlerFunc(func(w dns.ResponseWriter, q *dns.Msg) { e.ServeDNSAs(w, q, "dot") }), ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, IdleTimeout: func() time.Duration { return 30 * time.Second }, MaxTCPQueries: -1}
+		s.dot = &dns.Server{Listener: s.dotListener, TsigProvider: e, Net: "tcp-tls", Handler: dns.HandlerFunc(func(w dns.ResponseWriter, q *dns.Msg) { e.ServeDNSAs(w, q, "dot") }), ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, IdleTimeout: func() time.Duration { return 30 * time.Second }, MaxTCPQueries: -1}
 	}
 	if c.DoHListen != "" {
 		s.dohListener, err = net.Listen("tcp", c.DoHListen)

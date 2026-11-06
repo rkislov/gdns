@@ -125,10 +125,26 @@ func (s *Server) Handler() http.Handler {
 				return
 			}
 			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "udp_workers": s.UDPWorkers, "restart_required": s.restartRequired(), "dnssec": s.Engine.DNSSECStatus(), "logs": s.Engine.RecentLogs(8)}
+			data["secondaries"] = s.Engine.SecondaryStatus()
 			if s.Monitor != nil {
 				data["telemetry"] = s.Monitor.Snapshot()
 			}
 			jsonResponse(w, data)
+		case "/api/zone/refresh":
+			if r.Method != "POST" {
+				w.WriteHeader(405)
+				return
+			}
+			id, err := strconv.Atoi(r.URL.Query().Get("id"))
+			if err != nil {
+				fail(w, err)
+				return
+			}
+			if err = s.refreshSecondary(r.Context(), id, true); err != nil {
+				fail(w, err)
+				return
+			}
+			jsonResponse(w, map[string]bool{"ok": true})
 		case "/api/dnssec/rfc5011/refresh":
 			if r.Method != "POST" {
 				w.WriteHeader(405)
@@ -214,6 +230,7 @@ func (s *Server) Handler() http.Handler {
 				http.Error(w, "operator may change only zones and manual blocklist", 403)
 				return
 			}
+			preserveSecondary(&c, s.Engine.Config())
 			if e := s.commit(c); e != nil {
 				fail(w, e)
 				return
@@ -237,7 +254,7 @@ func (s *Server) Handler() http.Handler {
 			}
 			i, e := strconv.Atoi(r.URL.Query().Get("id"))
 			c := s.Engine.Config()
-			if e != nil || i < 0 || i >= len(c.Zones) || c.Zones[i].Kind != "primary" {
+			if e != nil || i < 0 || i >= len(c.Zones) || (c.Zones[i].Kind != "primary" && c.Zones[i].Kind != "secondary") {
 				http.Error(w, "zone not found", 404)
 				return
 			}

@@ -35,12 +35,14 @@ type Config struct {
 	Feeds            []Feed            `json:"feeds"`
 }
 type Zone struct {
-	RecordViews []RecordView `json:"record_views,omitempty"`
-	Name        string       `json:"name"`
-	Kind        string       `json:"kind"`
-	Clients     []string     `json:"clients"`
-	Records     []string     `json:"records"`
-	Servers     []string     `json:"servers"`
+	Transfer    ZoneTransfer   `json:"transfer,omitempty"`
+	Secondary   SecondaryState `json:"secondary,omitempty"`
+	RecordViews []RecordView   `json:"record_views,omitempty"`
+	Name        string         `json:"name"`
+	Kind        string         `json:"kind"`
+	Clients     []string       `json:"clients"`
+	Records     []string       `json:"records"`
+	Servers     []string       `json:"servers"`
 }
 type Feed struct {
 	Name          string   `json:"name"`
@@ -124,6 +126,7 @@ func cloneConfig(c Config) Config {
 	c.Feeds = slices.Clone(c.Feeds)
 	for i := range c.Zones {
 		z := &c.Zones[i]
+		z.Transfer.Allow = slices.Clone(z.Transfer.Allow)
 		z.Clients = slices.Clone(z.Clients)
 		z.Records = slices.Clone(z.Records)
 		z.Servers = slices.Clone(z.Servers)
@@ -216,8 +219,25 @@ func compile(c Config) (*snapshot, error) {
 		if err != nil {
 			return nil, err
 		}
+		if err := validateTransfer(z, c.Zones); err != nil {
+			return nil, err
+		}
 		switch z.Kind {
-		case "primary":
+		case "primary", "secondary":
+			if z.Kind == "secondary" {
+				if len(z.Servers) == 0 {
+					return nil, fmt.Errorf("secondary requires primary servers")
+				}
+				if err := validateServers(z.Servers); err != nil {
+					return nil, err
+				}
+				if len(z.RecordViews) > 0 {
+					return nil, fmt.Errorf("secondary cannot override transferred records")
+				}
+				if len(z.Records) == 0 {
+					break
+				}
+			}
 			for _, line := range z.Records {
 				rr, e := dns.NewRR(line)
 				if e != nil {

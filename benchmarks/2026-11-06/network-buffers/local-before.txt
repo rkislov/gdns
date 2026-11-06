@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkNetworkDNS/udp-3         	   99846	     32090 ns/op	     959 B/op	      18 allocs/op
+BenchmarkNetworkDNS/udp-3         	  152475	     21900 ns/op	     957 B/op	      18 allocs/op
+BenchmarkNetworkDNS/udp-3         	  171010	     21240 ns/op	     957 B/op	      18 allocs/op
+BenchmarkNetworkDNS/tcp-3         	  329281	     11912 ns/op	     778 B/op	      15 allocs/op
+BenchmarkNetworkDNS/tcp-3         	  335011	     11090 ns/op	     778 B/op	      15 allocs/op
+BenchmarkNetworkDNS/tcp-3         	  334642	     10933 ns/op	     778 B/op	      15 allocs/op
+PASS
+ok  	gdns/internal/core	26.131s

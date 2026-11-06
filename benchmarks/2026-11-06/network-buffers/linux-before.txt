@@ -1,0 +1,11 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkNetworkDNS/udp-3         	   62593	     49654 ns/op	    1388 B/op	      27 allocs/op
+BenchmarkNetworkDNS/udp-3         	   75061	     45968 ns/op	    1387 B/op	      27 allocs/op
+BenchmarkNetworkDNS/udp-3         	   67617	     47258 ns/op	    1387 B/op	      27 allocs/op
+BenchmarkNetworkDNS/tcp-3         	   70729	     50517 ns/op	     780 B/op	      15 allocs/op
+BenchmarkNetworkDNS/tcp-3         	   69721	     47275 ns/op	     780 B/op	      15 allocs/op
+BenchmarkNetworkDNS/tcp-3         	   75369	     43489 ns/op	     780 B/op	      15 allocs/op
+PASS

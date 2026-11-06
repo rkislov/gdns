@@ -76,6 +76,8 @@ func testStore(t *testing.T, driver, dsn string) {
 		t.Fatal("access changed DNS config")
 	}
 	c := core.DefaultConfig()
+	c.Zones[0].Transfer = core.ZoneTransfer{Allow: []string{"10.0.0.0/28"}, KeyName: "replica.", Secret: "test-metadata-roundtrip"}
+	c.Zones[0].Secondary = core.SecondaryState{Serial: 42, LastSuccess: time.Now().UTC().Truncate(time.Second), NextRefresh: time.Now().UTC().Add(time.Hour).Truncate(time.Second)}
 	c.DNSSECValidation = true
 	c.DNSSEC.AutoUpdate.Enabled = true
 	c.DNSSEC.AutoUpdate.RefreshHours = 2

@@ -1,0 +1,34 @@
+File: gdns-network-before.test
+Build ID: 358f366375c0c7deb798c35af3a4e1d257752d86
+Type: cpu
+Time: 2026-11-06 11:51:05 MSK
+Duration: 26.17s, Total samples = 41.28s (157.72%)
+Showing nodes accounting for 28.89s, 69.99% of 41.28s total
+Dropped 466 nodes (cum <= 0.21s)
+Showing top 25 nodes out of 145
+      flat  flat%   sum%        cum   cum%
+    22.11s 53.56% 53.56%     22.11s 53.56%  internal/runtime/syscall/linux.Syscall6
+     0.81s  1.96% 55.52%      0.81s  1.96%  runtime.futex
+     0.65s  1.57% 57.10%      0.83s  2.01%  runtime.exitsyscall
+     0.57s  1.38% 58.48%      0.57s  1.38%  runtime.memclrNoHeapPointers
+     0.45s  1.09% 59.57%      0.98s  2.37%  github.com/miekg/dns.UnpackRRWithHeader
+     0.41s  0.99% 60.56%      0.41s  0.99%  time.runtimeNow
+     0.32s  0.78% 61.34%      0.39s  0.94%  runtime.casgstatus
+     0.31s  0.75% 62.09%      0.31s  0.75%  runtime.nanotime (inline)
+     0.29s   0.7% 62.79%      3.79s  9.18%  runtime.findRunnable
+     0.29s   0.7% 63.49%     20.77s 50.31%  syscall.RawSyscall6
+     0.27s  0.65% 64.15%      0.49s  1.19%  runtime.mallocgcSmallScanNoHeaderSC6
+     0.24s  0.58% 64.73%      0.30s  0.73%  runtime.reentersyscall
+     0.23s  0.56% 65.29%      0.24s  0.58%  github.com/miekg/dns.packDomainName
+     0.20s  0.48% 65.77%      2.24s  5.43%  runtime.mallocgc
+     0.20s  0.48% 66.25%      0.43s  1.04%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.19s  0.46% 66.72%      1.94s  4.70%  gdns/internal/core.(*Engine).Resolve
+     0.17s  0.41% 67.13%      0.27s  0.65%  runtime.getcallerfp
+     0.17s  0.41% 67.54%      1.33s  3.22%  runtime.newobject
+     0.15s  0.36% 67.90%     16.28s 39.44%  github.com/miekg/dns.(*Server).serveDNS
+     0.15s  0.36% 68.27%      1.22s  2.96%  github.com/miekg/dns.UnpackDomainName
+     0.15s  0.36% 68.63%      6.46s 15.65%  syscall.Read (inline)
+     0.14s  0.34% 68.97%     12.91s 31.27%  gdns/internal/core.BenchmarkNetworkDNS.func1.3
+     0.14s  0.34% 69.31%      7.30s 17.68%  internal/poll.(*FD).Read
+     0.14s  0.34% 69.65%      0.23s  0.56%  runtime.lock2
+     0.14s  0.34% 69.99%      0.21s  0.51%  runtime.traceAcquire (inline)

@@ -179,13 +179,18 @@ func permitted(p access.Principal, r *http.Request) bool {
 	switch r.URL.Path {
 	case "/api/config":
 		return r.Method == "PUT"
-	case "/api/zone/import", "/api/feed/import", "/api/feed/refresh":
+	case "/api/zone/refresh", "/api/zone/import", "/api/feed/import", "/api/feed/refresh":
 		return r.Method == "POST"
 	}
 	return false
 }
 func publicConfig(c core.Config, p access.Principal) core.Config {
 	if p.Role != "admin" {
+		for i := range c.Zones {
+			if c.Zones[i].Transfer.Secret != "" {
+				c.Zones[i].Transfer.Secret = "***"
+			}
+		}
 		for i := range c.Feeds {
 			c.Feeds[i].URL = ""
 			if c.Feeds[i].Authorization != "" {
@@ -205,6 +210,22 @@ func operatorConfig(c *core.Config, old core.Config) bool {
 		}
 		c.Feeds[i].URL = old.Feeds[i].URL
 		c.Feeds[i].Authorization = old.Feeds[i].Authorization
+	}
+	for i := range c.Zones {
+		z := &c.Zones[i]
+		if z.Transfer.Secret == "***" {
+			found := false
+			for _, prev := range old.Zones {
+				if prev.Name == z.Name && reflect.DeepEqual(prev.Clients, z.Clients) {
+					z.Transfer.Secret = prev.Transfer.Secret
+					found = true
+					break
+				}
+			}
+			if !found {
+				return false
+			}
+		}
 	}
 	want := old
 	want.Zones = c.Zones

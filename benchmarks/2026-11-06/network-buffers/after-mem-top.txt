@@ -1,0 +1,33 @@
+File: gdns-network-after.test
+Build ID: 6dea40afc06c5b3e92c59ebcb450272bbba908e6
+Type: alloc_space
+Time: 2026-11-06 11:52:49 MSK
+Showing nodes accounting for 491.06MB, 98.12% of 500.46MB total
+Dropped 48 nodes (cum <= 2.50MB)
+Showing top 25 nodes out of 52
+      flat  flat%   sum%        cum   cum%
+   77.01MB 15.39% 15.39%   368.03MB 73.54%  github.com/miekg/dns.(*Server).serveDNS
+   60.51MB 12.09% 27.48%    73.51MB 14.69%  gdns/internal/core.newReply
+      43MB  8.59% 36.07%       51MB 10.19%  github.com/miekg/dns.(*A).copy
+      38MB  7.59% 43.66%       51MB 10.19%  github.com/miekg/dns.parseDstFromOOB
+   31.50MB  6.29% 49.96%   245.52MB 49.06%  github.com/miekg/dns.(*Server).serveUDPPacket
+   30.87MB  6.17% 56.13%    30.87MB  6.17%  gdns/internal/core.(*Engine).resizeLogs
+   26.50MB  5.30% 61.42%    26.50MB  5.30%  github.com/miekg/dns.init.func56
+   21.50MB  4.30% 65.72%    51.50MB 10.29%  github.com/miekg/dns.(*Server).serveUDP
+      20MB  4.00% 69.72%       30MB  5.99%  github.com/miekg/dns.ReadFromSessionUDP
+      16MB  3.20% 72.91%    42.50MB  8.49%  github.com/miekg/dns.UnpackRRWithHeader
+   15.50MB  3.10% 76.01%    91.51MB 18.28%  github.com/miekg/dns.(*response).Write
+      13MB  2.60% 78.61%       13MB  2.60%  github.com/miekg/dns.(*Msg).SetReply (inline)
+   12.50MB  2.50% 81.11%    68.50MB 13.69%  github.com/miekg/dns.correctSource
+      11MB  2.20% 83.30%       11MB  2.20%  golang.org/x/net/internal/socket.ControlMessage.Parse
+      10MB  2.00% 85.30%       11MB  2.20%  github.com/miekg/dns.(*Server).readTCP
+      10MB  2.00% 87.30%       10MB  2.00%  github.com/miekg/dns.UnpackDomainName
+    9.50MB  1.90% 89.20%       10MB  2.00%  net.UDPAddrFromAddrPort
+    8.50MB  1.70% 90.90%       69MB 13.79%  github.com/miekg/dns.(*Msg).unpack
+       8MB  1.60% 92.50%        8MB  1.60%  github.com/miekg/dns.cloneSlice[go.shape.uint8,go.shape.[]uint8] (inline)
+       8MB  1.60% 94.09%    50.50MB 10.09%  github.com/miekg/dns.unpackRRslice
+    7.50MB  1.50% 95.59%     7.50MB  1.50%  net.ipToSockaddr
+       5MB     1% 96.59%        5MB     1%  golang.org/x/net/internal/socket.NewControlMessage (inline)
+       5MB     1% 97.59%       56MB 11.19%  gdns/internal/core.copyRRs
+    2.66MB  0.53% 98.12%     2.66MB  0.53%  gdns/internal/core.BenchmarkNetworkDNS.func1.3
+         0     0% 98.12%   129.51MB 25.88%  gdns/internal/core.(*Engine).AnswerAs
