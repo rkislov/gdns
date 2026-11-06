@@ -3,17 +3,22 @@ module gdns
 go 1.27.0
 
 require (
+	github.com/go-asn1-ber/asn1-ber v1.5.8
+	github.com/go-ldap/ldap/v3 v3.4.15
 	github.com/jackc/pgx/v5 v5.7.6
 	github.com/miekg/dns v1.1.73
 	github.com/prometheus/client_golang v1.25.0
 	github.com/semihalev/sdns v1.9.1
 	github.com/shirou/gopsutil/v4 v4.25.9
+	github.com/stretchr/testify v1.12.1
+	golang.org/x/crypto v0.57.0
 	golang.org/x/sync v0.24.0
 	golang.org/x/sys v0.49.0
 	modernc.org/sqlite v1.39.1
 )
 
 require (
+	github.com/Azure/go-ntlmssp v0.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
@@ -35,7 +40,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.15 // indirect
 	github.com/tklauser/numcpus v0.10.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	golang.org/x/crypto v0.57.0 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/text v0.42.0 // indirect

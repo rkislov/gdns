@@ -5,11 +5,11 @@ package web
 
 import (
 	"crypto/sha256"
-	"crypto/subtle"
 	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"fmt"
+	"gdns/internal/access"
 	"gdns/internal/core"
 	validation "gdns/internal/dnssec"
 	"gdns/internal/telemetry"
@@ -27,6 +27,7 @@ import (
 var assets embed.FS
 
 type Server struct {
+	Access        *access.Manager
 	UDPWorkers    int
 	Engine        *core.Engine
 	Path, Token   string
@@ -100,9 +101,20 @@ func (s *Server) Handler() http.Handler {
 	mux.Handle("/", http.FileServer(http.FS(sub)))
 	mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
-		auth := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
-		if subtle.ConstantTimeCompare([]byte(auth), []byte(s.Token)) != 1 {
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		if s.publicAuth(w, r) {
+			return
+		}
+		principal, csrf, ok := s.principal(r)
+		if !ok {
 			http.Error(w, "Unauthorized", 401)
+			return
+		}
+		if !permitted(principal, r) {
+			http.Error(w, "Forbidden", 403)
+			return
+		}
+		if s.accessAPI(w, r, principal, csrf) {
 			return
 		}
 		r.Body = http.MaxBytesReader(w, r.Body, core.MaxImport)
@@ -178,7 +190,7 @@ func (s *Server) Handler() http.Handler {
 			if r.Method == "GET" {
 				c := s.Engine.Config()
 				w.Header().Set("ETag", configETag(c))
-				jsonResponse(w, c)
+				jsonResponse(w, publicConfig(c, principal))
 				return
 			}
 			if r.Method != "PUT" {
@@ -196,6 +208,10 @@ func (s *Server) Handler() http.Handler {
 			d.DisallowUnknownFields()
 			if e := d.Decode(&c); e != nil {
 				fail(w, e)
+				return
+			}
+			if principal.Role == "operator" && !operatorConfig(&c, s.Engine.Config()) {
+				http.Error(w, "operator may change only zones and manual blocklist", 403)
 				return
 			}
 			if e := s.commit(c); e != nil {
