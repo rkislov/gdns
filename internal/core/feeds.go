@@ -20,7 +20,11 @@ import (
 
 const MaxImport = 32 << 20
 
-func ParseFeed(r io.Reader) ([]string, error) {
+func ParseFeed(r io.Reader) ([]string, error) { return parseFeed(r, false) }
+
+// The subscription provider may mix a small number of non-domain IoCs into
+// domains.txt. Accept valid DNS names, but fail closed on empty/corrupt feeds.
+func parseFeed(r io.Reader, mixed bool) ([]string, error) {
 	br := bufio.NewReader(r)
 	magic, _ := br.Peek(2)
 	if len(magic) == 2 && magic[0] == 0x1f && magic[1] == 0x8b {
@@ -35,6 +39,7 @@ func ParseFeed(r io.Reader) ([]string, error) {
 	scan := bufio.NewScanner(lr)
 	scan.Buffer(make([]byte, 4096), 1<<20)
 	set := map[string]struct{}{}
+	accepted, skipped := 0, 0
 	for scan.Scan() {
 		line := strings.TrimSpace(scan.Text())
 		if line == "" || strings.HasPrefix(line, "!") || strings.HasPrefix(line, "[") {
@@ -48,6 +53,10 @@ func ParseFeed(r io.Reader) ([]string, error) {
 		if _, err := netip.ParseAddr(fields[0]); err == nil {
 			fields = fields[1:]
 		} else if len(fields) != 1 {
+			if mixed {
+				skipped++
+				continue
+			}
 			return nil, fmt.Errorf("unsupported feed line: %.100s", line)
 		}
 		for _, d := range fields {
@@ -59,11 +68,16 @@ func ParseFeed(r io.Reader) ([]string, error) {
 				continue
 			}
 			if !validName(d) || !strings.Contains(d, ".") {
+				if mixed {
+					skipped++
+					continue
+				}
 				return nil, fmt.Errorf("invalid feed domain: %.100s", d)
 			}
 			if _, err := netip.ParseAddr(d); err == nil {
 				continue
 			}
+			accepted++
 			set[d] = struct{}{}
 			if len(set) > 1000000 {
 				return nil, fmt.Errorf("feed exceeds 1 million domains")
@@ -75,6 +89,9 @@ func ParseFeed(r io.Reader) ([]string, error) {
 	}
 	if lr.N <= 0 {
 		return nil, fmt.Errorf("uncompressed feed exceeds 32 MiB")
+	}
+	if mixed && (len(set) == 0 || skipped*20 > accepted) {
+		return nil, fmt.Errorf("subscription feed contains no DNS names or more than 5%% invalid entries")
 	}
 	out := make([]string, 0, len(set))
 	for d := range set {
@@ -96,7 +113,7 @@ func DownloadFeed(ctx context.Context, f Feed) ([]string, error) {
 		return nil, err
 	}
 	if f.Authorization != "" {
-		req.Header.Set("Authorization", f.Authorization)
+		req.Header.Set("Authorization", feedAuthorization(u, f.Authorization))
 	}
 	client := &http.Client{Timeout: 30 * time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		if len(via) >= 5 {
@@ -118,7 +135,7 @@ func DownloadFeed(ctx context.Context, f Feed) ([]string, error) {
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("feed HTTP status %d", resp.StatusCode)
 	}
-	return ParseFeed(io.LimitReader(resp.Body, MaxImport+1))
+	return parseFeed(io.LimitReader(resp.Body, MaxImport+1), strings.EqualFold(u.Hostname(), "feed.kislovs.ru"))
 }
 func ParseZone(r io.Reader, name string) ([]string, error) {
 	name = canonical(name)
@@ -138,4 +155,14 @@ func ParseZone(r io.Reader, name string) ([]string, error) {
 		return nil, err
 	}
 	return out, nil
+}
+
+// feed.kislovs.ru subscription keys may be pasted without the HTTP scheme.
+// Other providers retain their explicitly configured Authorization value.
+func feedAuthorization(u *url.URL, value string) string {
+	value = strings.TrimSpace(value)
+	if strings.EqualFold(u.Hostname(), "feed.kislovs.ru") && strings.HasPrefix(value, "ff_") && !strings.ContainsAny(value, " \t\r\n") {
+		return "Bearer " + value
+	}
+	return value
 }
