@@ -194,9 +194,9 @@ func run() error {
 	defer listener.Close()
 	us := make([]*dns.Server, len(udp))
 	for i, conn := range udp {
-		us[i] = &dns.Server{PacketConn: conn, Handler: engine, UDPSize: 1232}
+		us[i] = &dns.Server{PacketConn: conn, TsigProvider: engine, Handler: engine, UDPSize: 1232}
 	}
-	ts := &dns.Server{Listener: tcp, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: -1}
+	ts := &dns.Server{Listener: tcp, TsigProvider: engine, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: -1}
 	diskPath := *metricsDisk
 	if diskPath == "" {
 		diskPath = filepath.Dir(*path)
@@ -232,6 +232,10 @@ func run() error {
 		defer cancel()
 		return store.Save(ctx, prepared)
 	}}
+	secondaryCtx, secondaryStop := context.WithCancel(context.Background())
+	secondaryDone := make(chan struct{})
+	go func() { defer close(secondaryDone); admin.RunSecondaries(secondaryCtx) }()
+	defer func() { secondaryStop(); <-secondaryDone }()
 	encrypted, err := transport.ListenWithAdmin(c, engine, admin.Handler())
 	if err != nil {
 		return err

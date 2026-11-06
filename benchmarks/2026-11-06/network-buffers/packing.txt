@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/wire
+cpu: Apple M4
+BenchmarkPack/allocate-10         	 8378486	       140.8 ns/op	      80 B/op	       1 allocs/op
+BenchmarkPack/allocate-10         	 8501367	       141.6 ns/op	      80 B/op	       1 allocs/op
+BenchmarkPack/allocate-10         	 8315632	       144.8 ns/op	      80 B/op	       1 allocs/op
+BenchmarkPack/pool-10             	 8312359	       167.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPack/pool-10             	 7350728	       161.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPack/pool-10             	 7443504	       149.5 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	gdns/internal/wire	8.487s

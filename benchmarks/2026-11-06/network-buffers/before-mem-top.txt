@@ -1,0 +1,33 @@
+File: gdns-network-before.test
+Build ID: 358f366375c0c7deb798c35af3a4e1d257752d86
+Type: alloc_space
+Time: 2026-11-06 11:51:31 MSK
+Showing nodes accounting for 610.11MB, 98.70% of 618.12MB total
+Dropped 42 nodes (cum <= 3.09MB)
+Showing top 25 nodes out of 59
+      flat  flat%   sum%        cum   cum%
+   82.51MB 13.35% 13.35%    98.51MB 15.94%  gdns/internal/core.newReply
+   65.01MB 10.52% 23.87%   474.04MB 76.69%  github.com/miekg/dns.(*Server).serveDNS
+      49MB  7.93% 31.79%       63MB 10.19%  github.com/miekg/dns.parseDstFromOOB
+      49MB  7.93% 39.72%       49MB  7.93%  github.com/miekg/dns.(*Msg).packBufferWithCompressionMap
+   39.50MB  6.39% 46.11%    39.50MB  6.39%  github.com/miekg/dns.init.func56
+      35MB  5.66% 51.78%       46MB  7.44%  github.com/miekg/dns.(*A).copy
+   29.50MB  4.77% 56.55%    69.50MB 11.24%  github.com/miekg/dns.(*Server).serveUDP
+      28MB  4.53% 61.08%   320.03MB 51.77%  github.com/miekg/dns.(*Server).serveUDPPacket
+   26.84MB  4.34% 65.42%    26.84MB  4.34%  gdns/internal/core.(*Engine).resizeLogs
+      23MB  3.72% 69.14%    62.50MB 10.11%  github.com/miekg/dns.UnpackRRWithHeader
+   22.50MB  3.64% 72.78%       40MB  6.47%  github.com/miekg/dns.ReadFromSessionUDP
+      17MB  2.75% 75.53%    92.01MB 14.88%  github.com/miekg/dns.correctSource
+      16MB  2.59% 78.12%    17.50MB  2.83%  net.UDPAddrFromAddrPort
+      16MB  2.59% 80.71%       16MB  2.59%  github.com/miekg/dns.(*Msg).SetReply (inline)
+   15.50MB  2.51% 83.22%   115.01MB 18.61%  github.com/miekg/dns.(*response).Write
+      14MB  2.26% 85.48%       14MB  2.26%  golang.org/x/net/internal/socket.ControlMessage.Parse
+   12.50MB  2.02% 87.50%    12.50MB  2.02%  github.com/miekg/dns.UnpackDomainName
+      12MB  1.94% 89.45%       12MB  1.94%  golang.org/x/net/internal/socket.NewControlMessage (inline)
+      11MB  1.78% 91.23%       11MB  1.78%  github.com/miekg/dns.cloneSlice[go.shape.uint8,go.shape.[]uint8] (inline)
+   10.50MB  1.70% 92.92%       91MB 14.72%  github.com/miekg/dns.(*Msg).unpack
+    9.50MB  1.54% 94.46%     9.50MB  1.54%  github.com/miekg/dns.(*Server).readTCP
+    9.50MB  1.54% 96.00%    55.50MB  8.98%  gdns/internal/core.copyRRs
+    7.50MB  1.21% 97.21%     7.50MB  1.21%  net.ipToSockaddr
+    5.50MB  0.89% 98.10%       68MB 11.00%  github.com/miekg/dns.unpackRRslice
+    3.72MB   0.6% 98.70%     3.72MB   0.6%  gdns/internal/core.BenchmarkNetworkDNS.func1.3

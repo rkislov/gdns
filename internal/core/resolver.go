@@ -68,6 +68,10 @@ func (e *Engine) Apply(c Config) error   { return e.Update(c, nil) }
 func (e *Engine) Update(c Config, persist func(Config) error) error {
 	e.updateMu.Lock()
 	defer e.updateMu.Unlock()
+	c = cloneConfig(c)
+	if old := e.state.Load(); old != nil {
+		advancePrimarySerials(&c, old.snap.config)
+	}
 	s, err := compile(c)
 	if err != nil {
 		return err
@@ -101,6 +105,10 @@ func (e *Engine) ServeDNS(w dns.ResponseWriter, q *dns.Msg) {
 	e.ServeDNSAs(w, q, transport)
 }
 func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) {
+	if len(q.Question) == 1 && q.Question[0].Qtype == dns.TypeAXFR {
+		e.serveAXFR(w, q)
+		return
+	}
 	remote := w.RemoteAddr()
 	ip := ClientIP(remote)
 	r := e.AnswerAs(context.Background(), q, ip, transport)
@@ -117,6 +125,13 @@ func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) 
 			}
 		}
 		r.Truncate(int(size))
+	}
+	if t := q.IsTsig(); t != nil {
+		if w.TsigStatus() != nil {
+			_ = w.WriteMsg(newReply(q, dns.RcodeNotAuth))
+			return
+		}
+		r.SetTsig(t.Hdr.Name, t.Algorithm, t.Fudge, time.Now().Unix())
 	}
 	_ = w.WriteMsg(r)
 }
@@ -172,7 +187,10 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 		return newReply(q, dns.RcodeRefused), "REFUSED"
 	}
 	z := s.zone(name, ip)
-	if z != nil && z.Kind == "primary" {
+	if z != nil && (z.Kind == "primary" || z.Kind == "secondary") {
+		if z.Kind == "secondary" && !secondaryAvailable(z, time.Now()) {
+			return newReply(q, dns.RcodeServerFailure), "SERVFAIL"
+		}
 		r := newReply(q, dns.RcodeSuccess)
 		r.Authoritative = true
 		// A delegation belongs to the parent; DS remains authoritative there.
@@ -378,9 +396,25 @@ func responseCacheKey(name string, typ uint16, do, cd bool, z *compiledZone) str
 	return name + "/" + strconv.Itoa(int(typ)) + "/" + strconv.FormatBool(do) + "/" + strconv.FormatBool(cd) + "/view/" + z.viewKey
 }
 
+type replyWithQuestion struct {
+	message  dns.Msg
+	question [1]dns.Question
+}
+
 func newReply(q *dns.Msg, rcode int) *dns.Msg {
-	r := new(dns.Msg)
-	r.SetReply(q)
+	allocation := new(replyWithQuestion)
+	r := &allocation.message
+	r.Id = q.Id
+	r.Response = true
+	r.Opcode = q.Opcode
+	if q.Opcode == dns.OpcodeQuery {
+		r.RecursionDesired = q.RecursionDesired
+		r.CheckingDisabled = q.CheckingDisabled
+	}
+	if len(q.Question) > 0 {
+		allocation.question[0] = q.Question[0]
+		r.Question = allocation.question[:]
+	}
 	r.Rcode = rcode
 	r.RecursionAvailable = true
 	return r

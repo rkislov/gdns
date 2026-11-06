@@ -1,0 +1,36 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkNetworkDNS/udp-3   	   40538	     52820 ns/op	    1391 B/op	      27 allocs/op
+BenchmarkNetworkDNS/tcp-3   	   57270	     48868 ns/op	     781 B/op	      15 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-3         	 2117654	      1484 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-3         	 2473221	       834.6 ns/op	     168 B/op	       2 allocs/op
+PASS
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkNetworkDNS/udp-3   	   47589	     54854 ns/op	    1382 B/op	      26 allocs/op
+BenchmarkNetworkDNS/tcp-3   	   47005	     44373 ns/op	     774 B/op	      14 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-3         	 2288782	      1042 ns/op	     256 B/op	       4 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-3         	 3233600	       771.3 ns/op	     160 B/op	       1 allocs/op
+PASS
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkNetworkDNS/udp-3   	   51501	     48595 ns/op	    1382 B/op	      26 allocs/op
+BenchmarkNetworkDNS/tcp-3   	   56756	     47388 ns/op	     773 B/op	      14 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-3         	 2411971	      1349 ns/op	     256 B/op	       4 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-3         	 3128254	       845.6 ns/op	     160 B/op	       1 allocs/op
+PASS
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkNetworkDNS/udp-3   	   47510	     50745 ns/op	    1390 B/op	      27 allocs/op
+BenchmarkNetworkDNS/tcp-3   	   53995	     44200 ns/op	     781 B/op	      15 allocs/op
+BenchmarkAnswerFastPath/Primary/log=false-3         	 2137545	      1254 ns/op	     264 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/Blocked/log=false-3         	 2453200	       893.6 ns/op	     168 B/op	       2 allocs/op
+PASS
