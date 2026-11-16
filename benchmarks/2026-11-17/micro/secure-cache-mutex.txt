@@ -1,0 +1,22 @@
+File: core.test
+Type: delay
+Time: 2026-11-17 01:05:13 MSK
+Showing nodes accounting for 110.27ms, 100% of 110.27ms total
+Dropped 46 nodes (cum <= 0.55ms)
+Showing top 15 nodes out of 58
+      flat  flat%   sum%        cum   cum%
+  109.66ms 99.45% 99.45%   109.66ms 99.45%  runtime.unlock (partial-inline)
+    0.60ms  0.55%   100%     0.60ms  0.55%  runtime._LostContendedRuntimeLock
+         0     0%   100%    18.46ms 16.74%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    18.45ms 16.73%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%    18.45ms 16.73%  gdns/internal/core.(*cache).getReply
+         0     0%   100%    18.46ms 16.74%  gdns/internal/core.BenchmarkAnswerFastPath.func1.1
+         0     0%   100%     3.61ms  3.27%  github.com/miekg/dns.(*A).copy
+         0     0%   100%     9.46ms  8.58%  github.com/miekg/dns.(*Msg).CopyTo
+         0     0%   100%     4.31ms  3.91%  github.com/miekg/dns.(*RRSIG).copy
+         0     0%   100%     0.90ms  0.82%  github.com/miekg/dns.cloneSlice[go.shape.uint8,go.shape.[]uint8] (inline)
+         0     0%   100%     6.66ms  6.04%  runtime.(*mcache).nextFree
+         0     0%   100%     6.66ms  6.04%  runtime.(*mcache).refill
+         0     0%   100%     6.66ms  6.04%  runtime.(*mcentral).cacheSpan
+         0     0%   100%     6.41ms  5.81%  runtime.(*mheap).freeSpan (inline)
+         0     0%   100%     6.41ms  5.81%  runtime.(*mheap).freeSpan.func1

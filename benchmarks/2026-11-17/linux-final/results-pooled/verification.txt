@@ -1,0 +1,1 @@
+60 trials; 18 functional checks. All warmed UDP trials: server InDatagrams == OutDatagrams == sent minus server RcvbufErrors, confirming no upstream UDP traffic during measurement. Some 30k trials also have client receive-buffer drops; inspect both counters. Tested candidate SHA256 matches a fresh build of final source.

@@ -1,0 +1,20 @@
+File: baseline-profile
+Build ID: 5554bee7d265e784c6181e5f8337980294f8b3f4
+Type: cpu
+Time: 2026-11-17 00:59:48 MSK
+Duration: 8s, Total samples = 1.11s (13.87%)
+Showing nodes accounting for 0.77s, 69.37% of 1.11s total
+Showing top 12 nodes out of 205
+      flat  flat%   sum%        cum   cum%
+     0.31s 27.93% 27.93%      0.31s 27.93%  internal/runtime/syscall/linux.Syscall6
+     0.10s  9.01% 36.94%      0.10s  9.01%  runtime.futex
+     0.09s  8.11% 45.05%      0.09s  8.11%  runtime.write1
+     0.05s  4.50% 49.55%      0.07s  6.31%  runtime.tryDeferToSpanScan
+     0.05s  4.50% 54.05%      0.05s  4.50%  runtime.typePointers.next
+     0.04s  3.60% 57.66%      0.14s 12.61%  runtime.scanObject
+     0.03s  2.70% 60.36%      0.03s  2.70%  runtime.nanotime
+     0.03s  2.70% 63.06%      0.03s  2.70%  runtime.read
+     0.03s  2.70% 65.77%      0.06s  5.41%  runtime.scanObjectsSmall
+     0.02s  1.80% 67.57%      0.02s  1.80%  runtime.spanSetScans
+     0.01s   0.9% 68.47%      0.04s  3.60%  github.com/miekg/dns.(*Server).readUDP
+     0.01s   0.9% 69.37%      0.01s   0.9%  internal/abi.(*Type).Kind

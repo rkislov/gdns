@@ -1,0 +1,20 @@
+File: candidate-profile
+Build ID: fd3b93aeac72270f066f76ac6f58e3ac85d7f4c0
+Type: alloc_space
+Time: 2026-11-17 01:02:15 MSK
+Showing nodes accounting for 128.91MB, 89.19% of 144.53MB total
+Dropped 105 nodes (cum <= 0.72MB)
+Showing top 12 nodes out of 53
+      flat  flat%   sum%        cum   cum%
+   25.11MB 17.38% 17.38%    25.11MB 17.38%  gdns/internal/core.addressReply[go.shape.struct { Hdr github.com/miekg/dns.RR_Header; A net.IP "dns:\"a\"" }] (inline)
+   18.52MB 12.82% 30.19%    93.24MB 64.52%  github.com/miekg/dns.(*Server).serveDNS
+   14.74MB 10.20% 40.39%   107.99MB 74.72%  github.com/miekg/dns.(*Server).serveUDPPacket
+   12.87MB  8.90% 49.29%    17.64MB 12.21%  github.com/miekg/dns.parseDstFromOOB
+   11.12MB  7.69% 56.99%    32.49MB 22.48%  github.com/miekg/dns.(*Server).serveUDP
+    8.99MB  6.22% 63.21%       16MB 11.07%  github.com/miekg/dns.ReadFromSessionUDP
+    8.88MB  6.14% 69.35%     8.88MB  6.14%  github.com/miekg/dns.(*Msg).packBufferWithCompressionMap
+    7.25MB  5.02% 74.36%    28.36MB 19.62%  github.com/miekg/dns.correctSource
+    7.20MB  4.98% 79.34%     7.20MB  4.98%  net.ipToSockaddr
+    5.40MB  3.74% 83.08%     7.02MB  4.85%  net.UDPAddrFromAddrPort
+    5.37MB  3.71% 86.79%     5.37MB  3.71%  github.com/miekg/dns.makeUDPBuffer.func1
+    3.47MB  2.40% 89.19%     3.47MB  2.40%  golang.org/x/net/internal/socket.NewControlMessage (inline)

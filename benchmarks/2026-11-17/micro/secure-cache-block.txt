@@ -1,0 +1,22 @@
+File: core.test
+Type: delay
+Time: 2026-11-17 01:05:13 MSK
+Showing nodes accounting for 14441.74ms, 100% of 14441.77ms total
+Dropped 10 nodes (cum <= 72.21ms)
+Showing top 15 nodes out of 27
+      flat  flat%   sum%        cum   cum%
+ 9699.76ms 67.16% 67.16%  9699.76ms 67.16%  runtime.chanrecv1
+ 4741.99ms 32.84%   100%  4741.99ms 32.84%  sync.(*WaitGroup).Wait
+         0     0%   100%  4749.55ms 32.89%  gdns/internal/core.BenchmarkAnswerFastPath
+         0     0%   100%     4742ms 32.84%  gdns/internal/core.BenchmarkAnswerFastPath.func1
+         0     0%   100%  4950.21ms 34.28%  main.main
+         0     0%   100%  4950.21ms 34.28%  runtime.main
+         0     0%   100%   200.16ms  1.39%  runtime/pprof.StopCPUProfile
+         0     0%   100%   200.16ms  1.39%  sync.(*Once).Do (inline)
+         0     0%   100%   200.16ms  1.39%  sync.(*Once).doSlow
+         0     0%   100%  9499.60ms 65.78%  testing.(*B).Run
+         0     0%   100%  4741.99ms 32.84%  testing.(*B).RunParallel
+         0     0%   100%  4747.98ms 32.88%  testing.(*B).doBench
+         0     0%   100%  4741.98ms 32.84%  testing.(*B).doBench.gowrap1
+         0     0%   100%  4741.98ms 32.84%  testing.(*B).launch
+         0     0%   100%  4747.98ms 32.88%  testing.(*B).run

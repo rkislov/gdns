@@ -1,0 +1,23 @@
+File: core.test
+Type: cpu
+Time: 2026-11-17 01:05:08 MSK
+Duration: 4.95s, Total samples = 16.28s (329.05%)
+Showing nodes accounting for 15.02s, 92.26% of 16.28s total
+Dropped 152 nodes (cum <= 0.08s)
+Showing top 15 nodes out of 70
+      flat  flat%   sum%        cum   cum%
+     6.12s 37.59% 37.59%      6.12s 37.59%  runtime.usleep
+     3.24s 19.90% 57.49%      3.24s 19.90%  runtime.procyieldAsm
+     2.67s 16.40% 73.89%      2.67s 16.40%  runtime.pthread_kill
+     1.27s  7.80% 81.70%      1.27s  7.80%  runtime.madvise
+     0.35s  2.15% 83.85%      0.35s  2.15%  runtime.walltime
+     0.32s  1.97% 85.81%      0.32s  1.97%  runtime.pthread_cond_wait
+     0.25s  1.54% 87.35%      0.25s  1.54%  sync/atomic.(*Uint64).Add (inline)
+     0.24s  1.47% 88.82%      0.24s  1.47%  runtime.pthread_cond_signal
+     0.16s  0.98% 89.80%      1.06s  6.51%  gdns/internal/core.(*cache).getReply
+     0.14s  0.86% 90.66%      0.14s  0.86%  runtime.nanotime1
+     0.10s  0.61% 91.28%      0.19s  1.17%  github.com/prometheus/client_golang/prometheus.(*histogramCounts).observe
+     0.05s  0.31% 91.58%      0.35s  2.15%  runtime.mallocgcSmallScanNoHeader
+     0.04s  0.25% 91.83%      1.49s  9.15%  gdns/internal/core.(*Engine).Resolve
+     0.04s  0.25% 92.08%      9.62s 59.09%  runtime.lock2
+     0.03s  0.18% 92.26%      0.40s  2.46%  github.com/miekg/dns.(*Msg).CopyTo

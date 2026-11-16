@@ -1,0 +1,21 @@
+File: baseline-profile
+Build ID: 3ebcbcc399c3d86498b2d88c5b795596d3accb0e
+Type: cpu
+Time: 2026-11-17 01:01:57 MSK
+Duration: 8s, Total samples = 5.80s (72.50%)
+Showing nodes accounting for 3.43s, 59.14% of 5.80s total
+Dropped 165 nodes (cum <= 0.03s)
+Showing top 12 nodes out of 159
+      flat  flat%   sum%        cum   cum%
+     2.68s 46.21% 46.21%      2.68s 46.21%  internal/runtime/syscall/linux.Syscall6
+     0.14s  2.41% 48.62%      0.16s  2.76%  runtime.step
+     0.09s  1.55% 50.17%      0.09s  1.55%  runtime.findfunc
+     0.09s  1.55% 51.72%      0.28s  4.83%  runtime.pcvalue
+     0.07s  1.21% 52.93%      0.12s  2.07%  runtime.mallocgcSmallNoScanSC2
+     0.06s  1.03% 53.97%      0.08s  1.38%  runtime.exitsyscall
+     0.05s  0.86% 54.83%      0.08s  1.38%  gdns/internal/core.(*Engine).observeDNSSECState
+     0.05s  0.86% 55.69%      0.05s  0.86%  indexbytebody
+     0.05s  0.86% 56.55%      0.05s  0.86%  runtime.(*moduledata).textAddr
+     0.05s  0.86% 57.41%      0.24s  4.14%  runtime.(*unwinder).resolveInternal
+     0.05s  0.86% 58.28%      0.12s  2.07%  runtime.mapaccess2_faststr
+     0.05s  0.86% 59.14%      0.05s  0.86%  runtime.memmove

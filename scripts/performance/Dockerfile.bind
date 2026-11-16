@@ -1,0 +1,4 @@
+# Copyright 2026 Кислов Роман Сергеевич
+# SPDX-License-Identifier: Apache-2.0
+FROM alpine:3.23.8
+RUN apk add --no-cache bind=9.20.30-r0 bind-tools=9.20.30-r0 python3

@@ -1,0 +1,21 @@
+File: candidate-profile
+Build ID: f7f726b7941b48c66e6c8ae055928f6da9bf6c2a
+Type: cpu
+Time: 2026-11-17 01:16:23 MSK
+Duration: 8s, Total samples = 5.83s (72.84%)
+Showing nodes accounting for 3.28s, 56.26% of 5.83s total
+Dropped 180 nodes (cum <= 0.03s)
+Showing top 12 nodes out of 171
+      flat  flat%   sum%        cum   cum%
+     2.55s 43.74% 43.74%      2.55s 43.74%  internal/runtime/syscall/linux.Syscall6
+     0.15s  2.57% 46.31%      0.19s  3.26%  runtime.step
+     0.12s  2.06% 48.37%      0.14s  2.40%  runtime.findfunc
+     0.07s  1.20% 49.57%      0.07s  1.20%  runtime.memclrNoHeapPointers
+     0.06s  1.03% 50.60%      0.11s  1.89%  runtime.mallocgcSmallNoScanSC2
+     0.06s  1.03% 51.63%      0.06s  1.03%  time.runtimeNow
+     0.05s  0.86% 52.49%      0.05s  0.86%  runtime.(*gList).pop
+     0.05s  0.86% 53.34%      0.20s  3.43%  runtime.(*unwinder).resolveInternal
+     0.05s  0.86% 54.20%      0.05s  0.86%  runtime.memmove
+     0.04s  0.69% 54.89%      0.98s 16.81%  github.com/miekg/dns.(*Server).readUDP
+     0.04s  0.69% 55.57%      0.06s  1.03%  github.com/miekg/dns.packDomainName
+     0.04s  0.69% 56.26%      0.04s  0.69%  internal/runtime/maps.ctrlGroup.matchH2

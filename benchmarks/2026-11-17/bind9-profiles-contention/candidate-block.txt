@@ -1,0 +1,18 @@
+File: candidate-profile
+Build ID: 3fee82542522c6101aba7f1bfb22822d1d8dece6
+Type: delay
+Time: 2026-11-17 01:02:48 MSK
+Showing nodes accounting for 12.10s, 100% of 12.11s total
+Dropped 3 nodes (cum <= 0.06s)
+Showing top 10 nodes out of 19
+      flat  flat%   sum%        cum   cum%
+       12s 99.12% 99.12%        12s 99.12%  runtime.selectgo
+     0.10s  0.86%   100%      0.10s  0.86%  internal/poll.(*fdMutex).rwlock
+         0     0%   100%      0.10s  0.86%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%   100%      0.10s  0.86%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0%   100%      0.10s  0.86%  gdns/internal/core.writeUDPReply
+         0     0%   100%         5s 41.30%  gdns/internal/telemetry.(*Monitor).Run
+         0     0%   100%         7s 57.82%  gdns/internal/web.(*Server).RunSecondaries
+         0     0%   100%      0.10s  0.86%  github.com/miekg/dns.(*Server).serveDNS
+         0     0%   100%      0.10s  0.86%  github.com/miekg/dns.(*Server).serveUDP.gowrap2
+         0     0%   100%      0.10s  0.86%  github.com/miekg/dns.(*Server).serveUDPPacket

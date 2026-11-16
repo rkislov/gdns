@@ -1,0 +1,18 @@
+{
+  "complete_control": true,
+  "acceptance_met": false,
+  "qps_medians": {
+    "bind": 15000,
+    "candidate": 15000
+  },
+  "p95_medians_ms": {
+    "bind": 0.093375,
+    "candidate": 0.073417
+  },
+  "errors": {
+    "bind": 0,
+    "candidate": 373
+  },
+  "comparable_goodput": true,
+  "candidate_bind_ratio": 0.7862597054886211
+}

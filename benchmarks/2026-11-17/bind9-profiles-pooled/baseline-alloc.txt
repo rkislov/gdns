@@ -1,0 +1,23 @@
+File: baseline-profile
+Build ID: 5554bee7d265e784c6181e5f8337980294f8b3f4
+Type: alloc_space
+Time: 2026-11-17 00:59:48 MSK
+Showing nodes accounting for 131.89MB, 91.07% of 144.83MB total
+Dropped 78 nodes (cum <= 0.72MB)
+Showing top 15 nodes out of 56
+      flat  flat%   sum%        cum   cum%
+   19.15MB 13.22% 13.22%    98.99MB 68.35%  github.com/miekg/dns.(*Server).serveDNS
+   16.47MB 11.37% 24.59%    26.51MB 18.30%  github.com/miekg/dns.(*Msg).Copy (inline)
+   14.35MB  9.91% 34.50%   113.34MB 78.26%  github.com/miekg/dns.(*Server).serveUDPPacket
+   13.13MB  9.07% 43.56%    17.66MB 12.19%  github.com/miekg/dns.parseDstFromOOB
+   10.74MB  7.41% 50.98%    27.89MB 19.26%  github.com/miekg/dns.(*Server).serveUDP
+    9.09MB  6.28% 57.26%    16.15MB 11.15%  github.com/miekg/dns.ReadFromSessionUDP
+    9.01MB  6.22% 63.48%     9.01MB  6.22%  github.com/miekg/dns.(*Msg).packBufferWithCompressionMap
+    7.39MB  5.10% 68.58%     7.39MB  5.10%  net.ipToSockaddr
+    7.22MB  4.99% 73.57%    28.54MB 19.71%  github.com/miekg/dns.correctSource
+    7.19MB  4.96% 78.53%     8.20MB  5.66%  github.com/miekg/dns.(*A).copy
+    5.34MB  3.69% 82.22%     7.06MB  4.87%  net.UDPAddrFromAddrPort
+    3.66MB  2.53% 84.75%     3.66MB  2.53%  golang.org/x/net/internal/socket.NewControlMessage (inline)
+    3.55MB  2.45% 87.20%     3.55MB  2.45%  gdns/internal/core.responseCacheKey
+    2.91MB  2.01% 89.21%     4.81MB  3.32%  github.com/miekg/dns.(*Msg).unpack
+    2.69MB  1.86% 91.07%     2.69MB  1.86%  golang.org/x/net/internal/socket.ControlMessage.Parse

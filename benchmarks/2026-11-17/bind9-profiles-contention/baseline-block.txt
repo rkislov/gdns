@@ -1,0 +1,12 @@
+File: baseline-profile
+Build ID: bb12a4e86b3d8357461b51cbd2ab51d5979918e6
+Type: delay
+Time: 2026-11-17 01:02:32 MSK
+Showing nodes accounting for 12s, 100% of 12s total
+Dropped 17 nodes (cum <= 0.06s)
+      flat  flat%   sum%        cum   cum%
+       12s   100%   100%        12s   100%  runtime.selectgo
+         0     0%   100%         5s 41.65%  gdns/internal/telemetry.(*Monitor).Run
+         0     0%   100%         7s 58.32%  gdns/internal/web.(*Server).RunSecondaries
+         0     0%   100%         7s 58.32%  main.run.func6
+         0     0%   100%         5s 41.65%  main.run.gowrap4

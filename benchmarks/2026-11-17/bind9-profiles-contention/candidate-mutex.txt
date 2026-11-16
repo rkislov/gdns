@@ -1,0 +1,18 @@
+File: candidate-profile
+Build ID: 3fee82542522c6101aba7f1bfb22822d1d8dece6
+Type: delay
+Time: 2026-11-17 01:02:48 MSK
+Showing nodes accounting for 257.66us, 100% of 257.66us total
+Dropped 18 nodes (cum <= 1.29us)
+Showing top 10 nodes out of 46
+      flat  flat%   sum%        cum   cum%
+  257.66us   100%   100%   257.66us   100%  runtime.unlock (inline)
+         0     0%   100%    67.67us 26.26%  github.com/miekg/dns.(*Server).ActivateAndServe
+         0     0%   100%    64.54us 25.05%  github.com/miekg/dns.(*Server).readUDP
+         0     0%   100%    67.67us 26.26%  github.com/miekg/dns.(*Server).serveUDP
+         0     0%   100%    64.54us 25.05%  github.com/miekg/dns.ReadFromSessionUDP
+         0     0%   100%    64.54us 25.05%  github.com/miekg/dns.defaultReader.ReadUDP
+         0     0%   100%    64.54us 25.05%  internal/poll.(*FD).ReadMsgInet6
+         0     0%   100%    67.67us 26.26%  main.run.func8
+         0     0%   100%    64.54us 25.05%  net.(*UDPConn).ReadMsgUDP
+         0     0%   100%    64.54us 25.05%  net.(*UDPConn).ReadMsgUDPAddrPort

@@ -1,0 +1,20 @@
+File: baseline-profile
+Build ID: 5554bee7d265e784c6181e5f8337980294f8b3f4
+Type: alloc_space
+Time: 2026-11-17 00:57:18 MSK
+Showing nodes accounting for 121.48MB, 84.79% of 143.27MB total
+Dropped 79 nodes (cum <= 0.72MB)
+Showing top 12 nodes out of 56
+      flat  flat%   sum%        cum   cum%
+   19.32MB 13.48% 13.48%    97.61MB 68.13%  github.com/miekg/dns.(*Server).serveDNS
+   15.96MB 11.14% 24.62%    25.73MB 17.96%  github.com/miekg/dns.(*Msg).Copy (inline)
+   14.37MB 10.03% 34.66%   111.98MB 78.16%  github.com/miekg/dns.(*Server).serveUDPPacket
+   12.68MB  8.85% 43.50%    17.38MB 12.13%  github.com/miekg/dns.parseDstFromOOB
+   10.97MB  7.65% 51.16%    27.72MB 19.35%  github.com/miekg/dns.(*Server).serveUDP
+    8.96MB  6.26% 57.41%    15.83MB 11.05%  github.com/miekg/dns.ReadFromSessionUDP
+    8.68MB  6.06% 63.47%     8.68MB  6.06%  github.com/miekg/dns.(*Msg).packBufferWithCompressionMap
+    7.37MB  5.15% 68.62%    28.33MB 19.77%  github.com/miekg/dns.correctSource
+    7.23MB  5.04% 73.66%     7.23MB  5.04%  net.ipToSockaddr
+    7.10MB  4.95% 78.62%     8.02MB  5.60%  github.com/miekg/dns.(*A).copy
+    5.25MB  3.66% 82.28%     6.86MB  4.79%  net.UDPAddrFromAddrPort
+    3.60MB  2.51% 84.79%     3.60MB  2.51%  gdns/internal/core.responseCacheKey

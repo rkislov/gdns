@@ -1,0 +1,23 @@
+File: candidate-profile
+Build ID: 39e301cf8841ae0a5a3284448a067473129c2a20
+Type: alloc_space
+Time: 2026-11-17 01:00:04 MSK
+Showing nodes accounting for 127.75MB, 96.64% of 132.20MB total
+Dropped 84 nodes (cum <= 0.66MB)
+Showing top 15 nodes out of 50
+      flat  flat%   sum%        cum   cum%
+   25.89MB 19.58% 19.58%    25.89MB 19.58%  gdns/internal/core.addressReply[go.shape.struct { Hdr github.com/miekg/dns.RR_Header; A net.IP "dns:\"a\"" }] (inline)
+   19.25MB 14.56% 34.14%    85.79MB 64.90%  github.com/miekg/dns.(*Server).serveDNS
+   14.72MB 11.13% 45.28%   100.51MB 76.03%  github.com/miekg/dns.(*Server).serveUDPPacket
+   12.93MB  9.78% 55.06%    17.62MB 13.33%  github.com/miekg/dns.parseDstFromOOB
+   10.78MB  8.16% 63.22%    28.17MB 21.31%  github.com/miekg/dns.(*Server).serveUDP
+    9.05MB  6.85% 70.07%    16.59MB 12.55%  github.com/miekg/dns.ReadFromSessionUDP
+    7.42MB  5.62% 75.68%    28.87MB 21.83%  github.com/miekg/dns.correctSource
+    7.24MB  5.48% 81.16%     7.24MB  5.48%  net.ipToSockaddr
+    5.67MB  4.29% 85.45%     7.53MB  5.70%  net.UDPAddrFromAddrPort
+    3.82MB  2.89% 88.34%     3.82MB  2.89%  golang.org/x/net/internal/socket.NewControlMessage (inline)
+    2.78MB  2.10% 90.44%     2.78MB  2.10%  golang.org/x/net/internal/socket.ControlMessage.Parse
+    2.61MB  1.97% 92.41%     4.43MB  3.35%  github.com/miekg/dns.(*Msg).unpack
+    1.91MB  1.44% 93.86%     1.91MB  1.44%  golang.org/x/net/ipv6.parsePacketInfo
+    1.86MB  1.41% 95.26%     1.86MB  1.41%  net/netip.Addr.AsSlice (inline)
+    1.82MB  1.38% 96.64%     1.82MB  1.38%  github.com/miekg/dns.UnpackDomainName

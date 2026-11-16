@@ -1,0 +1,33 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkCacheHit           	 3346550	       172.3 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit           	 3529084	       171.9 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit           	 3403350	       172.2 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-2         	 4613656	       114.2 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-2         	 5272306	       116.7 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-2         	 5244405	       116.9 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-4         	 8122968	        78.70 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-4         	 7999839	        80.22 ns/op	     224 B/op	       1 allocs/op
+BenchmarkCacheHit-4         	 7810868	        79.67 ns/op	     224 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false           	 1890638	       309.0 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false           	 1965446	       308.4 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false           	 1966718	       305.9 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-2         	 2101948	       261.9 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-2         	 2103591	       266.4 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-2         	 2209780	       269.0 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4         	 3694228	       206.9 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4         	 3445366	       186.9 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/Cache/log=false-4         	 3474897	       189.1 ns/op	     320 B/op	       1 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false     	 1561290	       378.5 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false     	 1592331	       378.9 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false     	 1598314	       380.0 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-2   	 1949376	       305.0 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-2   	 1911621	       296.1 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-2   	 1940272	       506.3 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4   	 1000000	       560.2 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4   	 2042544	       332.2 ns/op	     416 B/op	       5 allocs/op
+BenchmarkAnswerFastPath/SecureCache/log=false-4   	 1819927	       327.2 ns/op	     416 B/op	       5 allocs/op
+PASS
+ok  	gdns/internal/core	23.978s

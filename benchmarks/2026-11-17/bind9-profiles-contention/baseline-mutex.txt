@@ -1,0 +1,18 @@
+File: baseline-profile
+Build ID: bb12a4e86b3d8357461b51cbd2ab51d5979918e6
+Type: delay
+Time: 2026-11-17 01:02:32 MSK
+Showing nodes accounting for 336.83us, 100% of 336.83us total
+Dropped 8 nodes (cum <= 1.68us)
+Showing top 10 nodes out of 52
+      flat  flat%   sum%        cum   cum%
+  334.66us 99.36% 99.36%   334.66us 99.36%  runtime.unlock (inline)
+    2.17us  0.64%   100%     2.17us  0.64%  runtime._LostContendedRuntimeLock
+         0     0%   100%   177.50us 52.70%  github.com/miekg/dns.(*Server).ActivateAndServe
+         0     0%   100%   130.33us 38.69%  github.com/miekg/dns.(*Server).readUDP
+         0     0%   100%   177.50us 52.70%  github.com/miekg/dns.(*Server).serveUDP
+         0     0%   100%   130.33us 38.69%  github.com/miekg/dns.ReadFromSessionUDP
+         0     0%   100%   130.33us 38.69%  github.com/miekg/dns.defaultReader.ReadUDP
+         0     0%   100%   130.33us 38.69%  internal/poll.(*FD).ReadMsgInet6
+         0     0%   100%   177.50us 52.70%  main.run.func8
+         0     0%   100%   130.33us 38.69%  net.(*UDPConn).ReadMsgUDP

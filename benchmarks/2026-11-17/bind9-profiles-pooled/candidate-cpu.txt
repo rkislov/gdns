@@ -1,0 +1,20 @@
+File: candidate-profile
+Build ID: 39e301cf8841ae0a5a3284448a067473129c2a20
+Type: cpu
+Time: 2026-11-17 01:00:04 MSK
+Duration: 8s, Total samples = 1200ms (15.00%)
+Showing nodes accounting for 890ms, 74.17% of 1200ms total
+Showing top 12 nodes out of 177
+      flat  flat%   sum%        cum   cum%
+     490ms 40.83% 40.83%      490ms 40.83%  internal/runtime/syscall/linux.Syscall6
+     130ms 10.83% 51.67%      130ms 10.83%  runtime.futex
+      60ms  5.00% 56.67%       60ms  5.00%  runtime.write1
+      30ms  2.50% 59.17%       90ms  7.50%  runtime.scanObject
+      30ms  2.50% 61.67%       40ms  3.33%  runtime.tryDeferToSpanScan
+      30ms  2.50% 64.17%       40ms  3.33%  runtime.typePointers.next
+      20ms  1.67% 65.83%       20ms  1.67%  internal/poll.(*FD).readUnlock
+      20ms  1.67% 67.50%       30ms  2.50%  runtime.(*sweepLocked).sweep
+      20ms  1.67% 69.17%       20ms  1.67%  runtime.findfunc
+      20ms  1.67% 70.83%       20ms  1.67%  runtime.nanotime
+      20ms  1.67% 72.50%       20ms  1.67%  runtime.pageIndexOf
+      20ms  1.67% 74.17%       30ms  2.50%  runtime.scanblock

@@ -1,0 +1,11 @@
+active
+gdns 0.7.2-dev.1 (cce7c27-dev; 2026-11-12T18:16:33Z)
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50018
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; ANSWER SECTION:
+example.org.		299	IN	A	8.47.69.0
+example.org.		299	IN	A	8.6.112.0

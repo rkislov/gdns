@@ -1,0 +1,21 @@
+File: candidate-profile
+Build ID: 091996fc40e2eae6271eb2c27ce45a7ff5e98d44
+Type: cpu
+Time: 2026-11-17 00:57:34 MSK
+Duration: 8s, Total samples = 3.56s (44.50%)
+Showing nodes accounting for 2.60s, 73.03% of 3.56s total
+Dropped 82 nodes (cum <= 0.02s)
+Showing top 12 nodes out of 135
+      flat  flat%   sum%        cum   cum%
+     1.30s 36.52% 36.52%      1.30s 36.52%  runtime.futex
+     0.72s 20.22% 56.74%      0.72s 20.22%  internal/runtime/syscall/linux.Syscall6
+     0.19s  5.34% 62.08%      0.19s  5.34%  runtime.nanotime (inline)
+     0.07s  1.97% 64.04%      0.11s  3.09%  runtime.pcvalue
+     0.06s  1.69% 65.73%      1.08s 30.34%  net.(*UDPConn).readMsg
+     0.06s  1.69% 67.42%      0.07s  1.97%  time.now
+     0.04s  1.12% 68.54%      0.04s  1.12%  runtime.mallocgcSmallNoScanSC2
+     0.04s  1.12% 69.66%      1.02s 28.65%  runtime.newproc.func1
+     0.03s  0.84% 70.51%      1.26s 35.39%  github.com/miekg/dns.ReadFromSessionUDP
+     0.03s  0.84% 71.35%      1.11s 31.18%  net.(*UDPConn).ReadMsgUDPAddrPort
+     0.03s  0.84% 72.19%      0.04s  1.12%  runtime.(*mspan).writeHeapBitsSmall
+     0.03s  0.84% 73.03%      0.08s  2.25%  runtime.casgstatus

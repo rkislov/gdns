@@ -1,0 +1,20 @@
+File: baseline-profile
+Build ID: 3ebcbcc399c3d86498b2d88c5b795596d3accb0e
+Type: alloc_space
+Time: 2026-11-17 01:16:05 MSK
+Showing nodes accounting for 119.38MB, 82.86% of 144.08MB total
+Dropped 95 nodes (cum <= 0.72MB)
+Showing top 12 nodes out of 56
+      flat  flat%   sum%        cum   cum%
+   18.20MB 12.63% 12.63%    96.71MB 67.12%  github.com/miekg/dns.(*Server).serveDNS
+   16.01MB 11.11% 23.74%    26.20MB 18.18%  github.com/miekg/dns.(*Msg).Copy (inline)
+   13.91MB  9.65% 33.40%   110.62MB 76.77%  github.com/miekg/dns.(*Server).serveUDPPacket
+   12.80MB  8.89% 42.28%    17.32MB 12.02%  github.com/miekg/dns.parseDstFromOOB
+   10.64MB  7.38% 49.67%    29.35MB 20.37%  github.com/miekg/dns.(*Server).serveUDP
+    9.01MB  6.25% 55.92%    15.95MB 11.07%  github.com/miekg/dns.ReadFromSessionUDP
+    8.46MB  5.87% 61.79%     8.46MB  5.87%  github.com/miekg/dns.(*Msg).packBufferWithCompressionMap
+    7.29MB  5.06% 66.85%    28.29MB 19.63%  github.com/miekg/dns.correctSource
+    7.27MB  5.05% 71.90%     8.30MB  5.76%  github.com/miekg/dns.(*A).copy
+    7.05MB  4.90% 76.79%     7.05MB  4.90%  net.ipToSockaddr
+    5.06MB  3.51% 80.30%     6.94MB  4.82%  net.UDPAddrFromAddrPort
+    3.68MB  2.56% 82.86%     3.68MB  2.56%  golang.org/x/net/internal/socket.NewControlMessage (inline)

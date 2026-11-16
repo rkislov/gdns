@@ -1,0 +1,11 @@
+{
+  "InDatagrams": 221220,
+  "NoPorts": 0,
+  "InErrors": 3780,
+  "OutDatagrams": 221220,
+  "RcvbufErrors": 3780,
+  "SndbufErrors": 0,
+  "InCsumErrors": 0,
+  "IgnoredMulti": 0,
+  "MemErrors": 0
+}

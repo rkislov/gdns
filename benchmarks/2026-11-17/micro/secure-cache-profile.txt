@@ -1,0 +1,7 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkAnswerFastPath/SecureCache/log=false-4         	21922525	       206.1 ns/op	     416 B/op	       5 allocs/op
+PASS
+ok  	gdns/internal/core	5.297s

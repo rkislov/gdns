@@ -1,0 +1,21 @@
+File: baseline-profile
+Build ID: 5554bee7d265e784c6181e5f8337980294f8b3f4
+Type: cpu
+Time: 2026-11-17 00:57:18 MSK
+Duration: 8s, Total samples = 3.36s (42.00%)
+Showing nodes accounting for 2.80s, 83.33% of 3.36s total
+Dropped 78 nodes (cum <= 0.02s)
+Showing top 12 nodes out of 109
+      flat  flat%   sum%        cum   cum%
+        2s 59.52% 59.52%         2s 59.52%  internal/runtime/syscall/linux.Syscall6
+     0.28s  8.33% 67.86%      0.28s  8.33%  runtime.futex
+     0.13s  3.87% 71.73%      0.13s  3.87%  runtime.exitsyscall
+     0.08s  2.38% 74.11%      0.17s  5.06%  runtime.stealWork
+     0.06s  1.79% 75.89%      0.06s  1.79%  runtime.(*randomEnum).position (inline)
+     0.06s  1.79% 77.68%      1.72s 51.19%  syscall.RawSyscall6
+     0.04s  1.19% 78.87%      0.89s 26.49%  runtime.findRunnable
+     0.03s  0.89% 79.76%      0.03s  0.89%  runtime.nanotime (inline)
+     0.03s  0.89% 80.65%      0.03s  0.89%  runtime.write1
+     0.03s  0.89% 81.55%      1.93s 57.44%  syscall.SendmsgN
+     0.03s  0.89% 82.44%      1.94s 57.74%  syscall.Syscall
+     0.03s  0.89% 83.33%      1.90s 56.55%  syscall.sendmsgN

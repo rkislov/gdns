@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkResponsePacking/allocate-10         	 9070508	       118.2 ns/op	      80 B/op	       1 allocs/op
+BenchmarkResponsePacking/allocate-10         	 9802075	       117.5 ns/op	      80 B/op	       1 allocs/op
+BenchmarkResponsePacking/allocate-10         	10141840	       117.2 ns/op	      80 B/op	       1 allocs/op
+BenchmarkResponsePacking/pool-10             	10498725	       113.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkResponsePacking/pool-10             	10532340	       112.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkResponsePacking/pool-10             	10672362	       118.9 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	gdns/internal/core	8.525s

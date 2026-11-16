@@ -1,0 +1,1 @@
+{"elapsed_seconds":15.013487629,"errors":0,"mode":"warm","ok":215510,"p50_ms":5.723413,"p95_ms":27.153679,"p99_ms":49.805096,"qps":14354.426188337588,"scheduled_p95_ms":31.481385,"seconds":15,"send_lateness_max_ms":37.925515,"send_lateness_p95_ms":8.799261,"send_lateness_p99_ms":21.055426,"sent":225000,"target_qps":15000,"timeouts":9490,"transport":"udp"}
