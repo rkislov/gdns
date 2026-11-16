@@ -36,6 +36,8 @@ type Server struct {
 	Running       *core.Config
 	StorageDriver string
 	Monitor       *telemetry.Monitor
+	feedBusy      map[int]bool
+	feedAttempts  map[int]feedAttempt
 }
 
 func Save(path string, c core.Config) error {
@@ -126,6 +128,7 @@ func (s *Server) Handler() http.Handler {
 			}
 			data := map[string]any{"queries": s.Engine.Queries.Load(), "blocked": s.Engine.Blocked.Load(), "cache_hits": s.Engine.Hits.Load(), "failures": s.Engine.Failures.Load(), "storage": s.StorageDriver, "udp_workers": s.UDPWorkers, "restart_required": s.restartRequired(), "dnssec": s.Engine.DNSSECStatus(), "logs": s.Engine.RecentLogs(8)}
 			data["secondaries"] = s.Engine.SecondaryStatus()
+			data["feeds"] = s.feedStatuses()
 			if s.Monitor != nil {
 				data["telemetry"] = s.Monitor.Snapshot()
 			}
@@ -266,26 +269,34 @@ func (s *Server) Handler() http.Handler {
 				w.WriteHeader(405)
 				return
 			}
-			s.mu.Lock()
-			defer s.mu.Unlock()
-			c := s.Engine.Config()
 			i, e := strconv.Atoi(r.URL.Query().Get("id"))
-			if e != nil || i < 0 || i >= len(c.Feeds) {
+			if e != nil || i < 0 {
 				fail(w, fmt.Errorf("invalid feed id"))
 				return
 			}
-			var domains []string
 			if r.URL.Path == "/api/feed/refresh" {
-				domains, e = core.DownloadFeed(r.Context(), c.Feeds[i])
-			} else {
-				domains, e = core.ParseFeed(r.Body)
+				count, err := s.refreshFeed(r.Context(), i, false)
+				if err != nil {
+					fail(w, err)
+					return
+				}
+				jsonResponse(w, map[string]int{"count": count})
+				return
 			}
+			s.mu.Lock()
+			defer s.mu.Unlock()
+			c := s.Engine.Config()
+			if i >= len(c.Feeds) {
+				fail(w, fmt.Errorf("invalid feed id"))
+				return
+			}
+			domains, e := core.ParseFeed(r.Body)
 			if e != nil {
 				fail(w, e)
 				return
 			}
 			c.Feeds[i].Domains = domains
-			c.Feeds[i].Updated = time.Now().UTC().Format(time.RFC3339)
+			c.Feeds[i].Updated = time.Now().UTC().Format(time.RFC3339Nano)
 			if e = s.commit(c); e != nil {
 				fail(w, e)
 				return

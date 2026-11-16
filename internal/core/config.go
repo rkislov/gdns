@@ -45,12 +45,13 @@ type Zone struct {
 	Servers     []string       `json:"servers"`
 }
 type Feed struct {
-	Name          string   `json:"name"`
-	URL           string   `json:"url"`
-	Authorization string   `json:"authorization,omitempty"`
-	Enabled       bool     `json:"enabled"`
-	Domains       []string `json:"domains,omitempty"`
-	Updated       string   `json:"updated,omitempty"`
+	Name                   string   `json:"name"`
+	URL                    string   `json:"url"`
+	Authorization          string   `json:"authorization,omitempty"`
+	Enabled                bool     `json:"enabled"`
+	Domains                []string `json:"domains,omitempty"`
+	Updated                string   `json:"updated,omitempty"`
+	RefreshIntervalMinutes int      `json:"refresh_interval_minutes,omitempty"`
 }
 
 func DefaultConfig() Config {
@@ -321,6 +322,14 @@ func compile(c Config) (*snapshot, error) {
 		s.blocked[canonical(d)] = struct{}{}
 	}
 	for _, f := range c.Feeds {
+		if f.RefreshIntervalMinutes < 0 || f.RefreshIntervalMinutes > 43200 {
+			return nil, fmt.Errorf("feed refresh_interval_minutes must be 0..43200")
+		}
+		if f.RefreshIntervalMinutes > 0 {
+			if _, err := feedURL(f); err != nil {
+				return nil, err
+			}
+		}
 		if f.Enabled {
 			for _, d := range f.Domains {
 				if !validName(d) {
