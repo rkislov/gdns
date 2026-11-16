@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+# Copyright 2026 Кислов Роман Сергеевич
+# SPDX-License-Identifier: Apache-2.0
+"""Compare resolvers on dev with a separate native Linux Docker load host.
+Publishes one temporary UDP port, restricted by DOCKER-USER and resolver ACLs.
+"""
+import argparse, getpass, hashlib, ipaddress, json, os, pathlib, shlex, shutil
+import signal, statistics, subprocess as sp, time
+p=argparse.ArgumentParser()
+p.add_argument('--out',type=pathlib.Path,required=True)
+p.add_argument('--remote-bundle',required=True)
+p.add_argument('--load-binary',type=pathlib.Path,required=True)
+p.add_argument('--client-ip',required=True)
+p.add_argument('--host',default='45.87.247.8')
+p.add_argument('--user',default='roman')
+p.add_argument('--ssh-port',type=int,default=22222)
+p.add_argument('--dns-port',type=int,default=53053)
+p.add_argument('--quick',action='store_true')
+a=p.parse_args(); ipaddress.IPv4Address(a.host);ipaddress.IPv4Address(a.client_ip)
+out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
+password=getpass.getpass('sudo password: ')
+ssh=['ssh','-o','BatchMode=yes','-o','ConnectTimeout=15','-p',str(a.ssh_port),a.user+'@'+a.host]
+def run(args,**kw):return sp.check_output(args,text=True,**kw).strip()
+def remote(command):
+ r=sp.run(ssh+['sudo -S -p "" sh -c '+shlex.quote(command)],input=password+'\n',capture_output=True,text=True,timeout=90)
+ if r.returncode:raise RuntimeError(r.stderr.strip() or r.stdout.strip())
+ return r.stdout.strip()
+def rdocker(*args):return remote(shlex.join(['docker',*args]))
+def docker(*args):return run(['docker',*args])
+name='gdns-external-'+str(os.getpid());server=name+'-server';auth=name+'-auth';client=name+'-client'
+network=name;prefix='172.29.95.';stage='/home/'+a.user+'/'+name
+image='gdns-performance-bind:local';endpoint=a.host+':'+str(a.dns_port)
+rule=['-d',prefix+'11','-p','udp','--dport','53','!','-s',a.client_ip+'/32','-j','DROP']
+fixture=pathlib.Path(__file__).resolve().parents[1]/'benchmarks/2026-11-17/bind9'
+shutil.copy2(fixture/'auth.zone',out/'auth.zone')
+opts='directory "/tmp"; listen-on { any; }; listen-on-v6 { none; }; dnssec-validation no; minimal-responses yes;'
+(out/'auth.conf').write_text('options { '+opts+' allow-query { '+prefix+'11; }; recursion no; }; controls {}; zone "bench.test" { type primary; file "/lab/auth.zone"; };')
+(out/'bind.conf').write_text('options { '+opts+' allow-query { '+a.client_ip+'; }; recursion yes; allow-recursion { '+a.client_ip+'; }; forward only; forwarders { '+prefix+'10; }; max-cache-size 64m; stale-answer-enable no; prefetch 0; }; controls {};')
+c=json.loads((fixture/'gdns.json').read_text());c.update(upstreams=[prefix+'10:53'],allowed_clients=[a.client_ip+'/32'],udp_workers=1)
+(out/'gdns.json').write_text(json.dumps(c))
+run(ssh+['mkdir '+shlex.quote(stage)])
+sp.run(['scp','-O','-P',str(a.ssh_port),'-o','BatchMode=yes',*[str(out/f) for f in ['auth.zone','auth.conf','bind.conf','gdns.json']],a.user+'@'+a.host+':'+stage+'/'],check=True)
+metadata=json.loads(remote('cat '+shlex.quote(a.remote_bundle+'/source.json')))
+metadata.update(layout='external Linux Docker client; one VPS resolver CPU 0; authority CPU 0',offered_qps=15000,repeats=3 if a.quick else 5,seconds=5 if a.quick else 8,client_ip=a.client_ip,endpoint=endpoint,network=network,stage=stage,firewall_rule=rule,load_sha256=hashlib.sha256(a.load_binary.read_bytes()).hexdigest())
+metadata['image']=rdocker('image','inspect',image,'--format','{{.Id}}')
+metadata['binary_sha256']=remote('sha256sum '+shlex.quote(a.remote_bundle+'/baseline-bin')+' '+shlex.quote(a.remote_bundle+'/candidate'))
+(out/'metadata.json').write_text(json.dumps(metadata,indent=2))
+def start(impl):
+ remote('docker rm -f '+shlex.quote(server)+' >/dev/null 2>&1 || true')
+ args=['run','-d','--name',server,'--network',network,'--ip',prefix+'11','--cpuset-cpus','0','--memory','512m','-e','GOMAXPROCS=1','-p',endpoint+':53/udp','-v',stage+':/lab:ro','-v',a.remote_bundle+':/bench:ro']
+ if impl=='bind':args+=['--entrypoint','named',image,'-g','-n','1','-c','/lab/bind.conf']
+ else:args+=['--entrypoint','/bin/sh',image,'-c','cp /lab/gdns.json /tmp/gdns.json; exec /bench/'+('baseline-bin' if impl=='baseline' else 'candidate')+' -config /tmp/gdns.json -database /tmp/gdns.db -metrics-listen ""']
+ rdocker(*args)
+def load(rate,seconds,*extra):return docker('exec',client,'/load','-server',endpoint,'-rate',str(rate),'-seconds',str(seconds),*extra)
+def udp(text):
+ lines=text.splitlines();i=next(i for i,l in enumerate(lines) if l.startswith('Udp:'));return dict(zip(lines[i].split()[1:],map(int,lines[i+1].split()[1:])))
+def stats():
+ code='import json,pathlib,subprocess; d=lambda p:subprocess.check_output(["docker","exec",'+repr(server)+',"cat",p],text=True);print(json.dumps({"cpu":d("/sys/fs/cgroup/cpu.stat"),"memory":d("/sys/fs/cgroup/memory.current"),"udp":d("/proc/net/snmp"),"host":pathlib.Path("/proc/stat").read_text()}))'
+ return json.loads(remote('python3 -c '+shlex.quote(code)))
+created=False;firewall=False;rows=[]
+def stop_signal(*_):raise KeyboardInterrupt()
+signal.signal(signal.SIGTERM,stop_signal)
+try:
+ rdocker('network','create','--subnet',prefix+'0/24',network);created=True
+ remote(shlex.join(['iptables','-I','DOCKER-USER','1',*rule]));firewall=True
+ rdocker('run','-d','--name',auth,'--network',network,'--ip',prefix+'10','--cpuset-cpus','0','--memory','512m','-v',stage+':/lab:ro','--entrypoint','named',image,'-g','-n','1','-c','/lab/auth.conf')
+ docker('run','-d','--name',client,'--cpuset-cpus','0,1','-e','GOMAXPROCS=2','-v',str(a.load_binary.resolve())+':/load:ro','--entrypoint','sleep',image,'36000')
+ for repeat in range(metadata['repeats']):
+  impls=['bind','baseline','candidate'];impls=impls[repeat%3:]+impls[:repeat%3]
+  for impl in impls:
+   start(impl)
+   for attempt in range(12):
+    try:load(100,1,'-prime');break
+    except sp.CalledProcessError:time.sleep(.5)
+   else:raise RuntimeError('external UDP connectivity/startup failed')
+   if repeat==0:(out/('functional-'+impl+'.json')).write_text(load(100,1,'-check'))
+   load(15000,2);before=stats();cb=udp(docker('exec',client,'cat','/proc/net/snmp'))
+   row=json.loads(load(15000,metadata['seconds']));after=stats();ca=udp(docker('exec',client,'cat','/proc/net/snmp'))
+   ub,ua=udp(before['udp']),udp(after['udp'])
+   cpu=lambda s:int(dict(l.split() for l in s['cpu'].splitlines())['usage_usec'])
+   host=lambda s:{l.split()[0]:list(map(int,l.split()[1:])) for l in s['host'].splitlines() if l.startswith('cpu')}
+   hb,ha=host(before),host(after)
+   row.update(impl=impl,repeat=repeat,cpu_cores=(cpu(after)-cpu(before))/1e6/(metadata['seconds']+.1),memory_bytes=int(after['memory']),server_udp_delta={k:ua[k]-ub[k] for k in ub},client_udp_delta={k:ca[k]-cb[k] for k in cb},host_cpu_ticks_delta={k:[b-a for a,b in zip(hb[k],ha[k])] for k in hb})
+   rows.append(row);(out/'raw.json').write_text(json.dumps(rows,indent=2));print(json.dumps(row),flush=True)
+finally:
+ for container in [server,auth]:
+  try:rdocker('rm','-f',container)
+  except Exception as e:print('cleanup failed',container,str(e),flush=True)
+ sp.run(['docker','rm','-f',client],stdout=sp.DEVNULL,stderr=sp.DEVNULL)
+ if firewall:remote(shlex.join(['iptables','-D','DOCKER-USER',*rule]))
+ if created:rdocker('network','rm',network)
+summary={impl:{'p95_ms':statistics.median(r['p95_ms'] for r in rows if r['impl']==impl),'errors':sum(r['errors']+r['timeouts'] for r in rows if r['impl']==impl),'qps':statistics.median(r['qps'] for r in rows if r['impl']==impl)} for impl in ['bind','baseline','candidate']}
+(out/'summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary),flush=True)

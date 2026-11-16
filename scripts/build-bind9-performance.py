@@ -14,6 +14,7 @@ import tempfile
 parser = argparse.ArgumentParser()
 parser.add_argument('--arch', choices=['amd64', 'arm64'], required=True)
 parser.add_argument('--out', type=pathlib.Path, required=True)
+parser.add_argument('--baseline-ref', default='cce7c27')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
 out = args.out.resolve()
@@ -25,7 +26,7 @@ hook = next(ast.literal_eval(node.value) for node in ast.walk(tree)
             if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'hook' for t in node.targets))
 with tempfile.TemporaryDirectory(prefix='gdns-performance-source-') as directory:
     base = pathlib.Path(directory).resolve()
-    archive = sp.Popen(['git', 'archive', 'cce7c27'], cwd=root, stdout=sp.PIPE)
+    archive = sp.Popen(['git', 'archive', args.baseline_ref], cwd=root, stdout=sp.PIPE)
     sp.run(['tar', '-x', '-C', str(base)], stdin=archive.stdout, check=True)
     archive.stdout.close()
     if archive.wait():
@@ -47,10 +48,12 @@ with tempfile.TemporaryDirectory(prefix='gdns-performance-source-') as directory
         overlay.unlink()
         patched.unlink()
 source = {
+    'baseline_commit': sp.check_output(['git', 'rev-parse', args.baseline_ref], cwd=root, text=True).strip(),
     'candidate_commit': sp.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
     'candidate_diff': sp.check_output(['git', 'diff'], cwd=root, text=True),
     'go_version': sp.check_output(['go', 'version'], text=True).strip(),
 }
+source['candidate_untracked_sources'] = {name: (root / name).read_text() for name in sp.check_output(['git', 'ls-files', '--others', '--exclude-standard', 'cmd', 'internal'], cwd=root, text=True).splitlines() if name.endswith('.go')}
 (out / 'source.json').write_text(json.dumps(source, indent=2) + '\n')
 shutil.copy2(runner, out / runner.name)
 print(out)

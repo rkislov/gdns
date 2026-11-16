@@ -1,0 +1,30 @@
+=== RUN   TestUDPBatchAddressesTSIGAndConcurrency
+=== RUN   TestUDPBatchAddressesTSIGAndConcurrency/127.0.0.1:0
+=== RUN   TestUDPBatchAddressesTSIGAndConcurrency/0.0.0.0:0
+=== RUN   TestUDPBatchAddressesTSIGAndConcurrency/[::1]:0
+=== RUN   TestUDPBatchAddressesTSIGAndConcurrency/[::]:0
+--- PASS: TestUDPBatchAddressesTSIGAndConcurrency (0.06s)
+    --- PASS: TestUDPBatchAddressesTSIGAndConcurrency/127.0.0.1:0 (0.01s)
+    --- PASS: TestUDPBatchAddressesTSIGAndConcurrency/0.0.0.0:0 (0.02s)
+    --- PASS: TestUDPBatchAddressesTSIGAndConcurrency/[::1]:0 (0.01s)
+    --- PASS: TestUDPBatchAddressesTSIGAndConcurrency/[::]:0 (0.02s)
+=== RUN   TestUDPBatchDeadlineAndCloseWithBufferedPackets
+--- PASS: TestUDPBatchDeadlineAndCloseWithBufferedPackets (0.00s)
+=== RUN   TestUDPReplyControlMatchesSourceOnly
+--- PASS: TestUDPReplyControlMatchesSourceOnly (0.00s)
+=== RUN   TestUDPSendBatchDualStack
+--- PASS: TestUDPSendBatchDualStack (0.00s)
+=== RUN   TestUDPBatchConcurrentWriteClose
+--- PASS: TestUDPBatchConcurrentWriteClose (0.00s)
+=== RUN   TestUDPBatchPartialSendDoesNotDropOtherPeers
+--- PASS: TestUDPBatchPartialSendDoesNotDropOtherPeers (0.00s)
+=== RUN   TestUDPReceiveBuffer
+    udp_buffer_linux_test.go:44: workers=1 actual SO_RCVBUF=2097152 (kernel may cap request)
+    udp_buffer_linux_test.go:44: workers=2 actual SO_RCVBUF=2097152 (kernel may cap request)
+    udp_buffer_linux_test.go:44: workers=2 actual SO_RCVBUF=2097152 (kernel may cap request)
+--- PASS: TestUDPReceiveBuffer (0.00s)
+=== RUN   TestUDPWorkerGroup
+--- PASS: TestUDPWorkerGroup (0.00s)
+=== RUN   TestUDPBindFailureDoesNotTakeOverExistingListener
+--- PASS: TestUDPBindFailureDoesNotTakeOverExistingListener (0.00s)
+PASS

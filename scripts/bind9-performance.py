@@ -8,14 +8,17 @@ Acceptance load fixed before measurements: warm UDP, 15000 QPS, 8 seconds,
 import argparse, json, pathlib, subprocess as sp, tempfile, time, os, statistics, hashlib, shutil
 p = argparse.ArgumentParser()
 p.add_argument('--out', required=True)
-p.add_argument('--quick', action='store_true')
-p.add_argument('--profile-only', action='store_true')
+modes = p.add_mutually_exclusive_group()
+modes.add_argument('--quick', action='store_true')
+modes.add_argument('--control-only', action='store_true')
+modes.add_argument('--profile-only', action='store_true')
 p.add_argument('--arch', default='arm64')
 p.add_argument('--server-cpus', default='2,3')
 p.add_argument('--client-cpus', default='0,1')
 p.add_argument('--auth-cpus', default='4,5')
 p.add_argument('--workers', type=int, default=2)
 p.add_argument('--prebuilt-dir')
+p.add_argument('--pacing', choices=['spin','sleep'], default='spin')
 a = p.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
 out = pathlib.Path(a.out).resolve()
@@ -93,9 +96,12 @@ def cpu():
     return int(dict((line.split() for line in docker('exec', server, 'cat', '/sys/fs/cgroup/cpu.stat').splitlines()))['usage_usec'])
 
 def load(rate, seconds, transport, mode, prime=False):
-    return docker('exec', client, '/lab/load', '-server', prefix + '11:53', '-rate', str(rate), '-seconds', str(seconds), '-transport', transport, '-mode', mode, *(['-prime'] if prime else []))
+    return docker('exec', client, '/lab/load', '-pacing', a.pacing, '-server', prefix + '11:53', '-rate', str(rate), '-seconds', str(seconds), '-transport', transport, '-mode', mode, *(['-prime'] if prime else []))
 rows = []
-metadata = {'baseline_commit': 'cce7c27', 'candidate_commit': source_metadata['candidate_commit'] if source_metadata else run(['git', 'rev-parse', 'HEAD'], cwd=root), 'candidate_diff': source_metadata['candidate_diff'] if source_metadata else run(['git', 'diff'], cwd=root), 'image': json.loads(docker('image', 'inspect', image))[0]['Id'], 'architecture': 'linux/' + a.arch, 'resolver_cpus': a.server_cpus, 'client_cpus': a.client_cpus, 'auth_cpus': a.auth_cpus, 'workers': a.workers, 'memory_limit': '512m', 'acceptance_qps': 15000, 'ttl': 3600, 'working_set': 512, 'log': False, 'dnssec': False, 'lab': str(lab), 'go_version': source_metadata['go_version'] if source_metadata else run(['go', 'version']), 'docker_version': docker('version', '--format', '{{.Server.Version}}'), 'kernel': docker('info', '--format', '{{.KernelVersion}}')}
+metadata = {'baseline_commit': source_metadata.get('baseline_commit', 'cce7c27') if source_metadata else 'cce7c27', 'candidate_commit': source_metadata['candidate_commit'] if source_metadata else run(['git', 'rev-parse', 'HEAD'], cwd=root), 'candidate_diff': source_metadata['candidate_diff'] if source_metadata else run(['git', 'diff'], cwd=root), 'image': json.loads(docker('image', 'inspect', image))[0]['Id'], 'architecture': 'linux/' + a.arch, 'resolver_cpus': a.server_cpus, 'client_cpus': a.client_cpus, 'auth_cpus': a.auth_cpus, 'workers': a.workers, 'memory_limit': '512m', 'acceptance_qps': 15000, 'ttl': 3600, 'working_set': 512, 'log': False, 'dnssec': False, 'lab': str(lab), 'go_version': source_metadata['go_version'] if source_metadata else run(['go', 'version']), 'docker_version': docker('version', '--format', '{{.Server.Version}}'), 'kernel': docker('info', '--format', '{{.KernelVersion}}')}
+if source_metadata and 'candidate_untracked_sources' in source_metadata:
+    metadata['candidate_untracked_sources'] = source_metadata['candidate_untracked_sources']
+metadata['pacing'] = a.pacing
 metadata['binary_sha256'] = {name: hashlib.sha256((lab / name).read_bytes()).hexdigest() for name in ['baseline-bin', 'candidate', 'load']}
 (out / 'metadata.json').write_text(json.dumps(metadata, indent=2))
 docker('network', 'create', '--internal', '--subnet', prefix + '0/24', network)
@@ -105,6 +111,8 @@ try:
     time.sleep(1)
     (out / 'bind-version.txt').write_text(docker('exec', auth, 'named', '-V'))
     scenarios = [('udp', 'warm', 15000, 5, 8), ('udp', 'warm', 5000, 3, 8), ('udp', 'warm', 30000, 3, 8), ('tcp', 'warm', 5000, 3, 5), ('udp', 'miss', 1000, 3, 5), ('udp', 'mixed', 5000, 3, 5)]
+    if a.control_only:
+        scenarios = scenarios[:1]
     if a.profile_only:
         for impl in ['baseline', 'candidate']:
             remove(server)
@@ -175,6 +183,13 @@ control = [r for r in rows if r['transport'] == 'udp' and r['mode'] == 'warm' an
 medians = {impl: statistics.median((r['p95_ms'] for r in control if r['impl'] == impl)) for impl in ['bind', 'baseline', 'candidate']}
 errors = {impl: sum((r['errors'] + r['timeouts'] for r in control if r['impl'] == impl)) for impl in medians}
 qps = {impl: statistics.median((r['qps'] for r in control if r['impl'] == impl)) for impl in medians}
-summary = {'p95_medians_ms': medians, 'candidate_bind_ratio': medians['candidate'] / medians['bind'], 'errors': errors, 'qps_medians': qps, 'acceptance_met': medians['candidate'] <= 0.8 * medians['bind'] and errors['candidate'] <= errors['bind'] and (qps['candidate'] >= 0.99 * qps['bind'])}
+checks = {
+    'p95_twenty_percent_better_than_bind': medians['candidate'] <= 0.8 * medians['bind'],
+    'p95_better_than_baseline': medians['candidate'] < medians['baseline'],
+    'loss_not_worse': errors['candidate'] <= min(errors['bind'], errors['baseline']),
+    'comparable_goodput': min(qps.values()) >= 0.99 * 15000 and min(qps.values()) >= 0.99 * max(qps.values()),
+    'full_control_repeats': all(sum(r['impl'] == impl for r in control) >= 5 for impl in medians),
+}
+summary = {'p95_medians_ms': medians, 'candidate_bind_ratio': medians['candidate'] / medians['bind'], 'errors': errors, 'qps_medians': qps, 'acceptance_checks': checks, 'acceptance_met': all(checks.values())}
 (out / 'summary.json').write_text(json.dumps(summary, indent=2))
 print(json.dumps(summary))

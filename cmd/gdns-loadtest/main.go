@@ -42,6 +42,11 @@ func percentile(v []float64, p float64) float64 {
 	sort.Float64s(v)
 	return v[int(float64(len(v)-1)*p)]
 }
+func spinUntil(deadline time.Time) {
+	for time.Now().Before(deadline) {
+	}
+}
+
 func main() {
 	addr := flag.String("server", "127.0.0.1:53", "")
 	rate := flag.Int("rate", 5000, "")
@@ -50,6 +55,7 @@ func main() {
 	mode := flag.String("mode", "warm", "warm/miss/mixed")
 	prime := flag.Bool("prime", false, "")
 	check := flag.Bool("check", false, "")
+	pacing := flag.String("pacing", "spin", "spin or Linux high-resolution sleep")
 	flag.Parse()
 	if *check {
 		checkAnswers(*addr, *transport)
@@ -128,6 +134,11 @@ func main() {
 			}
 		}()
 	}
+	pace, closePacer, err := packetPacer(*pacing)
+	if err != nil {
+		panic(err)
+	}
+	defer closePacer()
 	start := time.Now().Add(50 * time.Millisecond)
 	nonce := start.UnixNano()
 	time.Sleep(time.Until(start))
@@ -150,9 +161,8 @@ func main() {
 			binary.BigEndian.PutUint16(head, uint16(len(data)))
 			data = append(head, data...)
 		}
-		// Dedicated client CPUs: busy pacing avoids millisecond timer batching.
-		for time.Now().Before(scheduled) {
-		}
+		// The same absolute schedule is used by both pacing implementations.
+		pace(scheduled)
 		w := workers[i%count]
 		sent := time.Now()
 		w.mu.Lock()
@@ -198,7 +208,7 @@ func main() {
 		}
 	}
 	elapsed := max(float64(*seconds), all.Last.Sub(start).Seconds())
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
 }
 
 func checkAnswers(addr, network string) {
