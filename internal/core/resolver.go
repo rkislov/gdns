@@ -12,7 +12,6 @@ import (
 	"golang.org/x/sync/singleflight"
 	"net"
 	"net/netip"
-	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -113,7 +112,8 @@ func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) 
 	ip := ClientIP(remote)
 	r := e.AnswerAs(context.Background(), q, ip, transport)
 
-	if _, ok := w.RemoteAddr().(*net.UDPAddr); ok {
+	_, udp := remote.(*net.UDPAddr)
+	if udp {
 		size := uint16(512)
 		if opt := q.IsEdns0(); opt != nil {
 			size = opt.UDPSize()
@@ -132,8 +132,30 @@ func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) 
 			return
 		}
 		r.SetTsig(t.Hdr.Name, t.Algorithm, t.Fudge, time.Now().Unix())
+		_ = w.WriteMsg(r)
+		return
+	}
+	if udp {
+		_ = writeUDPReply(w, r)
+		return
 	}
 	_ = w.WriteMsg(r)
+}
+
+// Keep the common UDP packing buffer across requests. Write completes before
+// the buffer is returned; TSIG responses still use the library's signing path.
+// Oversized PackBuffer results are never retained in the pool.
+var udpReplyBuffers = sync.Pool{New: func() any { return new([1232]byte) }}
+
+func writeUDPReply(w dns.ResponseWriter, m *dns.Msg) error {
+	buffer := udpReplyBuffers.Get().(*[1232]byte)
+	defer udpReplyBuffers.Put(buffer)
+	wire, err := m.PackBuffer(buffer[:])
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(wire)
+	return err
 }
 
 // Answer is the common entry point for UDP, TCP, DoH and DoT accounting and policy.
@@ -283,7 +305,7 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 		e.Hits.Add(1)
 		return clientResponse(cached, q), "CACHE"
 	}
-	value, err, _ := st.flights.Do(key, func() (any, error) {
+	value, err, _ := st.flights.Do(key.flightKey(), func() (any, error) {
 		if cached := st.cache.getReply(key, q.IsEdns0() != nil); cached != nil {
 			return cached, nil
 		}
@@ -389,11 +411,8 @@ func (e *Engine) Resolve(ctx context.Context, q *dns.Msg, ip netip.Addr) (respon
 	}
 	return clientResponse(answer, q), dns.RcodeToString[answer.Rcode]
 }
-func responseCacheKey(name string, typ uint16, do, cd bool, z *compiledZone) string {
-	if z == nil {
-		return name + "/" + strconv.Itoa(int(typ)) + "/" + strconv.FormatBool(do) + "/" + strconv.FormatBool(cd)
-	}
-	return name + "/" + strconv.Itoa(int(typ)) + "/" + strconv.FormatBool(do) + "/" + strconv.FormatBool(cd) + "/view/" + z.viewKey
+func responseCacheKey(name string, typ uint16, do, cd bool, z *compiledZone) cacheKey {
+	return cacheKey{name: name, zone: z, qtype: typ, do: do, cd: cd}
 }
 
 type replyWithQuestion struct {

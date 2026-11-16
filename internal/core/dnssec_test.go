@@ -116,8 +116,8 @@ func TestSecureCacheRechecksSignaturePeriod(t *testing.T) {
 	a, _ := dns.NewRR("example. 300 IN A 192.0.2.1")
 	sig := &dns.RRSIG{Hdr: dns.RR_Header{Name: "example.", Rrtype: dns.TypeRRSIG, Class: 1, Ttl: 300}, Expiration: uint32(time.Now().Add(-time.Minute).Unix()), Inception: uint32(time.Now().Add(-time.Hour).Unix())}
 	m.Answer = []dns.RR{a, sig}
-	c.put("secure", m)
-	if c.get("secure") != nil {
+	c.put(cacheKey{name: "secure"}, m)
+	if c.get(cacheKey{name: "secure"}) != nil {
 		t.Fatal("expired signature served from secure cache")
 	}
 }

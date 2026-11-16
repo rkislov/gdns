@@ -80,8 +80,8 @@ func TestCachedEDNSStillRejectsInvalidSignatureTimes(t *testing.T) {
 			start, end = time.Now().Add(time.Hour), time.Now().Add(2*time.Hour)
 		}
 		m.Answer = []dns.RR{a, &dns.RRSIG{Hdr: dns.RR_Header{Name: "example.", Rrtype: dns.TypeRRSIG, Class: 1, Ttl: 300}, Inception: uint32(start.Unix()), Expiration: uint32(end.Unix())}}
-		c.put("secure", m)
-		if c.getReply("secure", true) != nil {
+		c.put(cacheKey{name: "secure"}, m)
+		if c.getReply(cacheKey{name: "secure"}, true) != nil {
 			t.Fatal("invalid secure entry served", future)
 		}
 	}

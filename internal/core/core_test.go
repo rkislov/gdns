@@ -127,22 +127,22 @@ func TestCache(t *testing.T) {
 	m.SetReply(q)
 	rr, _ := dns.NewRR("example. 60 IN A 192.0.2.1")
 	m.Answer = []dns.RR{rr}
-	c.put("view-a", m)
-	a := c.get("view-a")
+	c.put(cacheKey{name: "view-a"}, m)
+	a := c.get(cacheKey{name: "view-a"})
 	a.Answer[0].Header().Ttl = 0
-	if c.get("view-a").Answer[0].Header().Ttl != 60 {
+	if c.get(cacheKey{name: "view-a"}).Answer[0].Header().Ttl != 60 {
 		t.Fatal("shared cache mutation")
 	}
-	if c.get("view-b") != nil {
+	if c.get(cacheKey{name: "view-b"}) != nil {
 		t.Fatal("view leakage")
 	}
-	s := c.shard("view-a")
+	s := c.shard(cacheKey{name: "view-a"})
 	s.Lock()
-	v := s.items["view-a"]
+	v := s.items[cacheKey{name: "view-a"}]
 	v.at = time.Now().Add(-time.Minute)
-	s.items["view-a"] = v
+	s.items[cacheKey{name: "view-a"}] = v
 	s.Unlock()
-	if c.get("view-a") != nil {
+	if c.get(cacheKey{name: "view-a"}) != nil {
 		t.Fatal("expired record")
 	}
 }
@@ -266,7 +266,7 @@ func BenchmarkCacheHit(b *testing.B) {
 	m.SetReply(q)
 	rr, _ := dns.NewRR("example. 300 IN A 192.0.2.1")
 	m.Answer = []dns.RR{rr}
-	e.state.Load().cache.put("example./1/false/false", m)
+	e.state.Load().cache.put(responseCacheKey("example.", dns.TypeA, false, false, nil), m)
 	ip := netip.MustParseAddr("127.0.0.1")
 	b.ReportAllocs()
 	b.ResetTimer()

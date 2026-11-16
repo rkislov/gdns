@@ -4,11 +4,30 @@
 package core
 
 import (
-	"github.com/miekg/dns"
 	"hash/maphash"
+	"strconv"
 	"sync"
 	"time"
+
+	"github.com/miekg/dns"
 )
+
+type cacheKey struct {
+	name   string
+	zone   *compiledZone
+	qtype  uint16
+	do, cd bool
+}
+
+// singleflight uses a string key on misses. Cache lookups use the tuple
+// directly, so a hit doesn't have to format or allocate this string.
+func (k cacheKey) flightKey() string {
+	key := k.name + "/" + strconv.Itoa(int(k.qtype)) + "/" + strconv.FormatBool(k.do) + "/" + strconv.FormatBool(k.cd)
+	if k.zone != nil {
+		key += "/view/" + k.zone.viewKey
+	}
+	return key
+}
 
 type cacheEntry struct {
 	msg *dns.Msg
@@ -17,7 +36,7 @@ type cacheEntry struct {
 }
 type cacheShard struct {
 	sync.RWMutex
-	items    map[string]cacheEntry
+	items    map[cacheKey]cacheEntry
 	capacity int
 }
 type cache struct {
@@ -29,7 +48,7 @@ type cache struct {
 func newCache(limit int) *cache {
 	c := &cache{seed: maphash.MakeSeed(), limit: limit}
 	for i := range c.shards {
-		c.shards[i].items = map[string]cacheEntry{}
+		c.shards[i].items = map[cacheKey]cacheEntry{}
 		c.shards[i].capacity = limit / 64
 		if i < limit%64 {
 			c.shards[i].capacity++
@@ -37,7 +56,7 @@ func newCache(limit int) *cache {
 	}
 	return c
 }
-func (c *cache) shard(k string) *cacheShard { return &c.shards[maphash.String(c.seed, k)%64] }
+func (c *cache) shard(k cacheKey) *cacheShard { return &c.shards[maphash.Comparable(c.seed, k)%64] }
 
 // A cache hit owns its message, OPT and Additional slice in one allocation.
 // RR payloads still receive the library's deep copy before TTL adjustment.
@@ -47,8 +66,70 @@ type cachedReply struct {
 	extra [1]dns.RR
 }
 
-func (c *cache) get(k string) *dns.Msg { return c.getReply(k, false) }
-func (c *cache) getReply(k string, edns bool) *dns.Msg {
+type cachedAddressReply[T any] struct {
+	msg     dns.Msg
+	record  T
+	answer  [1]dns.RR
+	address [16]byte
+}
+
+type cachedAddressEDNSReply[T any] struct {
+	cachedAddressReply[T]
+	opt   dns.OPT
+	extra [1]dns.RR
+}
+
+func (r *cachedAddressReply[T]) init(message *dns.Msg, record dns.RR) *dns.Msg {
+	r.msg.MsgHdr, r.msg.Compress = message.MsgHdr, message.Compress
+	r.answer[0] = record
+	r.msg.Answer = r.answer[:]
+	return &r.msg
+}
+
+func addressReply[T any](edns bool) *cachedAddressReply[T] {
+	if !edns {
+		return new(cachedAddressReply[T])
+	}
+	reply := new(cachedAddressEDNSReply[T])
+	reply.opt.Hdr = dns.RR_Header{Name: ".", Rrtype: dns.TypeOPT, Class: 1232}
+	reply.extra[0] = &reply.opt
+	reply.msg.Extra = reply.extra[:]
+	return &reply.cachedAddressReply
+}
+
+// Cached records are immutable. A single address and its TTL fit in the
+// reply allocation, including private IP bytes and a per-client OPT.
+func copyCachedAddress(message *dns.Msg, age uint32, edns bool) *dns.Msg {
+	if len(message.Answer) != 1 || len(message.Ns) != 0 {
+		return nil
+	}
+	switch rr := message.Answer[0].(type) {
+	case *dns.A:
+		if len(rr.A) != 4 && len(rr.A) != 16 {
+			return nil
+		}
+		reply := addressReply[dns.A](edns)
+		reply.record = *rr
+		copy(reply.address[:], rr.A)
+		reply.record.A = reply.address[:len(rr.A)]
+		reply.record.Hdr.Ttl -= age
+		return reply.init(message, &reply.record)
+	case *dns.AAAA:
+		if len(rr.AAAA) != 16 {
+			return nil
+		}
+		reply := addressReply[dns.AAAA](edns)
+		reply.record = *rr
+		copy(reply.address[:], rr.AAAA)
+		reply.record.AAAA = reply.address[:]
+		reply.record.Hdr.Ttl -= age
+		return reply.init(message, &reply.record)
+	}
+	return nil
+}
+
+func (c *cache) get(k cacheKey) *dns.Msg { return c.getReply(k, false) }
+func (c *cache) getReply(k cacheKey, edns bool) *dns.Msg {
 	s := c.shard(k)
 	s.RLock()
 	e, ok := s.items[k]
@@ -74,6 +155,9 @@ func (c *cache) getReply(k string, edns bool) *dns.Msg {
 			}
 		}
 	}
+	if m := copyCachedAddress(e.msg, age, edns); m != nil {
+		return m
+	}
 	var m *dns.Msg
 	if edns {
 		reply := new(cachedReply)
@@ -97,7 +181,7 @@ func (c *cache) getReply(k string, edns bool) *dns.Msg {
 	}
 	return m
 }
-func (c *cache) put(k string, m *dns.Msg) {
+func (c *cache) put(k cacheKey, m *dns.Msg) {
 	if c.limit == 0 || (m.Rcode != dns.RcodeSuccess && m.Rcode != dns.RcodeNameError) || m.Truncated || (len(m.Answer) == 0 && !hasSOA(m.Ns)) {
 		return
 	}

@@ -47,7 +47,7 @@ func BenchmarkAnswerFastPath(b *testing.B) {
 						m.AuthenticatedData = true
 						m.Answer = append(m.Answer, &dns.RRSIG{Hdr: dns.RR_Header{Name: name, Rrtype: dns.TypeRRSIG, Class: 1, Ttl: 3600}, Expiration: uint32(time.Now().Add(time.Hour).Unix()), Inception: uint32(time.Now().Add(-time.Hour).Unix())})
 					}
-					e.state.Load().cache.put(fmt.Sprintf("%s/1/%t/false", name, kind == "SecureCache"), m)
+					e.state.Load().cache.put(responseCacheKey(name, dns.TypeA, kind == "SecureCache", false, nil), m)
 				}
 				ip := netip.MustParseAddr("127.0.0.1")
 				b.ReportAllocs()
