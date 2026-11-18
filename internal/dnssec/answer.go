@@ -17,7 +17,10 @@ func (r *validationRun) answer(question dns.Question, m *dns.Msg) (bool, error) 
 	if err := r.preflight(m); err != nil {
 		return false, err
 	}
-	original := m.Copy()
+	// Validate already owns a deep copy. Keep section headers for the alias walk;
+	// records are read-only until finish, after the walk has completed.
+	originalValue := *m
+	original := &originalValue
 	name := canonical(question.Name)
 	secure := true
 	seen := map[string]bool{}
@@ -193,6 +196,11 @@ func (r *validationRun) finish(m, original *dns.Msg, secure bool, until time.Tim
 	// Retain only the authority records that were authenticated on the actual
 	// resolution path. The original Additional section is never trusted.
 	deduplicate := func(records []dns.RR) []dns.RR {
+		// Distinct RR types cannot be duplicate records. The usual positive
+		// response is one address and its signature; avoid text serialization.
+		if len(records) < 2 || len(records) == 2 && records[0].Header().Rrtype != records[1].Header().Rrtype {
+			return records
+		}
 		out := []dns.RR{}
 		seen := map[string]bool{}
 		for _, rr := range records {

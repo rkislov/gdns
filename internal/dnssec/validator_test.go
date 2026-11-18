@@ -20,7 +20,7 @@ type signer struct {
 	private crypto.Signer
 }
 
-func newSigner(t *testing.T, name string) signer {
+func newSigner(t testing.TB, name string) signer {
 	t.Helper()
 	key := &dns.DNSKEY{Hdr: dns.RR_Header{Name: name, Rrtype: dns.TypeDNSKEY, Class: dns.ClassINET, Ttl: 300}, Flags: 257, Protocol: 3, Algorithm: dns.ECDSAP256SHA256}
 	p, err := key.Generate(256)
@@ -29,7 +29,7 @@ func newSigner(t *testing.T, name string) signer {
 	}
 	return signer{key, p.(crypto.Signer)}
 }
-func (s signer) sign(t *testing.T, rrs []dns.RR) *dns.RRSIG {
+func (s signer) sign(t testing.TB, rrs []dns.RR) *dns.RRSIG {
 	t.Helper()
 	sig := &dns.RRSIG{Hdr: dns.RR_Header{Name: rrs[0].Header().Name, Rrtype: dns.TypeRRSIG, Class: dns.ClassINET, Ttl: 300}, TypeCovered: rrs[0].Header().Rrtype, Algorithm: s.key.Algorithm, Labels: uint8(dns.CountLabel(rrs[0].Header().Name)), OrigTtl: rrs[0].Header().Ttl, Expiration: uint32(time.Now().Add(time.Hour).Unix()), Inception: uint32(time.Now().Add(-time.Hour).Unix()), KeyTag: s.key.KeyTag(), SignerName: s.key.Hdr.Name}
 	if strings.HasPrefix(sig.Hdr.Name, "*.") {
@@ -40,7 +40,7 @@ func (s signer) sign(t *testing.T, rrs []dns.RR) *dns.RRSIG {
 	}
 	return sig
 }
-func rr(t *testing.T, line string) dns.RR {
+func rr(t testing.TB, line string) dns.RR {
 	t.Helper()
 	r, e := dns.NewRR(line)
 	if e != nil {
@@ -59,7 +59,7 @@ func reply(name string, typ uint16, answer, ns []dns.RR, rcode int) *dns.Msg {
 	m.Ns = ns
 	return m
 }
-func signed(t *testing.T, s signer, records ...dns.RR) []dns.RR {
+func signed(t testing.TB, s signer, records ...dns.RR) []dns.RR {
 	return append(append([]dns.RR{}, records...), s.sign(t, records))
 }
 
@@ -67,11 +67,11 @@ type hierarchy struct {
 	root, parent, child signer
 	messages            map[string]*dns.Msg
 	config              Config
-	t                   *testing.T
+	t                   testing.TB
 }
 
 func messageKey(n string, typ uint16) string { return canonical(n) + fmt.Sprint(typ) }
-func fixture(t *testing.T) *hierarchy {
+func fixture(t testing.TB) *hierarchy {
 	h := &hierarchy{root: newSigner(t, "."), parent: newSigner(t, "test."), child: newSigner(t, "secure.test."), messages: map[string]*dns.Msg{}, t: t}
 	h.config = DefaultConfig()
 	h.config.TrustAnchors = []string{h.root.key.ToDS(dns.SHA256).String()}

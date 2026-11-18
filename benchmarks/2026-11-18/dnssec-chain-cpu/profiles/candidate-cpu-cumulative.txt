@@ -1,0 +1,34 @@
+File: candidate-profile
+Build ID: 951bd08f8011189f6cce7db5eb70b42e841c8b0d
+Type: cpu
+Time: 2026-11-18 07:19:34 MSK
+Duration: 8s, Total samples = 7.19s (89.87%)
+Showing nodes accounting for 2.21s, 30.74% of 7.19s total
+Dropped 375 nodes (cum <= 0.04s)
+Showing top 25 nodes out of 265
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%      5.88s 81.78%  github.com/miekg/dns.(*Server).serveUDPPacket
+     0.02s  0.28%  0.28%      5.84s 81.22%  github.com/miekg/dns.(*Server).serveDNS
+     0.01s  0.14%  0.42%      5.55s 77.19%  gdns/internal/transport.udpHandler.func1
+         0     0%  0.42%      5.55s 77.19%  github.com/miekg/dns.HandlerFunc.ServeDNS
+         0     0%  0.42%      5.52s 76.77%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%  0.42%      5.52s 76.77%  gdns/internal/core.(*Engine).ServeDNSAs
+     0.01s  0.14%  0.56%      4.59s 63.84%  gdns/internal/core.(*Engine).AnswerAs
+     0.01s  0.14%   0.7%      4.52s 62.87%  gdns/internal/core.(*Engine).Resolve
+         0     0%   0.7%      4.27s 59.39%  golang.org/x/sync/singleflight.(*Group).Do
+         0     0%   0.7%      4.25s 59.11%  golang.org/x/sync/singleflight.(*Group).doCall
+     0.01s  0.14%  0.83%      4.22s 58.69%  gdns/internal/core.(*Engine).Resolve.func2
+         0     0%  0.83%      4.22s 58.69%  golang.org/x/sync/singleflight.(*Group).doCall.func2
+         0     0%  0.83%      3.22s 44.78%  gdns/internal/dnssec.(*Validator).Validate
+         0     0%  0.83%      3.18s 44.23%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%  0.83%      2.29s 31.85%  gdns/internal/dnssec.(*validationRun).state
+         0     0%  0.83%      2.25s 31.29%  gdns/internal/dnssec.(*validationRun).state.func1
+         0     0%  0.83%      2.22s 30.88%  gdns/internal/dnssec.(*validationRun).buildState
+     2.14s 29.76% 30.60%      2.14s 29.76%  internal/runtime/syscall/linux.Syscall6
+     0.01s  0.14% 30.74%      1.94s 26.98%  gdns/internal/core.exchange
+         0     0% 30.74%      1.94s 26.98%  gdns/internal/core.lookup
+         0     0% 30.74%      1.93s 26.84%  github.com/miekg/dns.(*Client).ExchangeContext
+         0     0% 30.74%      1.84s 25.59%  syscall.RawSyscall6
+         0     0% 30.74%      1.81s 25.17%  syscall.Syscall
+         0     0% 30.74%      1.80s 25.03%  gdns/internal/dnssec.(*validationRun).verify
+         0     0% 30.74%      1.80s 25.03%  github.com/semihalev/sdns/middleware/resolver/dnssec.VerifyRRSIGWithWork (inline)

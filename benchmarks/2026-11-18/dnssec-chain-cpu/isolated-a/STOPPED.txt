@@ -1,0 +1,1 @@
+Stopped with SIGINT after observing candidate timeouts; rejected configuration. The interrupted trial is not present in raw.json. Second series was not started. Runner finally block stopped fixture and resolver.

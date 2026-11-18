@@ -1,0 +1,1 @@
+ok  	gdns/cmd/gdns-loadtest	2.222s

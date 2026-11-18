@@ -1,0 +1,35 @@
+{
+  "baseline_commit": "b20fa9c08242a22a1dc28b3988c8ca5151fbbe00",
+  "candidate_source": {
+    "candidate_tags": "gdns_udp_addrport,gdns_dnssec_cpu",
+    "baseline_tags": "gdns_udp_addrport",
+    "baseline_commit": "b20fa9c08242a22a1dc28b3988c8ca5151fbbe00",
+    "candidate_commit": "b20fa9c08242a22a1dc28b3988c8ca5151fbbe00",
+    "candidate_diff": "diff --git a/internal/dnssec/validator.go b/internal/dnssec/validator.go\nindex a7e20f8..20eee0b 100644\n--- a/internal/dnssec/validator.go\n+++ b/internal/dnssec/validator.go\n@@ -72,7 +72,7 @@ func New(c Config) (*Validator, error) {\n \tif err != nil {\n \t\treturn nil, err\n \t}\n-\tv := &Validator{config: c, anchors: map[string][]dns.RR{}, cache: map[string]zoneState{}, crypto: proof.NewCryptoLimiter(32)}\n+\tv := &Validator{config: c, anchors: map[string][]dns.RR{}, cache: map[string]zoneState{}, crypto: proof.NewCryptoLimiter(cryptoConcurrency())}\n \tfor _, line := range c.TrustAnchors {\n \t\trr, _ := dns.NewRR(line)\n \t\tif key, ok := rr.(*dns.DNSKEY); ok {\n",
+    "go_version": "go version go1.27.0 darwin/arm64",
+    "candidate_untracked_sources": {
+      "internal/dnssec/cpu_default.go": "//go:build !gdns_dnssec_cpu\n\npackage dnssec\n\nfunc cryptoConcurrency() uint32 { return 32 }\n",
+      "internal/dnssec/cpu_experiment.go": "//go:build gdns_dnssec_cpu\n\npackage dnssec\n\nimport \"runtime\"\n\n// Leave scheduling headroom for cached answers and socket processing.\nfunc cryptoConcurrency() uint32 { return uint32(max(1, runtime.GOMAXPROCS(0)/2)) }\n"
+    }
+  },
+  "resolver_cpus": "0,1",
+  "client_cpus": "2",
+  "fixture_cpus": "0",
+  "workers": 2,
+  "dnssec": true,
+  "request_do": false,
+  "request_ad": true,
+  "fixture_shares_resolver_cpu": true,
+  "bind_comparison": false,
+  "profiling": false,
+  "runner_sha256": "5a6c643b493f2cf7945b2c09888bb8075d1783c5ae62bf14b22fc009d6ccd3ca",
+  "requested_mode": "mixed",
+  "repeats": 5,
+  "seconds": 10,
+  "sha256": {
+    "baseline-bin": "279ab6054c3ceb2fecde85b02266754d1d45b1195f313cd083cc66b0284ffa55",
+    "candidate": "587969489a9ec00ee4a0eba87bbabfd4454a5d5f619a1bf328d6d4a1efe9d4e7",
+    "load": "d313811c4b8ec320b15b50db9475ca850fdad3198599f47bc8bd81b11bcc5121",
+    "fixture": "433577197779464fc2a7f6cb27d64e2cfabb37054a116ba2f8f261f28b94eb12"
+  }
+}

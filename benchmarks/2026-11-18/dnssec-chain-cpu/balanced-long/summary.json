@@ -1,0 +1,12 @@
+{
+  "mixed": {
+    "baseline-bin": {
+      "p95_ms": 11.91747,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 8.668679,
+      "losses": 0
+    }
+  }
+}

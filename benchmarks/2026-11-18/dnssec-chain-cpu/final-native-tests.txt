@@ -1,0 +1,111 @@
+=== RUN   TestConfigAndIANA
+--- PASS: TestConfigAndIANA (0.00s)
+=== RUN   TestConcurrentValidationOwnsAnswerRecords
+--- PASS: TestConcurrentValidationOwnsAnswerRecords (0.00s)
+=== RUN   TestFinishStillRemovesSameTypeDuplicates
+--- PASS: TestFinishStillRemovesSameTypeDuplicates (0.00s)
+=== RUN   TestInternalDSProofAuthenticatesDenialOnly
+--- PASS: TestInternalDSProofAuthenticatesDenialOnly (0.00s)
+=== RUN   TestInternalDSProofStillRejectsInvalidDenial
+=== RUN   TestInternalDSProofStillRejectsInvalidDenial/tampered
+=== RUN   TestInternalDSProofStillRejectsInvalidDenial/expired
+=== RUN   TestInternalDSProofStillRejectsInvalidDenial/absent
+--- PASS: TestInternalDSProofStillRejectsInvalidDenial (0.01s)
+    --- PASS: TestInternalDSProofStillRejectsInvalidDenial/tampered (0.00s)
+    --- PASS: TestInternalDSProofStillRejectsInvalidDenial/expired (0.00s)
+    --- PASS: TestInternalDSProofStillRejectsInvalidDenial/absent (0.00s)
+=== RUN   TestClientNegativeAnswerStillAuthenticatesSOA
+--- PASS: TestClientNegativeAnswerStillAuthenticatesSOA (0.00s)
+=== RUN   TestInternalDSNSEC3ProofAuthenticity
+--- PASS: TestInternalDSNSEC3ProofAuthenticity (0.01s)
+=== RUN   TestRFC5011AddHoldDownAndRestart
+--- PASS: TestRFC5011AddHoldDownAndRestart (0.00s)
+=== RUN   TestRFC5011AbsenceResetsCandidate
+--- PASS: TestRFC5011AbsenceResetsCandidate (0.00s)
+=== RUN   TestRFC5011SelfSignedRevocationAndPermanentTombstone
+--- PASS: TestRFC5011SelfSignedRevocationAndPermanentTombstone (0.00s)
+=== RUN   TestRFC5011RevocationOnlyCancelsCompromisedIntroduction
+--- PASS: TestRFC5011RevocationOnlyCancelsCompromisedIntroduction (0.00s)
+=== RUN   TestRFC5011OriginalIntroducerRevocationRestartsTimer
+--- PASS: TestRFC5011OriginalIntroducerRevocationRestartsTimer (0.00s)
+=== RUN   TestRFC5011RefreshIntervals
+--- PASS: TestRFC5011RefreshIntervals (0.00s)
+=== RUN   TestRFC5011ManagerDurabilityRetryAndClock
+--- PASS: TestRFC5011ManagerDurabilityRetryAndClock (0.00s)
+=== RUN   TestRFC5011UnauthenticatedRevocationDoesNotCountAsSuccess
+--- PASS: TestRFC5011UnauthenticatedRevocationDoesNotCountAsSuccess (0.00s)
+=== RUN   TestRFC5011FailedProbeIsDurableAndIntervalSettingApplies
+--- PASS: TestRFC5011FailedProbeIsDurableAndIntervalSettingApplies (0.00s)
+=== RUN   TestRFC5011RejectsBogusRootObservations
+=== RUN   TestRFC5011RejectsBogusRootObservations/tamper
+=== RUN   TestRFC5011RejectsBogusRootObservations/unsigned-ad
+=== RUN   TestRFC5011RejectsBogusRootObservations/expired
+=== RUN   TestRFC5011RejectsBogusRootObservations/future
+--- PASS: TestRFC5011RejectsBogusRootObservations (0.00s)
+    --- PASS: TestRFC5011RejectsBogusRootObservations/tamper (0.00s)
+    --- PASS: TestRFC5011RejectsBogusRootObservations/unsigned-ad (0.00s)
+    --- PASS: TestRFC5011RejectsBogusRootObservations/expired (0.00s)
+    --- PASS: TestRFC5011RejectsBogusRootObservations/future (0.00s)
+=== RUN   TestRFC5011InterruptedProbeDoesNotRestoreUncertainTrust
+--- PASS: TestRFC5011InterruptedProbeDoesNotRestoreUncertainTrust (0.00s)
+=== RUN   TestSecureChainAndCache
+--- PASS: TestSecureChainAndCache (0.00s)
+=== RUN   TestBogusSignaturesAndChain
+=== RUN   TestBogusSignaturesAndChain/tamper
+=== RUN   TestBogusSignaturesAndChain/missing-signature
+=== RUN   TestBogusSignaturesAndChain/wrong-ds
+=== RUN   TestBogusSignaturesAndChain/expired
+=== RUN   TestBogusSignaturesAndChain/future
+=== RUN   TestBogusSignaturesAndChain/rogue-key
+=== RUN   TestBogusSignaturesAndChain/missing-dnskey
+--- PASS: TestBogusSignaturesAndChain (0.01s)
+    --- PASS: TestBogusSignaturesAndChain/tamper (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/missing-signature (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/wrong-ds (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/expired (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/future (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/rogue-key (0.00s)
+    --- PASS: TestBogusSignaturesAndChain/missing-dnskey (0.00s)
+=== RUN   TestUnsignedDelegationAndStrippedDS
+=== RUN   TestUnsignedDelegationAndStrippedDS/unsigned
+=== RUN   TestUnsignedDelegationAndStrippedDS/stripped-ds
+=== RUN   TestUnsignedDelegationAndStrippedDS/unsupported-ds
+--- PASS: TestUnsignedDelegationAndStrippedDS (0.01s)
+    --- PASS: TestUnsignedDelegationAndStrippedDS/unsigned (0.00s)
+    --- PASS: TestUnsignedDelegationAndStrippedDS/stripped-ds (0.00s)
+    --- PASS: TestUnsignedDelegationAndStrippedDS/unsupported-ds (0.00s)
+=== RUN   TestNSECNegativeAnswers
+--- PASS: TestNSECNegativeAnswers (0.01s)
+=== RUN   TestNSEC3NegativeAndLimits
+--- PASS: TestNSEC3NegativeAndLimits (0.01s)
+=== RUN   TestCustomExceptionIsExplicit
+--- PASS: TestCustomExceptionIsExplicit (0.00s)
+=== RUN   TestAliasesAndWildcard
+=== RUN   TestAliasesAndWildcard/cname
+=== RUN   TestAliasesAndWildcard/cname-negative
+=== RUN   TestAliasesAndWildcard/cname-unsigned-target
+=== RUN   TestAliasesAndWildcard/dname
+=== RUN   TestAliasesAndWildcard/bad-dname
+=== RUN   TestAliasesAndWildcard/wildcard
+=== RUN   TestAliasesAndWildcard/wildcard-missing-proof
+=== RUN   TestAliasesAndWildcard/unrelated-answer
+--- PASS: TestAliasesAndWildcard (0.02s)
+    --- PASS: TestAliasesAndWildcard/cname (0.00s)
+    --- PASS: TestAliasesAndWildcard/cname-negative (0.00s)
+    --- PASS: TestAliasesAndWildcard/cname-unsigned-target (0.00s)
+    --- PASS: TestAliasesAndWildcard/dname (0.00s)
+    --- PASS: TestAliasesAndWildcard/bad-dname (0.00s)
+    --- PASS: TestAliasesAndWildcard/wildcard (0.00s)
+    --- PASS: TestAliasesAndWildcard/wildcard-missing-proof (0.00s)
+    --- PASS: TestAliasesAndWildcard/unrelated-answer (0.00s)
+=== RUN   TestNSEC3OptOutDoesNotSetAD
+--- PASS: TestNSEC3OptOutDoesNotSetAD (0.00s)
+=== RUN   TestSignatureExpirationBoundsTTL
+--- PASS: TestSignatureExpirationBoundsTTL (0.00s)
+=== RUN   TestCrossZoneAliasAndKeyRollover
+=== RUN   TestCrossZoneAliasAndKeyRollover/unsigned-target=false
+=== RUN   TestCrossZoneAliasAndKeyRollover/unsigned-target=true
+--- PASS: TestCrossZoneAliasAndKeyRollover (0.01s)
+    --- PASS: TestCrossZoneAliasAndKeyRollover/unsigned-target=false (0.00s)
+    --- PASS: TestCrossZoneAliasAndKeyRollover/unsigned-target=true (0.00s)
+PASS

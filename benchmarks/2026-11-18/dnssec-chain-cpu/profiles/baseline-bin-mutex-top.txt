@@ -1,0 +1,48 @@
+File: baseline-profile
+Build ID: 36107a12760bb1b9f3ad670367d812bc6b56b76b
+Type: delay
+Time: 2026-11-18 07:19:25 MSK
+Showing nodes accounting for 76.64ms, 100% of 76.64ms total
+Dropped 129 nodes (cum <= 0.38ms)
+Showing top 40 nodes out of 59
+      flat  flat%   sum%        cum   cum%
+   48.70ms 63.55% 63.55%    48.70ms 63.55%  sync.(*Mutex).Unlock (partial-inline)
+   12.75ms 16.63% 80.18%    12.75ms 16.63%  runtime.unlock (inline)
+    7.79ms 10.17% 90.35%    52.58ms 68.61%  sync.(*RWMutex).Unlock
+    7.40ms  9.65%   100%     7.40ms  9.65%  sync.(*RWMutex).RUnlock (inline)
+         0     0%   100%    66.95ms 87.36%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    66.95ms 87.36%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%    66.30ms 86.51%  gdns/internal/core.(*Engine).Resolve.func2
+         0     0%   100%    66.97ms 87.38%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%   100%    66.97ms 87.38%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0%   100%     4.99ms  6.51%  gdns/internal/core.(*cache).put
+         0     0%   100%     4.99ms  6.51%  gdns/internal/core.(*cache).put.deferwrap1
+         0     0%   100%     2.57ms  3.35%  gdns/internal/core.exchange
+         0     0%   100%     2.57ms  3.35%  gdns/internal/core.lookup
+         0     0%   100%    58.56ms 76.41%  gdns/internal/dnssec.(*Validator).Validate
+         0     0%   100%    58.56ms 76.41%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%   100%    58.33ms 76.11%  gdns/internal/dnssec.(*validationRun).state
+         0     0%   100%    52.44ms 68.43%  gdns/internal/dnssec.(*validationRun).state.func1
+         0     0%   100%       67ms 87.42%  gdns/internal/transport.udpHandler.func1
+         0     0%   100%     2.45ms  3.20%  github.com/miekg/dns.(*Client).DialContext
+         0     0%   100%     2.57ms  3.35%  github.com/miekg/dns.(*Client).ExchangeContext
+         0     0%   100%     3.67ms  4.79%  github.com/miekg/dns.(*Server).ActivateAndServe
+         0     0%   100%       67ms 87.42%  github.com/miekg/dns.(*Server).serveDNS
+         0     0%   100%     3.67ms  4.79%  github.com/miekg/dns.(*Server).serveUDP
+         0     0%   100%    63.89ms 83.37%  github.com/miekg/dns.(*Server).serveUDP.gowrap2
+         0     0%   100%       67ms 87.42%  github.com/miekg/dns.(*Server).serveUDPPacket
+         0     0%   100%       67ms 87.42%  github.com/miekg/dns.HandlerFunc.ServeDNS
+         0     0%   100%    66.95ms 87.36%  golang.org/x/sync/singleflight.(*Group).Do
+         0     0%   100%    66.30ms 86.51%  golang.org/x/sync/singleflight.(*Group).doCall
+         0     0%   100%     2.78ms  3.62%  golang.org/x/sync/singleflight.(*Group).doCall.func1
+         0     0%   100%    66.30ms 86.51%  golang.org/x/sync/singleflight.(*Group).doCall.func2
+         0     0%   100%     3.67ms  4.79%  main.run.func8
+         0     0%   100%     2.45ms  3.20%  net.(*Dialer).DialContext
+         0     0%   100%     2.41ms  3.14%  net.(*netFD).dial
+         0     0%   100%     2.40ms  3.14%  net.(*netFD).setAddr (inline)
+         0     0%   100%     2.41ms  3.14%  net.(*sysDialer).dialParallel
+         0     0%   100%     2.41ms  3.14%  net.(*sysDialer).dialSerial
+         0     0%   100%     2.41ms  3.14%  net.(*sysDialer).dialSingle
+         0     0%   100%     2.41ms  3.14%  net.(*sysDialer).dialUDP
+         0     0%   100%     2.41ms  3.14%  net.internetSocket
+         0     0%   100%     2.41ms  3.14%  net.socket

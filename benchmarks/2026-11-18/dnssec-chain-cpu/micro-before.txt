@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/dnssec
+cpu: Apple M4
+BenchmarkValidateChain/cached-chain-2         	   28986	     39791 ns/op	    4976 B/op	      93 allocs/op
+BenchmarkValidateChain/cached-chain-2         	   30180	     40450 ns/op	    4976 B/op	      93 allocs/op
+BenchmarkValidateChain/cached-chain-2         	   29293	     40104 ns/op	    4976 B/op	      93 allocs/op
+BenchmarkValidateChain/uncached-leaf-2        	   10000	    117264 ns/op	   11529 B/op	     206 allocs/op
+BenchmarkValidateChain/uncached-leaf-2        	   10000	    117383 ns/op	   11529 B/op	     206 allocs/op
+BenchmarkValidateChain/uncached-leaf-2        	   10000	    117540 ns/op	   11529 B/op	     206 allocs/op
+PASS
+ok  	gdns/internal/dnssec	9.018s

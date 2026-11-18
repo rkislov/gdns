@@ -1,0 +1,34 @@
+File: baseline-profile
+Build ID: 36107a12760bb1b9f3ad670367d812bc6b56b76b
+Type: cpu
+Time: 2026-11-18 07:19:16 MSK
+Duration: 8s, Total samples = 7.55s (94.36%)
+Showing nodes accounting for 0.15s, 1.99% of 7.55s total
+Dropped 370 nodes (cum <= 0.04s)
+Showing top 25 nodes out of 251
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%      6.28s 83.18%  github.com/miekg/dns.(*Server).serveUDPPacket
+     0.02s  0.26%  0.26%      6.24s 82.65%  github.com/miekg/dns.(*Server).serveDNS
+     0.01s  0.13%   0.4%      6.08s 80.53%  github.com/miekg/dns.HandlerFunc.ServeDNS
+     0.01s  0.13%  0.53%      6.07s 80.40%  gdns/internal/transport.udpHandler.func1
+         0     0%  0.53%      6.05s 80.13%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%  0.53%      6.05s 80.13%  gdns/internal/core.(*Engine).ServeDNSAs
+     0.01s  0.13%  0.66%      4.80s 63.58%  gdns/internal/core.(*Engine).AnswerAs
+     0.03s   0.4%  1.06%      4.77s 63.18%  gdns/internal/core.(*Engine).Resolve
+     0.01s  0.13%  1.19%      4.49s 59.47%  gdns/internal/core.(*Engine).Resolve.func2
+     0.01s  0.13%  1.32%      4.49s 59.47%  golang.org/x/sync/singleflight.(*Group).Do
+         0     0%  1.32%      4.49s 59.47%  golang.org/x/sync/singleflight.(*Group).doCall
+         0     0%  1.32%      4.49s 59.47%  golang.org/x/sync/singleflight.(*Group).doCall.func2
+         0     0%  1.32%      3.69s 48.87%  gdns/internal/dnssec.(*Validator).Validate
+     0.01s  0.13%  1.46%      3.65s 48.34%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%  1.46%      2.71s 35.89%  gdns/internal/dnssec.(*validationRun).state
+         0     0%  1.46%      2.69s 35.63%  gdns/internal/dnssec.(*validationRun).state.func1
+     0.01s  0.13%  1.59%      2.68s 35.50%  gdns/internal/dnssec.(*validationRun).buildState
+         0     0%  1.59%      2.49s 32.98%  gdns/internal/dnssec.(*validationRun).verify
+         0     0%  1.59%      2.48s 32.85%  github.com/semihalev/sdns/middleware/resolver/dnssec.VerifyRRSIGWithWork (inline)
+     0.03s   0.4%  1.99%      2.48s 32.85%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyRRSIGWithWork
+         0     0%  1.99%      2.36s 31.26%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyOneSigWithWork
+         0     0%  1.99%      2.32s 30.73%  github.com/semihalev/sdns/middleware/resolver/dnssec.runSignatureVerification
+         0     0%  1.99%      2.30s 30.46%  github.com/semihalev/sdns/middleware/resolver/dnssec.cryptoVerify
+         0     0%  1.99%      2.30s 30.46%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifySignature
+         0     0%  1.99%      2.12s 28.08%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyECDSASignature

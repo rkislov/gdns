@@ -1,0 +1,10 @@
+MainPID=1597663
+ExecMainStartTimestamp=Wed 2026-11-18 05:05:47 MSK
+ActiveState=active
+8325c7934322aba54242d591717962708acf366f0a612fd44a16e7a312b5c7f0  /usr/bin/gdns
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 3524
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232

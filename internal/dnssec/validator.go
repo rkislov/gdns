@@ -295,6 +295,23 @@ func (r *validationRun) buildState(name string, depth int) (zoneState, error) {
 		return zoneState{}, fmt.Errorf("DS lookup failed for %s", name)
 	}
 	pm := scopedMessage(m, nil, p.zone)
+	// This internal lookup establishes only DS absence, not a client negative
+	// answer. RFC 4035 section 5.4 uses authenticated NSEC RRsets for that proof.
+	// SOA is not part of the delegation proof and is never returned under AD.
+	// Preserve its conservative lifetime bound before removing it.
+	proofExpiry := expiry(pm)
+	denialRecords := make([]dns.RR, 0, len(pm.Ns))
+	for _, rr := range pm.Ns {
+		switch rr := rr.(type) {
+		case *dns.NSEC, *dns.NSEC3:
+			denialRecords = append(denialRecords, rr)
+		case *dns.RRSIG:
+			if rr.TypeCovered == dns.TypeNSEC || rr.TypeCovered == dns.TypeNSEC3 {
+				denialRecords = append(denialRecords, rr)
+			}
+		}
+	}
+	pm.Ns = denialRecords
 	if err = r.verify(p, pm); err != nil {
 		return zoneState{}, err
 	}
@@ -302,7 +319,7 @@ func (r *validationRun) buildState(name string, depth int) (zoneState, error) {
 	if len(nsec)+len(nsec3) == 0 {
 		return zoneState{}, proof.ErrNSECMissingCoverage
 	}
-	expires := earlier(p.expires, expiry(pm))
+	expires := earlier(p.expires, earlier(proofExpiry, expiry(pm)))
 	if len(nsec) > 0 && proof.VerifyDelegationNSEC(name, nsec) == nil {
 		return zoneState{zone: name, expires: expires}, nil
 	}

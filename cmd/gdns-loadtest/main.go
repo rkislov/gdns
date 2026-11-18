@@ -61,6 +61,7 @@ func main() {
 	zone := flag.String("zone", "bench.test.", "fixture zone")
 	expectedIP := flag.String("answer-ip", "192.0.2.1", "expected A answer")
 	requireAD := flag.Bool("require-ad", false, "require validated AD responses")
+	localPortBase := flag.Int("local-port-base", 0, "optional fixed UDP source ports for reproducible worker distribution")
 	flag.Parse()
 	*zone = dns.Fqdn(*zone)
 	if *check {
@@ -86,7 +87,14 @@ func main() {
 	}
 	workers := make([]*worker, count)
 	for i := range workers {
-		conn, err := net.DialTimeout(*transport, *addr, time.Second)
+		dialer := net.Dialer{Timeout: time.Second}
+		if *localPortBase != 0 {
+			if *transport != "udp" || *localPortBase < 1024 || *localPortBase+count-1 > 65535 {
+				panic("invalid fixed UDP source-port range")
+			}
+			dialer.LocalAddr = &net.UDPAddr{Port: *localPortBase + i}
+		}
+		conn, err := dialer.Dial(*transport, *addr)
 		if err != nil {
 			panic(err)
 		}
@@ -159,7 +167,7 @@ func main() {
 	for i := 0; i < total; i++ {
 		scheduled := start.Add(time.Duration(int64(i) * int64(time.Second) / int64(*rate)))
 		name := fmt.Sprintf("n%d.%s", i%512, *zone)
-		unique := *mode == "miss" || *mode == "mixed" && i%10 == 0
+		unique := uniqueQuery(*mode, i, count)
 		if unique {
 			name = fmt.Sprintf("u%d-%d.miss.%s", nonce, i, *zone)
 		}
@@ -225,7 +233,7 @@ func main() {
 		}
 	}
 	elapsed := max(float64(*seconds), all.Last.Sub(start).Seconds())
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"unique_name_ok": len(all.UniqueNames), "unique_name_p95_ms": percentile(all.UniqueNames, .95), "repeated_name_ok": len(all.RepeatedNames), "repeated_name_p95_ms": percentile(all.RepeatedNames, .95), "zone": *zone, "answer_ip": *expectedIP, "require_ad": *requireAD, "pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"local_port_base": *localPortBase, "mixed_distribution": "per-flow-balanced", "unique_name_ok": len(all.UniqueNames), "unique_name_p95_ms": percentile(all.UniqueNames, .95), "repeated_name_ok": len(all.RepeatedNames), "repeated_name_p95_ms": percentile(all.RepeatedNames, .95), "zone": *zone, "answer_ip": *expectedIP, "require_ad": *requireAD, "pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
 }
 
 func checkAnswers(addr, network string) {
@@ -283,4 +291,10 @@ func checkAnswers(addr, network string) {
 		}
 	}
 	json.NewEncoder(os.Stdout).Encode(map[string]any{"transport": network, "checked": results, "positive_negative_ttl": "PASS"})
+}
+
+// Each flow gets one unique name per ten queries. Using i%10 with eight
+// flows concentrates every cache miss onto the four even-numbered flows.
+func uniqueQuery(mode string, sequence, flows int) bool {
+	return mode == "miss" || mode == "mixed" && (sequence/flows)%10 == (sequence%flows)%10
 }

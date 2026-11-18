@@ -1,0 +1,49 @@
+File: candidate-profile
+Build ID: 951bd08f8011189f6cce7db5eb70b42e841c8b0d
+Type: cpu
+Time: 2026-11-18 07:19:34 MSK
+Duration: 8s, Total samples = 7.19s (89.87%)
+Showing nodes accounting for 4.75s, 66.06% of 7.19s total
+Dropped 375 nodes (cum <= 0.04s)
+Showing top 40 nodes out of 265
+      flat  flat%   sum%        cum   cum%
+     2.14s 29.76% 29.76%      2.14s 29.76%  internal/runtime/syscall/linux.Syscall6
+     0.37s  5.15% 34.91%      0.37s  5.15%  p256MulInternal
+     0.30s  4.17% 39.08%      0.30s  4.17%  p256SqrInternal
+     0.18s  2.50% 41.59%      0.21s  2.92%  runtime.step
+     0.17s  2.36% 43.95%      0.17s  2.36%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.17s  2.36% 46.31%      0.62s  8.62%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.10s  1.39% 47.71%      0.10s  1.39%  runtime.exitsyscall
+     0.09s  1.25% 48.96%      0.28s  3.89%  runtime.(*unwinder).resolveInternal
+     0.09s  1.25% 50.21%      0.10s  1.39%  runtime.findfunc
+     0.08s  1.11% 51.32%      0.08s  1.11%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.08s  1.11% 52.43%      0.08s  1.11%  runtime.futex
+     0.08s  1.11% 53.55%      0.31s  4.31%  runtime.pcvalue
+     0.05s   0.7% 54.24%      0.09s  1.25%  runtime.(*stkframe).getStackMap
+     0.05s   0.7% 54.94%      0.15s  2.09%  runtime.adjustframe
+     0.05s   0.7% 55.63%      0.05s   0.7%  runtime.spanClass.sizeclass (inline)
+     0.05s   0.7% 56.33%      0.05s   0.7%  time.runtimeNow
+     0.04s  0.56% 56.88%      0.22s  3.06%  gdns/internal/core.(*cache).getReply
+     0.04s  0.56% 57.44%      0.04s  0.56%  p256SubInternal
+     0.04s  0.56% 58.00%      0.04s  0.56%  runtime.memmove
+     0.03s  0.42% 58.41%      0.04s  0.56%  gdns/internal/core.(*Engine).observeDNSSECState
+     0.03s  0.42% 58.83%      0.04s  0.56%  gdns/internal/dnssec.signatures
+     0.03s  0.42% 59.25%      0.18s  2.50%  github.com/miekg/dns.UnpackDomainName
+     0.03s  0.42% 59.67%      1.48s 20.58%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyECDSASignature
+     0.03s  0.42% 60.08%      0.35s  4.87%  internal/poll.(*FD).ReadMsgInet4
+     0.03s  0.42% 60.50%      0.20s  2.78%  net.(*netFD).connect
+     0.03s  0.42% 60.92%      0.06s  0.83%  runtime.(*sweepLocked).sweep
+     0.03s  0.42% 61.34%      0.07s  0.97%  runtime.growslice
+     0.03s  0.42% 61.75%      0.21s  2.92%  runtime.makeslice
+     0.03s  0.42% 62.17%      0.84s 11.68%  runtime.mallocgc
+     0.03s  0.42% 62.59%      0.11s  1.53%  runtime.mallocgcSmallNoScanSC4
+     0.03s  0.42% 63.00%      0.05s   0.7%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.03s  0.42% 63.42%      0.21s  2.92%  runtime.netpoll
+     0.03s  0.42% 63.84%      0.04s  0.56%  runtime.reentersyscall
+     0.03s  0.42% 64.26%      0.38s  5.29%  runtime.schedule
+     0.03s  0.42% 64.67%      0.08s  1.11%  runtime.tryDeferToSpanScan
+     0.02s  0.28% 64.95%      0.81s 11.27%  crypto/internal/fips140/nistec.(*P256Point).p256ScalarMult
+     0.02s  0.28% 65.23%      0.18s  2.50%  crypto/internal/fips140/nistec.p256PointAddAsm
+     0.02s  0.28% 65.51%      0.34s  4.73%  github.com/miekg/dns.(*Msg).unpack
+     0.02s  0.28% 65.79%      5.84s 81.22%  github.com/miekg/dns.(*Server).serveDNS
+     0.02s  0.28% 66.06%      0.04s  0.56%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyRRSIGWithWork.func1
