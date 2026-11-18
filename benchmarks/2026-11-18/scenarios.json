@@ -1,0 +1,86 @@
+{
+  "('tcp', 'warm', 5000)": {
+    "bind": {
+      "p95_ms": 19.591948,
+      "losses": 0
+    },
+    "baseline": {
+      "p95_ms": 2.704565,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 3.297152,
+      "losses": 0
+    }
+  },
+  "('udp', 'miss', 1000)": {
+    "bind": {
+      "p95_ms": 4.444553,
+      "losses": 0
+    },
+    "baseline": {
+      "p95_ms": 6.173841,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 8.086745,
+      "losses": 0
+    }
+  },
+  "('udp', 'mixed', 5000)": {
+    "bind": {
+      "p95_ms": 5.486923,
+      "losses": 0
+    },
+    "baseline": {
+      "p95_ms": 7.140211,
+      "losses": 2538
+    },
+    "candidate": {
+      "p95_ms": 7.817302,
+      "losses": 0
+    }
+  },
+  "('udp', 'warm', 5000)": {
+    "bind": {
+      "p95_ms": 2.775314,
+      "losses": 0
+    },
+    "baseline": {
+      "p95_ms": 4.291978,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 4.242098,
+      "losses": 0
+    }
+  },
+  "('udp', 'warm', 15000)": {
+    "bind": {
+      "p95_ms": 6.172077,
+      "losses": 5324
+    },
+    "baseline": {
+      "p95_ms": 10.869625,
+      "losses": 1369
+    },
+    "candidate": {
+      "p95_ms": 7.3985,
+      "losses": 1570
+    }
+  },
+  "('udp', 'warm', 30000)": {
+    "bind": {
+      "p95_ms": 11.823499,
+      "losses": 36705
+    },
+    "baseline": {
+      "p95_ms": 42.927293,
+      "losses": 106922
+    },
+    "candidate": {
+      "p95_ms": 21.681519,
+      "losses": 74545
+    }
+  }
+}
