@@ -1,0 +1,230 @@
+{
+  "commit": "23a3c32",
+  "build_tags": "gdns_udp_addrport",
+  "old_sha256": "8325c7934322aba54242d591717962708acf366f0a612fd44a16e7a312b5c7f0",
+  "new_sha256": "cb9851bcd8db5b3b1b249b14901f9e3b355c86b2f7d16e98fed9cc8069731770",
+  "backup": "/var/backups/gdns/20261118T044931Z-23a3c32",
+  "before": [
+    {
+      "transport": "udp",
+      "name": "example.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "example.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "udp",
+      "name": "cloudflare.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "cloudflare.com",
+      "type": "AAAA",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "cloudflare.com",
+      "type": "DNSKEY",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "udp",
+      "name": "dnssec-failed.org",
+      "type": "A",
+      "cd": false,
+      "rcode": "SERVFAIL",
+      "ad": false,
+      "answer_count": 0
+    },
+    {
+      "transport": "udp",
+      "name": "dnssec-failed.org",
+      "type": "A",
+      "cd": true,
+      "rcode": "NOERROR",
+      "ad": false,
+      "answer_count": 2
+    },
+    {
+      "transport": "udp",
+      "name": "gdns-validation-missing-20261118.cloudflare.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 0
+    },
+    {
+      "transport": "dot",
+      "name": "cloudflare.com",
+      "rcode": 0,
+      "ad": true,
+      "answer_count": 3,
+      "tls_verified": true
+    },
+    {
+      "transport": "dot",
+      "name": "dnssec-failed.org",
+      "rcode": 2,
+      "ad": false,
+      "answer_count": 0,
+      "tls_verified": true
+    },
+    {
+      "transport": "doh",
+      "name": "cloudflare.com",
+      "rcode": 0,
+      "ad": true,
+      "answer_count": 3,
+      "tls_verified": true
+    },
+    {
+      "transport": "doh",
+      "name": "dnssec-failed.org",
+      "rcode": 2,
+      "ad": false,
+      "answer_count": 0,
+      "tls_verified": true
+    }
+  ],
+  "after": [
+    {
+      "transport": "udp",
+      "name": "example.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "example.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "udp",
+      "name": "cloudflare.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "cloudflare.com",
+      "type": "AAAA",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "tcp",
+      "name": "cloudflare.com",
+      "type": "DNSKEY",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 3
+    },
+    {
+      "transport": "udp",
+      "name": "dnssec-failed.org",
+      "type": "A",
+      "cd": false,
+      "rcode": "SERVFAIL",
+      "ad": false,
+      "answer_count": 0
+    },
+    {
+      "transport": "udp",
+      "name": "dnssec-failed.org",
+      "type": "A",
+      "cd": true,
+      "rcode": "NOERROR",
+      "ad": false,
+      "answer_count": 2
+    },
+    {
+      "transport": "udp",
+      "name": "gdns-validation-missing-20261118.cloudflare.com",
+      "type": "A",
+      "cd": false,
+      "rcode": "NOERROR",
+      "ad": true,
+      "answer_count": 0
+    },
+    {
+      "transport": "dot",
+      "name": "cloudflare.com",
+      "rcode": 0,
+      "ad": true,
+      "answer_count": 3,
+      "tls_verified": true
+    },
+    {
+      "transport": "dot",
+      "name": "dnssec-failed.org",
+      "rcode": 2,
+      "ad": false,
+      "answer_count": 0,
+      "tls_verified": true
+    },
+    {
+      "transport": "doh",
+      "name": "cloudflare.com",
+      "rcode": 0,
+      "ad": true,
+      "answer_count": 3,
+      "tls_verified": true
+    },
+    {
+      "transport": "doh",
+      "name": "dnssec-failed.org",
+      "rcode": 2,
+      "ad": false,
+      "answer_count": 0,
+      "tls_verified": true
+    }
+  ],
+  "steady_state": {
+    "transport": "udp",
+    "name": "cloudflare.com",
+    "type": "A",
+    "cd": false,
+    "rcode": "NOERROR",
+    "ad": true,
+    "answer_count": 3
+  },
+  "service": "MainPID=1706737\nNRestarts=0\nActiveState=active",
+  "status": "success"
+}
