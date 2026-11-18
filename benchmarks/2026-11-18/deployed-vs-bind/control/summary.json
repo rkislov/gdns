@@ -1,0 +1,23 @@
+{
+  "p95_medians_ms": {
+    "bind": 10.519078,
+    "candidate": 11.712378
+  },
+  "candidate_bind_ratio": 1.1134415012418388,
+  "errors": {
+    "bind": 11120,
+    "candidate": 462
+  },
+  "qps_medians": {
+    "bind": 14870.975712226564,
+    "candidate": 14997.291554383497
+  },
+  "acceptance_checks": {
+    "p95_twenty_percent_better_than_bind": false,
+    "p95_better_than_baseline": true,
+    "loss_not_worse": true,
+    "comparable_goodput": true,
+    "full_control_repeats": true
+  },
+  "acceptance_met": false
+}

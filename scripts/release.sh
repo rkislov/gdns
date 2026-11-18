@@ -2,7 +2,7 @@
 # Copyright 2026 Кислов Роман Сергеевич
 # SPDX-License-Identifier: Apache-2.0
 set -eu
-VERSION=${VERSION:-0.7.2}
+VERSION=${VERSION:-0.7.3}
 COMMIT=${COMMIT:-$(git rev-parse --short HEAD 2>/dev/null || printf unknown)}
 BUILD_DATE=${BUILD_DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}
 NFPM=${NFPM:-nfpm}
@@ -10,7 +10,7 @@ export VERSION
 mkdir -p dist
 for ARCH in amd64 arm64; do
   export ARCH
-  CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" go build -trimpath \
+  CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" go build -tags gdns_udp_addrport -trimpath \
     -ldflags="-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X main.buildDate=$BUILD_DATE" \
     -o "dist/gdns_linux_$ARCH" ./cmd/gdns
   stage=$(mktemp -d)

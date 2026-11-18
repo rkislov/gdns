@@ -27,11 +27,13 @@ jobs:
           cache: true
       - run: go test -race ./...
       - run: go vet ./...
+      - run: go test -race -tags gdns_udp_addrport ./...
+      - run: go vet -tags gdns_udp_addrport ./...
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci && npm run css
       - run: git diff --exit-code -- internal/web/static/style.css
-      - run: CGO_ENABLED=0 go build -trimpath -o /tmp/gdns ./cmd/gdns
+      - run: CGO_ENABLED=0 go build -tags gdns_udp_addrport -trimpath -o /tmp/gdns ./cmd/gdns
       - run: /tmp/gdns -version

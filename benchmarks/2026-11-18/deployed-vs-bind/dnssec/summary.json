@@ -1,0 +1,32 @@
+{
+  "warm": {
+    "bind": {
+      "p95_ms": 5.322599,
+      "losses": 19
+    },
+    "candidate": {
+      "p95_ms": 5.456181,
+      "losses": 0
+    }
+  },
+  "mixed": {
+    "bind": {
+      "p95_ms": 14.446171,
+      "losses": 370
+    },
+    "candidate": {
+      "p95_ms": 17.399042,
+      "losses": 0
+    }
+  },
+  "miss": {
+    "bind": {
+      "p95_ms": 14.329184,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 13.231584,
+      "losses": 0
+    }
+  }
+}

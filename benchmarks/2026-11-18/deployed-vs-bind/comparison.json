@@ -1,0 +1,388 @@
+{
+  "full": {
+    "udp-warm-15000": {
+      "bind": {
+        "trials": 5,
+        "p95_ms": 7.828617,
+        "p95_range_ms": [
+          5.668254,
+          12.062538
+        ],
+        "successful_qps": 14910.339530567815,
+        "sent": 600000,
+        "ok": 596966,
+        "errors": 0,
+        "timeouts": 3034,
+        "losses": 3034,
+        "loss_percent": 0.5056666666666667,
+        "send_lateness_p95_ms": 6.260081
+      },
+      "candidate": {
+        "trials": 5,
+        "p95_ms": 10.335762,
+        "p95_range_ms": [
+          6.297585,
+          15.265184
+        ],
+        "successful_qps": 14996.781735629878,
+        "sent": 600000,
+        "ok": 599919,
+        "errors": 0,
+        "timeouts": 81,
+        "losses": 81,
+        "loss_percent": 0.0135,
+        "send_lateness_p95_ms": 5.173536
+      },
+      "candidate_p95_reduction_percent": -32.02538839235589,
+      "candidate_goodput_increase_percent": 0.5797467246459798,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-warm-5000": {
+      "bind": {
+        "trials": 3,
+        "p95_ms": 4.302165,
+        "p95_range_ms": [
+          2.016591,
+          4.921194
+        ],
+        "successful_qps": 4999.9511736018085,
+        "sent": 120000,
+        "ok": 119966,
+        "errors": 0,
+        "timeouts": 34,
+        "losses": 34,
+        "loss_percent": 0.028333333333333332,
+        "send_lateness_p95_ms": 1.830509
+      },
+      "candidate": {
+        "trials": 3,
+        "p95_ms": 3.536083,
+        "p95_range_ms": [
+          1.538618,
+          3.750572
+        ],
+        "successful_qps": 4999.772686584748,
+        "sent": 120000,
+        "ok": 120000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 1.143099
+      },
+      "candidate_p95_reduction_percent": 17.80689490059074,
+      "candidate_goodput_increase_percent": -0.003569775201062164,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-warm-30000": {
+      "bind": {
+        "trials": 3,
+        "p95_ms": 19.8359,
+        "p95_range_ms": [
+          12.625036,
+          21.420879
+        ],
+        "successful_qps": 22182.907806746316,
+        "sent": 720000,
+        "ok": 662789,
+        "errors": 11745,
+        "timeouts": 45466,
+        "losses": 57211,
+        "loss_percent": 7.945972222222222,
+        "send_lateness_p95_ms": 1543.430412
+      },
+      "candidate": {
+        "trials": 3,
+        "p95_ms": 43.188543,
+        "p95_range_ms": [
+          39.972218,
+          56.706173
+        ],
+        "successful_qps": 26431.778014353957,
+        "sent": 720000,
+        "ok": 701476,
+        "errors": 0,
+        "timeouts": 18524,
+        "losses": 18524,
+        "loss_percent": 2.5727777777777776,
+        "send_lateness_p95_ms": 771.550523
+      },
+      "candidate_p95_reduction_percent": -117.72918294607257,
+      "candidate_goodput_increase_percent": 19.15380185782256,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "tcp-warm-5000": {
+      "bind": {
+        "trials": 3,
+        "p95_ms": 5.486382,
+        "p95_range_ms": [
+          5.136938,
+          11.315814
+        ],
+        "successful_qps": 4998.164875783473,
+        "sent": 75000,
+        "ok": 75000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.377271
+      },
+      "candidate": {
+        "trials": 3,
+        "p95_ms": 4.598232,
+        "p95_range_ms": [
+          2.104444,
+          7.555889
+        ],
+        "successful_qps": 4999.9504774905,
+        "sent": 75000,
+        "ok": 75000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.290378
+      },
+      "candidate_p95_reduction_percent": 16.18826395974614,
+      "candidate_goodput_increase_percent": 0.03572514615670652,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-miss-1000": {
+      "bind": {
+        "trials": 3,
+        "p95_ms": 8.746838,
+        "p95_range_ms": [
+          6.059733,
+          10.809697
+        ],
+        "successful_qps": 999.9641344863811,
+        "sent": 15000,
+        "ok": 15000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.951854
+      },
+      "candidate": {
+        "trials": 3,
+        "p95_ms": 7.417785,
+        "p95_range_ms": [
+          5.558374,
+          8.04484
+        ],
+        "successful_qps": 1000,
+        "sent": 15000,
+        "ok": 15000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 1.745825
+      },
+      "candidate_p95_reduction_percent": 15.194668061761284,
+      "candidate_goodput_increase_percent": 0.0035866800000006194,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-mixed-5000": {
+      "bind": {
+        "trials": 3,
+        "p95_ms": 7.087941,
+        "p95_range_ms": [
+          3.387063,
+          7.122213
+        ],
+        "successful_qps": 4998.99919036409,
+        "sent": 75000,
+        "ok": 75000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.439983
+      },
+      "candidate": {
+        "trials": 3,
+        "p95_ms": 4.275681,
+        "p95_range_ms": [
+          3.739259,
+          19.649521
+        ],
+        "successful_qps": 4999.413371834597,
+        "sent": 75000,
+        "ok": 75000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.229006
+      },
+      "candidate_p95_reduction_percent": 39.67668466766301,
+      "candidate_goodput_increase_percent": 0.008285287809295383,
+      "twenty_percent_lower_p95": true,
+      "loss_not_worse": true
+    }
+  },
+  "control": {
+    "udp-warm-15000": {
+      "bind": {
+        "trials": 5,
+        "p95_ms": 10.519078,
+        "p95_range_ms": [
+          9.649647,
+          10.804593
+        ],
+        "successful_qps": 14870.975712226564,
+        "sent": 1500000,
+        "ok": 1488880,
+        "errors": 0,
+        "timeouts": 11120,
+        "losses": 11120,
+        "loss_percent": 0.7413333333333333,
+        "send_lateness_p95_ms": 10.214955
+      },
+      "candidate": {
+        "trials": 5,
+        "p95_ms": 11.712378,
+        "p95_range_ms": [
+          10.206252,
+          12.946653
+        ],
+        "successful_qps": 14997.291554383497,
+        "sent": 1500000,
+        "ok": 1499538,
+        "errors": 0,
+        "timeouts": 462,
+        "losses": 462,
+        "loss_percent": 0.0308,
+        "send_lateness_p95_ms": 6.017182
+      },
+      "candidate_p95_reduction_percent": -11.344150124183884,
+      "candidate_goodput_increase_percent": 0.8494119323527505,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    }
+  },
+  "dnssec": {
+    "udp-warm-5000": {
+      "bind": {
+        "trials": 5,
+        "p95_ms": 5.322599,
+        "p95_range_ms": [
+          4.422506,
+          6.24725
+        ],
+        "successful_qps": 4999.701959266715,
+        "sent": 250000,
+        "ok": 249981,
+        "errors": 0,
+        "timeouts": 19,
+        "losses": 19,
+        "loss_percent": 0.0076,
+        "send_lateness_p95_ms": 2.356617
+      },
+      "candidate": {
+        "trials": 5,
+        "p95_ms": 5.456181,
+        "p95_range_ms": [
+          4.435395,
+          7.795112
+        ],
+        "successful_qps": 5000,
+        "sent": 250000,
+        "ok": 250000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.83958
+      },
+      "candidate_p95_reduction_percent": -2.5097137695325067,
+      "candidate_goodput_increase_percent": 0.0059611700000017365,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-mixed-5000": {
+      "bind": {
+        "trials": 5,
+        "p95_ms": 14.446171,
+        "p95_range_ms": [
+          8.677473,
+          16.937523
+        ],
+        "successful_qps": 4993.3614649615365,
+        "sent": 250000,
+        "ok": 249630,
+        "errors": 0,
+        "timeouts": 370,
+        "losses": 370,
+        "loss_percent": 0.148,
+        "send_lateness_p95_ms": 3.996355
+      },
+      "candidate": {
+        "trials": 5,
+        "p95_ms": 17.399042,
+        "p95_range_ms": [
+          10.108694,
+          20.482827
+        ],
+        "successful_qps": 4997.911095569096,
+        "sent": 250000,
+        "ok": 250000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 4.185863
+      },
+      "candidate_p95_reduction_percent": -20.44050980706238,
+      "candidate_goodput_increase_percent": 0.0911135842955435,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    },
+    "udp-miss-500": {
+      "bind": {
+        "trials": 5,
+        "p95_ms": 14.329184,
+        "p95_range_ms": [
+          10.979843,
+          20.447519
+        ],
+        "successful_qps": 499.9570748854473,
+        "sent": 25000,
+        "ok": 25000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.351756
+      },
+      "candidate": {
+        "trials": 5,
+        "p95_ms": 13.231584,
+        "p95_range_ms": [
+          12.560116,
+          21.845774
+        ],
+        "successful_qps": 499.8296531558739,
+        "sent": 25000,
+        "ok": 25000,
+        "errors": 0,
+        "timeouts": 0,
+        "losses": 0,
+        "loss_percent": 0.0,
+        "send_lateness_p95_ms": 2.452093
+      },
+      "candidate_p95_reduction_percent": 7.659891868231994,
+      "candidate_goodput_increase_percent": -0.025486533939456102,
+      "twenty_percent_lower_p95": false,
+      "loss_not_worse": true
+    }
+  }
+}

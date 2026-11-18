@@ -19,6 +19,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: go test -race ./... && go vet ./...
+      - run: go test -race -tags gdns_udp_addrport ./... && go vet -tags gdns_udp_addrport ./...
       - run: npm ci && npm run css && python3 scripts/third-party-notices.py
       - run: git diff --exit-code -- internal/web/static/style.css THIRD_PARTY_NOTICES.txt
       - run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.45.1
