@@ -1,0 +1,15 @@
+ok  	gdns/cmd/gdns	1.799s
+?   	gdns/cmd/gdns-bench-upstream	[no test files]
+?   	gdns/cmd/gdns-loadtest	[no test files]
+ok  	gdns/internal/access	(cached)
+--- FAIL: TestManagedRevocationInvalidatesCacheAndSurvivesRestart (0.03s)
+    --- FAIL: TestManagedRevocationInvalidatesCacheAndSurvivesRestart/slow-revocation-commit (0.00s)
+        managed_test.go:30: dns: bad key
+FAIL
+FAIL	gdns/internal/core	0.851s
+ok  	gdns/internal/dnssec	(cached)
+ok  	gdns/internal/storage	(cached)
+ok  	gdns/internal/telemetry	(cached)
+ok  	gdns/internal/transport	1.645s
+ok  	gdns/internal/web	3.575s
+FAIL

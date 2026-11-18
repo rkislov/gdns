@@ -124,7 +124,7 @@ func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) 
 				size = 1232
 			}
 		}
-		r.Truncate(int(size))
+		truncateUDPReply(r, int(size))
 	}
 	if t := q.IsTsig(); t != nil {
 		if w.TsigStatus() != nil {
@@ -140,6 +140,31 @@ func (e *Engine) ServeDNSAs(w dns.ResponseWriter, q *dns.Msg, transport string) 
 		return
 	}
 	_ = w.WriteMsg(r)
+}
+
+// A single address answer can be bounded without walking DNS labels. Escaped
+// names only shorten their wire encoding; the textual length plus one is an
+// upper bound. All other layouts retain the library's truncation rules.
+func truncateUDPReply(m *dns.Msg, size int) {
+	if len(m.Question) == 1 && len(m.Answer) == 1 && len(m.Ns) == 0 && len(m.Extra) == 0 {
+		var name string
+		dataSize := 0
+		switch rr := m.Answer[0].(type) {
+		case *dns.A:
+			if rr != nil {
+				name, dataSize = rr.Hdr.Name, 4
+			}
+		case *dns.AAAA:
+			if rr != nil {
+				name, dataSize = rr.Hdr.Name, 16
+			}
+		}
+		if dataSize != 0 && 12+len(m.Question[0].Name)+1+4+len(name)+1+10+dataSize <= max(size, 512) {
+			m.Compress = false
+			return
+		}
+	}
+	m.Truncate(size)
 }
 
 // Keep the common UDP packing buffer across requests. Write completes before

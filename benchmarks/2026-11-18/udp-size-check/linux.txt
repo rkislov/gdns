@@ -1,0 +1,11 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/core
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkUDPTruncation/library-3         	28186118	        38.88 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUDPTruncation/library-3         	26529170	        40.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUDPTruncation/library-3         	30343406	        37.24 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUDPTruncation/bounded-3         	227260788	         5.345 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUDPTruncation/bounded-3         	209210563	         5.276 ns/op	       0 B/op	       0 allocs/op
+BenchmarkUDPTruncation/bounded-3         	223328751	         5.741 ns/op	       0 B/op	       0 allocs/op
+PASS
