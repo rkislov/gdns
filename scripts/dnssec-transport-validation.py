@@ -3,10 +3,12 @@
 # SPDX-License-Identifier: Apache-2.0
 """Isolated loopback DNSSEC transport validation; run after other load tests."""
 import argparse,hashlib,json,os,pathlib,subprocess as sp,time,statistics
-p=argparse.ArgumentParser();p.add_argument('--stage',required=True);p.add_argument('--out',required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--stage',required=True);p.add_argument('--binaries');p.add_argument('--out',required=True);a=p.parse_args()
 stage=pathlib.Path(a.stage).resolve();out=pathlib.Path(a.out).resolve();out.mkdir(mode=0o700,exist_ok=False)
-metadata={'baseline_commit':'67cfc62','candidate_source':json.loads((stage/'packet/source.json').read_text()),'resolver_cpus':'0,1','client_cpus':'2','fixture_cpus':'0','workers':2,'dnssec':True,'request_do':False,'request_ad':True,'fixture_shares_resolver_cpu':True,'bind_comparison':False}
-metadata['sha256']={name:hashlib.sha256((stage/name).read_bytes()).hexdigest() for name in ['packet/baseline-bin','packet/candidate','gdns-secure-load','gdns-secure-fixture']}
+binary_dir=pathlib.Path(a.binaries).resolve() if a.binaries else stage/'packet'
+source=json.loads((binary_dir/'source.json').read_text())
+metadata={'baseline_commit':source['baseline_commit'],'candidate_source':source,'resolver_cpus':'0,1','client_cpus':'2','fixture_cpus':'0','workers':2,'dnssec':True,'request_do':False,'request_ad':True,'fixture_shares_resolver_cpu':True,'bind_comparison':False}
+metadata['sha256']={name:hashlib.sha256(path.read_bytes()).hexdigest() for name,path in {'baseline-bin':binary_dir/'baseline-bin','candidate':binary_dir/'candidate','load':stage/'gdns-secure-load','fixture':stage/'gdns-secure-fixture'}.items()}
 (out/'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
 processes=[];rows=[]
 def start(args,cpus,log):
@@ -31,7 +33,7 @@ try:
   for repeat in range(3):
    for impl in (['baseline-bin','candidate'] if repeat%2==0 else ['candidate','baseline-bin']):
     tag=f'{mode}-{repeat}-{impl}';cfg=out/(tag+'.private.json');cfg.write_text(json.dumps(config));cfg.chmod(0o600)
-    server=start([str(stage/'packet'/impl),'-config',str(cfg),'-database',str(out/(tag+'.db')),'-metrics-listen',''],'0,1',tag+'.private.log')
+    server=start([str(binary_dir/impl),'-config',str(cfg),'-database',str(out/(tag+'.db')),'-metrics-listen',''],'0,1',tag+'.private.log')
     try:
      for _ in range(50):
       if server.poll() is not None:raise RuntimeError('resolver exited')

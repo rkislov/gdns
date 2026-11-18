@@ -1,0 +1,11 @@
+goos: linux
+goarch: amd64
+pkg: gdns/internal/transport
+cpu: QEMU Virtual CPU version 2.5+
+BenchmarkUDPSessionRoundTrip/library-3         	   44193	     25110 ns/op	     488 B/op	      12 allocs/op
+BenchmarkUDPSessionRoundTrip/library-3         	   53415	     30281 ns/op	     488 B/op	      12 allocs/op
+BenchmarkUDPSessionRoundTrip/library-3         	   39568	     25304 ns/op	     488 B/op	      12 allocs/op
+BenchmarkUDPSessionRoundTrip/addrport-3        	   48584	     23374 ns/op	     320 B/op	       2 allocs/op
+BenchmarkUDPSessionRoundTrip/addrport-3        	   51397	     22236 ns/op	     320 B/op	       2 allocs/op
+BenchmarkUDPSessionRoundTrip/addrport-3        	   47012	     23994 ns/op	     320 B/op	       2 allocs/op
+PASS

@@ -102,6 +102,7 @@ rows = []
 metadata = {'baseline_commit': source_metadata.get('baseline_commit', 'cce7c27') if source_metadata else 'cce7c27', 'candidate_commit': source_metadata['candidate_commit'] if source_metadata else run(['git', 'rev-parse', 'HEAD'], cwd=root), 'candidate_diff': source_metadata['candidate_diff'] if source_metadata else run(['git', 'diff'], cwd=root), 'image': json.loads(docker('image', 'inspect', image))[0]['Id'], 'architecture': 'linux/' + a.arch, 'resolver_cpus': a.server_cpus, 'client_cpus': a.client_cpus, 'auth_cpus': a.auth_cpus, 'workers': a.workers, 'memory_limit': '512m', 'acceptance_qps': 15000, 'ttl': 3600, 'working_set': 512, 'log': False, 'dnssec': False, 'lab': str(lab), 'go_version': source_metadata['go_version'] if source_metadata else run(['go', 'version']), 'docker_version': docker('version', '--format', '{{.Server.Version}}'), 'kernel': docker('info', '--format', '{{.KernelVersion}}')}
 if source_metadata and 'candidate_untracked_sources' in source_metadata:
     metadata['candidate_untracked_sources'] = source_metadata['candidate_untracked_sources']
+metadata['candidate_tags'] = source_metadata.get('candidate_tags', '') if source_metadata else ''
 metadata['pacing'] = a.pacing
 metadata['binary_sha256'] = {name: hashlib.sha256((lab / name).read_bytes()).hexdigest() for name in ['baseline-bin', 'candidate', 'load']}
 (out / 'metadata.json').write_text(json.dumps(metadata, indent=2))

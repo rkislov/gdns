@@ -194,7 +194,7 @@ func run() error {
 	defer listener.Close()
 	us := make([]*dns.Server, len(udp))
 	for i, conn := range udp {
-		us[i] = &dns.Server{PacketConn: conn, TsigProvider: engine, Handler: engine, UDPSize: 1232}
+		us[i] = transport.NewUDPServer(conn, engine, engine)
 	}
 	ts := &dns.Server{Listener: tcp, TsigProvider: engine, Handler: engine, ReadTimeout: 5 * time.Second, WriteTimeout: 5 * time.Second, MaxTCPQueries: -1}
 	diskPath := *metricsDisk

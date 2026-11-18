@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--arch', choices=['amd64', 'arm64'], required=True)
 parser.add_argument('--out', type=pathlib.Path, required=True)
 parser.add_argument('--baseline-ref', default='cce7c27')
+parser.add_argument('--candidate-tags', default='', help='Go build tags for candidate only')
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
 out = args.out.resolve()
@@ -34,7 +35,7 @@ with tempfile.TemporaryDirectory(prefix='gdns-performance-source-') as directory
     for name, source, package in [('baseline-bin', base, './cmd/gdns'),
                                   ('candidate', root, './cmd/gdns'),
                                   ('load', root, './cmd/gdns-loadtest')]:
-        sp.run(['go', 'build', '-trimpath', '-o', str(out / name), package],
+        sp.run(['go', 'build', *(['-tags', args.candidate_tags] if name == 'candidate' and args.candidate_tags else []), '-trimpath', '-o', str(out / name), package],
                cwd=source, env=env, check=True)
     for impl, source in [('baseline', base), ('candidate', root)]:
         original = source / 'cmd/gdns/main.go'
@@ -43,11 +44,12 @@ with tempfile.TemporaryDirectory(prefix='gdns-performance-source-') as directory
                            .replace('func main() {', hook, 1))
         overlay = out / (impl + '-overlay.json')
         overlay.write_text(json.dumps({'Replace': {str(original): str(patched)}}))
-        sp.run(['go', 'build', '-overlay', str(overlay), '-trimpath', '-o',
+        sp.run(['go', 'build', *(['-tags', args.candidate_tags] if impl == 'candidate' and args.candidate_tags else []), '-overlay', str(overlay), '-trimpath', '-o',
                 str(out / (impl + '-profile')), './cmd/gdns'], cwd=source, env=env, check=True)
         overlay.unlink()
         patched.unlink()
 source = {
+    'candidate_tags': args.candidate_tags,
     'baseline_commit': sp.check_output(['git', 'rev-parse', args.baseline_ref], cwd=root, text=True).strip(),
     'candidate_commit': sp.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
     'candidate_diff': sp.check_output(['git', 'diff'], cwd=root, text=True),

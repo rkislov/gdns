@@ -1,0 +1,32 @@
+{
+  "warm": {
+    "baseline-bin": {
+      "p95_ms": 5.513851,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 4.533222,
+      "losses": 0
+    }
+  },
+  "mixed": {
+    "baseline-bin": {
+      "p95_ms": 11.693061,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 21.61399,
+      "losses": 0
+    }
+  },
+  "miss": {
+    "baseline-bin": {
+      "p95_ms": 18.784014,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 28.127727,
+      "losses": 0
+    }
+  }
+}

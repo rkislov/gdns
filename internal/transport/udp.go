@@ -4,6 +4,7 @@ package transport
 
 import (
 	"fmt"
+	"github.com/miekg/dns"
 	"net"
 	"runtime"
 )
@@ -36,4 +37,12 @@ func ListenUDP(address string, configured int) ([]net.PacketConn, error) {
 		}
 	}
 	return conns, nil
+}
+
+// NewUDPServer preserves the actual peer address for policy and UDP truncation.
+func NewUDPServer(conn net.PacketConn, handler dns.Handler, provider dns.TsigProvider) *dns.Server {
+	if handler == nil {
+		handler = dns.DefaultServeMux
+	}
+	return &dns.Server{PacketConn: wrapUDPPacketConn(conn), Handler: udpHandler(handler), TsigProvider: provider, UDPSize: 1232}
 }
