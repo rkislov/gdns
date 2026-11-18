@@ -1,0 +1,11 @@
+{
+  "checked": [
+    "n0.bench.test.",
+    "aaaa.bench.test.",
+    "alias.bench.test.",
+    "_service._tcp.bench.test.",
+    "absent.bench.test."
+  ],
+  "positive_negative_ttl": "PASS",
+  "transport": "udp"
+}
