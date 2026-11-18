@@ -1,0 +1,3 @@
+ok  	gdns/cmd/gdns	(cached)
+?   	gdns/cmd/gdns-bench-upstream	[no test files]
+?   	gdns/cmd/gdns-loadtest	[no test files]

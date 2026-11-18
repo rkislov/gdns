@@ -21,6 +21,7 @@ import (
 func main() {
 	address := flag.String("listen", "127.0.0.1:1154", "loopback UDP/TCP address")
 	anchor := flag.String("anchor", "", "write the public DNSKEY trust anchor")
+	bogusName := flag.String("bogus-name", "", "serve a deliberately invalid A signature for this test name")
 	flag.Parse()
 	host, _, err := net.SplitHostPort(*address)
 	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() {
@@ -82,6 +83,11 @@ func main() {
 			m.Answer = nil
 			m.Ns = nil
 			m.Rcode = dns.RcodeServerFailure
+		}
+		if *bogusName != "" && name == dns.CanonicalName(*bogusName) && question.Qtype == dns.TypeA && len(m.Answer) > 0 {
+			if a, ok := m.Answer[0].(*dns.A); ok {
+				a.A = net.IPv4(192, 0, 2, 78).To4()
+			}
 		}
 		if opt := q.IsEdns0(); opt != nil {
 			m.SetEdns0(1232, opt.Do())

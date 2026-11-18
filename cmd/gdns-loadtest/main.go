@@ -56,7 +56,11 @@ func main() {
 	prime := flag.Bool("prime", false, "")
 	check := flag.Bool("check", false, "")
 	pacing := flag.String("pacing", "spin", "spin or Linux high-resolution sleep")
+	zone := flag.String("zone", "bench.test.", "fixture zone")
+	expectedIP := flag.String("answer-ip", "192.0.2.1", "expected A answer")
+	requireAD := flag.Bool("require-ad", false, "require validated AD responses")
 	flag.Parse()
+	*zone = dns.Fqdn(*zone)
 	if *check {
 		checkAnswers(*addr, *transport)
 		return
@@ -64,10 +68,11 @@ func main() {
 	if *prime {
 		for i := 0; i < 512; i++ {
 			q := new(dns.Msg)
-			q.SetQuestion(fmt.Sprintf("n%d.bench.test.", i), dns.TypeA)
+			q.SetQuestion(fmt.Sprintf("n%d.%s", i, *zone), dns.TypeA)
+			q.AuthenticatedData = *requireAD
 			c := dns.Client{Net: *transport, Timeout: time.Second}
 			r, _, err := c.Exchange(q, *addr)
-			if err != nil || r.Rcode != 0 || len(r.Answer) != 1 {
+			if err != nil || r.Rcode != 0 || len(r.Answer) != 1 || (*requireAD && !r.AuthenticatedData) {
 				os.Exit(1)
 			}
 		}
@@ -119,7 +124,7 @@ func main() {
 					valid := m.Response && m.Rcode == 0 && !m.Truncated && len(m.Question) == 1 && m.Question[0].Name == p.name && len(m.Answer) == 1
 					if valid {
 						a, yes := m.Answer[0].(*dns.A)
-						valid = yes && a.A.String() == "192.0.2.1"
+						valid = yes && a.A.String() == *expectedIP && (!*requireAD || m.AuthenticatedData)
 					}
 					if valid {
 						w.r.OK++
@@ -145,12 +150,13 @@ func main() {
 	total := *rate * *seconds
 	for i := 0; i < total; i++ {
 		scheduled := start.Add(time.Duration(int64(i) * int64(time.Second) / int64(*rate)))
-		name := fmt.Sprintf("n%d.bench.test.", i%512)
+		name := fmt.Sprintf("n%d.%s", i%512, *zone)
 		if *mode == "miss" || *mode == "mixed" && i%10 == 0 {
-			name = fmt.Sprintf("u%d-%d.miss.bench.test.", nonce, i)
+			name = fmt.Sprintf("u%d-%d.miss.%s", nonce, i, *zone)
 		}
 		q := new(dns.Msg)
 		q.SetQuestion(name, dns.TypeA)
+		q.AuthenticatedData = *requireAD
 		q.Id = uint16(i / count)
 		data, err := q.Pack()
 		if err != nil {
@@ -208,7 +214,7 @@ func main() {
 		}
 	}
 	elapsed := max(float64(*seconds), all.Last.Sub(start).Seconds())
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"zone": *zone, "answer_ip": *expectedIP, "require_ad": *requireAD, "pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
 }
 
 func checkAnswers(addr, network string) {
