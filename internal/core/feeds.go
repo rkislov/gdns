@@ -100,13 +100,21 @@ func parseFeed(r io.Reader, mixed bool) ([]string, error) {
 	sort.Strings(out)
 	return out, nil
 }
-func DownloadFeed(ctx context.Context, f Feed) ([]string, error) {
+func feedURL(f Feed) (*url.URL, error) {
 	u, err := url.Parse(f.URL)
 	if err != nil || u.Host == "" || (u.Scheme != "http" && u.Scheme != "https") || u.User != nil {
 		return nil, fmt.Errorf("feed URL must use HTTP(S) without URL credentials")
 	}
 	if f.Authorization != "" && u.Scheme != "https" {
 		return nil, fmt.Errorf("subscription credentials require HTTPS")
+	}
+	return u, nil
+}
+
+func DownloadFeed(ctx context.Context, f Feed) ([]string, error) {
+	u, err := feedURL(f)
+	if err != nil {
+		return nil, err
 	}
 	req, err := http.NewRequestWithContext(ctx, "GET", f.URL, nil)
 	if err != nil {
@@ -138,7 +146,30 @@ func DownloadFeed(ctx context.Context, f Feed) ([]string, error) {
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("feed HTTP status %d", resp.StatusCode)
 	}
-	return parseFeed(io.LimitReader(resp.Body, MaxImport+1), strings.EqualFold(u.Hostname(), "feed.kislovs.ru"))
+	domains, err := parseFeed(io.LimitReader(resp.Body, MaxImport+1), strings.EqualFold(u.Hostname(), "feed.kislovs.ru"))
+	if err == nil && len(domains) == 0 {
+		return nil, fmt.Errorf("feed contains no domains")
+	}
+	return domains, err
+}
+
+// FeedInfo reads the fields needed by the scheduler without copying domain lists.
+type FeedInfo struct {
+	Name, URL, Authorization, Updated string
+	Enabled                           bool
+	Interval, Count                   int
+}
+
+func (e *Engine) FeedInfo() []FeedInfo {
+	feeds := e.state.Load().snap.config.Feeds
+	info := make([]FeedInfo, len(feeds))
+	for i, feed := range feeds {
+		info[i] = FeedInfo{
+			Name: feed.Name, URL: feed.URL, Authorization: feed.Authorization, Updated: feed.Updated,
+			Enabled: feed.Enabled, Interval: feed.RefreshIntervalMinutes, Count: len(feed.Domains),
+		}
+	}
+	return info
 }
 func ParseZone(r io.Reader, name string) ([]string, error) {
 	name = canonical(name)

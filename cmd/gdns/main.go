@@ -235,7 +235,9 @@ func run() error {
 	secondaryCtx, secondaryStop := context.WithCancel(context.Background())
 	secondaryDone := make(chan struct{})
 	go func() { defer close(secondaryDone); admin.RunSecondaries(secondaryCtx) }()
-	defer func() { secondaryStop(); <-secondaryDone }()
+	feedsDone := make(chan struct{})
+	go func() { defer close(feedsDone); admin.RunFeeds(secondaryCtx) }()
+	defer func() { secondaryStop(); <-secondaryDone; <-feedsDone }()
 	encrypted, err := transport.ListenWithAdmin(c, engine, admin.Handler())
 	if err != nil {
 		return err
@@ -267,6 +269,7 @@ func run() error {
 	case <-ctx.Done():
 	case err = <-errs:
 	}
+	secondaryStop()
 	shutdown, done := context.WithTimeout(context.Background(), 5*time.Second)
 	defer done()
 	if metricsServer != nil {
