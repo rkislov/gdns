@@ -8,6 +8,10 @@ Acceptance load fixed before measurements: warm UDP, 15000 QPS, 8 seconds,
 import argparse, json, pathlib, subprocess as sp, tempfile, time, os, statistics, hashlib, shutil
 p = argparse.ArgumentParser()
 p.add_argument('--out', required=True)
+p.add_argument('--resume-from', help='preserve and skip completed trials from an interrupted identical run')
+p.add_argument('--bind-only-compare', action='store_true', help='compare BIND and deployed candidate, omit historical baseline')
+p.add_argument('--local-port-base', type=int, default=0)
+p.add_argument('--control-seconds', type=int, default=8)
 modes = p.add_mutually_exclusive_group()
 modes.add_argument('--quick', action='store_true')
 modes.add_argument('--control-only', action='store_true')
@@ -21,6 +25,7 @@ p.add_argument('--workers', type=int, default=2)
 p.add_argument('--prebuilt-dir')
 p.add_argument('--pacing', choices=['spin','sleep'], default='spin')
 a = p.parse_args()
+implementations = ['bind', 'candidate'] if a.bind_only_compare else ['bind', 'baseline', 'candidate']
 root = pathlib.Path(__file__).resolve().parents[1]
 out = pathlib.Path(a.out).resolve()
 out.mkdir(parents=True, exist_ok=True)
@@ -97,14 +102,25 @@ def cpu():
     return int(dict((line.split() for line in docker('exec', server, 'cat', '/sys/fs/cgroup/cpu.stat').splitlines()))['usage_usec'])
 
 def load(rate, seconds, transport, mode, prime=False):
-    return docker('exec', client, '/lab/load', '-pacing', a.pacing, '-server', prefix + '11:53', '-rate', str(rate), '-seconds', str(seconds), '-transport', transport, '-mode', mode, *(['-prime'] if prime else []))
-rows = []
+    return docker('exec', client, '/lab/load', '-pacing', a.pacing, '-server', prefix + '11:53', '-rate', str(rate), '-seconds', str(seconds), '-transport', transport, '-mode', mode, '-local-port-base', str(a.local_port_base if transport == 'udp' else 0), *(['-prime'] if prime else []))
+rows = json.loads((pathlib.Path(a.resume_from) / 'raw.json').read_text()) if a.resume_from else []
 metadata = {'baseline_commit': source_metadata.get('baseline_commit', 'cce7c27') if source_metadata else 'cce7c27', 'candidate_commit': source_metadata['candidate_commit'] if source_metadata else run(['git', 'rev-parse', 'HEAD'], cwd=root), 'candidate_diff': source_metadata['candidate_diff'] if source_metadata else run(['git', 'diff'], cwd=root), 'image': json.loads(docker('image', 'inspect', image))[0]['Id'], 'architecture': 'linux/' + a.arch, 'resolver_cpus': a.server_cpus, 'client_cpus': a.client_cpus, 'auth_cpus': a.auth_cpus, 'workers': a.workers, 'memory_limit': '512m', 'acceptance_qps': 15000, 'ttl': 3600, 'working_set': 512, 'log': False, 'dnssec': False, 'lab': str(lab), 'go_version': source_metadata['go_version'] if source_metadata else run(['go', 'version']), 'docker_version': docker('version', '--format', '{{.Server.Version}}'), 'kernel': docker('info', '--format', '{{.KernelVersion}}')}
 if source_metadata and 'candidate_untracked_sources' in source_metadata:
     metadata['candidate_untracked_sources'] = source_metadata['candidate_untracked_sources']
 metadata['candidate_tags'] = source_metadata.get('candidate_tags', '') if source_metadata else ''
 metadata['pacing'] = a.pacing
+metadata['implementations'] = implementations
+metadata['local_port_base'] = a.local_port_base
+metadata['control_seconds'] = a.control_seconds
 metadata['binary_sha256'] = {name: hashlib.sha256((lab / name).read_bytes()).hexdigest() for name in ['baseline-bin', 'candidate', 'load']}
+if a.resume_from:
+    previous = json.loads((pathlib.Path(a.resume_from) / 'metadata.json').read_text())
+    for key in ['binary_sha256','image','architecture','resolver_cpus','client_cpus','auth_cpus','workers','pacing','local_port_base','control_seconds','implementations']:
+        if previous[key] != metadata[key]:
+            raise SystemExit('Resume configuration changed: ' + key)
+    metadata['resumed_from'] = str(pathlib.Path(a.resume_from).resolve())
+    metadata['resumed_rows'] = len(rows)
+    (out / 'raw.json').write_text(json.dumps(rows, indent=2))
 (out / 'metadata.json').write_text(json.dumps(metadata, indent=2))
 docker('network', 'create', '--internal', '--subnet', prefix + '0/24', network)
 try:
@@ -112,7 +128,7 @@ try:
     container(client, 20, a.client_cpus, 'sleep', ['36000'])
     time.sleep(1)
     (out / 'bind-version.txt').write_text(docker('exec', auth, 'named', '-V'))
-    scenarios = [('udp', 'warm', 15000, 5, 8), ('udp', 'warm', 5000, 3, 8), ('udp', 'warm', 30000, 3, 8), ('tcp', 'warm', 5000, 3, 5), ('udp', 'miss', 1000, 3, 5), ('udp', 'mixed', 5000, 3, 5)]
+    scenarios = [('udp', 'warm', 15000, 5, a.control_seconds), ('udp', 'warm', 5000, 3, 8), ('udp', 'warm', 30000, 3, 8), ('tcp', 'warm', 5000, 3, 5), ('udp', 'miss', 1000, 3, 5), ('udp', 'mixed', 5000, 3, 5)]
     if a.control_only:
         scenarios = scenarios[:1]
     if a.capacity_sweep:
@@ -140,9 +156,10 @@ try:
         scenarios = [('udp', 'warm', 15000, 3, 5)]
     for transport, mode, rate, repeats, duration in scenarios:
         for repeat in range(repeats):
-            impls = ['bind', 'baseline', 'candidate']
-            impls = impls[repeat % 3:] + impls[:repeat % 3]
+            impls = implementations[repeat % len(implementations):] + implementations[:repeat % len(implementations)]
             for impl in impls:
+                if any(r['transport']==transport and r['mode']==mode and r['target_qps']==rate and r['repeat']==repeat and r['impl']==impl for r in rows):
+                    continue
                 remove(server)
                 if impl == 'bind':
                     container(server, 11, a.server_cpus, 'named', ['-g', '-n', str(a.workers), '-c', '/lab/bind.conf'])
@@ -187,7 +204,7 @@ if a.capacity_sweep:
     diagnostic = {}
     for rate in [1000, 5000, 10000]:
         diagnostic[str(rate)] = {}
-        for impl in ['bind', 'baseline', 'candidate']:
+        for impl in implementations:
             trials = [r for r in rows if r['target_qps'] == rate and r['impl'] == impl]
             diagnostic[str(rate)][impl] = {
                 'p95_median_ms': statistics.median(r['p95_ms'] for r in trials),
@@ -201,13 +218,13 @@ if a.capacity_sweep:
     print(json.dumps(summary))
     raise SystemExit(0)
 control = [r for r in rows if r['transport'] == 'udp' and r['mode'] == 'warm' and (r['target_qps'] == 15000)]
-medians = {impl: statistics.median((r['p95_ms'] for r in control if r['impl'] == impl)) for impl in ['bind', 'baseline', 'candidate']}
+medians = {impl: statistics.median((r['p95_ms'] for r in control if r['impl'] == impl)) for impl in implementations}
 errors = {impl: sum((r['errors'] + r['timeouts'] for r in control if r['impl'] == impl)) for impl in medians}
 qps = {impl: statistics.median((r['qps'] for r in control if r['impl'] == impl)) for impl in medians}
 checks = {
     'p95_twenty_percent_better_than_bind': medians['candidate'] <= 0.8 * medians['bind'],
-    'p95_better_than_baseline': medians['candidate'] < medians['baseline'],
-    'loss_not_worse': errors['candidate'] <= min(errors['bind'], errors['baseline']),
+    'p95_better_than_baseline': medians['candidate'] < medians['baseline'] if 'baseline' in medians else True,
+    'loss_not_worse': errors['candidate'] <= min(errors[impl] for impl in errors if impl != 'candidate'),
     'comparable_goodput': min(qps.values()) >= 0.99 * 15000 and min(qps.values()) >= 0.99 * max(qps.values()),
     'full_control_repeats': all(sum(r['impl'] == impl for r in control) >= 5 for impl in medians),
 }
