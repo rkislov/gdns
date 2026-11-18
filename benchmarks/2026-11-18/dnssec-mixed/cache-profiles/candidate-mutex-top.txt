@@ -1,0 +1,38 @@
+File: candidate-profile
+Build ID: 883734ab8019979196342cfe373833a324ea2492
+Type: delay
+Time: 2026-11-18 06:49:34 MSK
+Showing nodes accounting for 12678.42us, 100% of 12678.42us total
+Dropped 65 nodes (cum <= 63.39us)
+Showing top 30 nodes out of 130
+      flat  flat%   sum%        cum   cum%
+ 7122.24us 56.18% 56.18%  7122.24us 56.18%  runtime.unlock (inline)
+ 3898.01us 30.75% 86.92%  3898.01us 30.75%  sync.(*Mutex).Unlock (partial-inline)
+ 1251.06us  9.87% 96.79%  1831.25us 14.44%  sync.(*RWMutex).Unlock
+  407.11us  3.21%   100%   407.11us  3.21%  sync.(*RWMutex).RUnlock (inline)
+         0     0%   100%  1136.63us  8.97%  context.WithDeadline (inline)
+         0     0%   100%  1136.63us  8.97%  context.WithDeadlineCause
+         0     0%   100%  1076.67us  8.49%  context.WithTimeout
+         0     0%   100%  8477.70us 66.87%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%  8477.70us 66.87%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%  5133.26us 40.49%  gdns/internal/core.(*Engine).Resolve.func2
+         0     0%   100%  1407.15us 11.10%  gdns/internal/core.(*Engine).Resolve.func2.2
+         0     0%   100%  9792.74us 77.24%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%   100%  9792.74us 77.24%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0%   100%   326.65us  2.58%  gdns/internal/core.(*cache).getReply
+         0     0%   100%   326.65us  2.58%  gdns/internal/core.addressReply[go.shape.struct { Hdr github.com/miekg/dns.RR_Header; A net.IP "dns:\"a\"" }] (inline)
+         0     0%   100%   326.65us  2.58%  gdns/internal/core.copyCachedAddress
+         0     0%   100%  1471.93us 11.61%  gdns/internal/core.exchange
+         0     0%   100%  1471.93us 11.61%  gdns/internal/core.lookup
+         0     0%   100%  1315.04us 10.37%  gdns/internal/core.writeUDPReply
+         0     0%   100%  3950.44us 31.16%  gdns/internal/dnssec.(*Validator).Validate
+         0     0%   100%  3950.44us 31.16%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%   100%  1818.27us 14.34%  gdns/internal/dnssec.(*validationRun).buildState
+         0     0%   100%  1407.15us 11.10%  gdns/internal/dnssec.(*validationRun).query
+         0     0%   100%  3950.44us 31.16%  gdns/internal/dnssec.(*validationRun).state
+         0     0%   100%  3648.31us 28.78%  gdns/internal/dnssec.(*validationRun).state.func1
+         0     0%   100%   652.29us  5.14%  gdns/internal/transport.(*packetUDPConn).ReadFrom
+         0     0%   100%  1315.04us 10.37%  gdns/internal/transport.(*packetUDPConn).WriteTo
+         0     0%   100% 10107.21us 79.72%  gdns/internal/transport.udpHandler.func1
+         0     0%   100%  1471.93us 11.61%  github.com/miekg/dns.(*Client).ExchangeContext
+         0     0%   100%  1411.97us 11.14%  github.com/miekg/dns.(*Client).ExchangeWithConnContext

@@ -1,0 +1,38 @@
+File: candidate-profile
+Build ID: f0efe8c7caf2218bdbe2190818b4726b9c4f3e54
+Type: delay
+Time: 2026-11-18 06:38:47 MSK
+Showing nodes accounting for 27.54ms, 100% of 27.54ms total
+Dropped 51 nodes (cum <= 0.14ms)
+Showing top 30 nodes out of 89
+      flat  flat%   sum%        cum   cum%
+   16.20ms 58.83% 58.83%    16.20ms 58.83%  sync.(*Mutex).Unlock (partial-inline)
+    5.94ms 21.57% 80.40%     5.94ms 21.57%  runtime.unlock (inline)
+    2.70ms  9.81% 90.21%     2.70ms  9.81%  sync.(*RWMutex).RUnlock (inline)
+    2.70ms  9.79%   100%     8.81ms 31.97%  sync.(*RWMutex).Unlock
+         0     0%   100%    22.73ms 82.54%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    22.73ms 82.54%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%    12.64ms 45.90%  gdns/internal/core.(*Engine).Resolve.func2
+         0     0%   100%    22.73ms 82.54%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%   100%    22.73ms 82.54%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0%   100%     1.10ms  4.00%  gdns/internal/core.(*cache).put
+         0     0%   100%     1.10ms  4.00%  gdns/internal/core.(*cache).put.deferwrap1
+         0     0%   100%     0.98ms  3.57%  gdns/internal/core.exchange
+         0     0%   100%     0.98ms  3.57%  gdns/internal/core.lookup
+         0     0%   100%    10.67ms 38.74%  gdns/internal/dnssec.(*Validator).Validate
+         0     0%   100%    10.67ms 38.74%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%   100%     2.81ms 10.19%  gdns/internal/dnssec.(*validationRun).buildState
+         0     0%   100%    10.52ms 38.19%  gdns/internal/dnssec.(*validationRun).state
+         0     0%   100%    10.51ms 38.17%  gdns/internal/dnssec.(*validationRun).state.func1
+         0     0%   100%     0.14ms  0.51%  gdns/internal/dnssec.(*validationRun).verify
+         0     0%   100%     0.27ms  0.98%  gdns/internal/transport.(*packetUDPConn).ReadFrom
+         0     0%   100%    22.73ms 82.54%  gdns/internal/transport.udpHandler.func1
+         0     0%   100%     0.98ms  3.57%  github.com/miekg/dns.(*Client).ExchangeContext
+         0     0%   100%     0.93ms  3.38%  github.com/miekg/dns.(*Client).ExchangeWithConnContext
+         0     0%   100%     0.20ms  0.71%  github.com/miekg/dns.(*Conn).Read
+         0     0%   100%     0.93ms  3.36%  github.com/miekg/dns.(*Conn).ReadMsg
+         0     0%   100%     0.93ms  3.36%  github.com/miekg/dns.(*Conn).ReadMsgHeader
+         0     0%   100%     0.43ms  1.58%  github.com/miekg/dns.(*Server).ActivateAndServe
+         0     0%   100%     0.27ms  0.98%  github.com/miekg/dns.(*Server).readPacketConn
+         0     0%   100%    22.88ms 83.08%  github.com/miekg/dns.(*Server).serveDNS
+         0     0%   100%     0.43ms  1.58%  github.com/miekg/dns.(*Server).serveUDP

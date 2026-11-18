@@ -1,0 +1,39 @@
+File: candidate-profile
+Build ID: 883734ab8019979196342cfe373833a324ea2492
+Type: cpu
+Time: 2026-11-18 06:49:26 MSK
+Duration: 8.01s, Total samples = 7.38s (92.10%)
+Showing nodes accounting for 4.58s, 62.06% of 7.38s total
+Dropped 343 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 283
+      flat  flat%   sum%        cum   cum%
+     1.99s 26.96% 26.96%      1.99s 26.96%  internal/runtime/syscall/linux.Syscall6
+     0.49s  6.64% 33.60%      0.49s  6.64%  p256MulInternal
+     0.27s  3.66% 37.26%      0.27s  3.66%  p256SqrInternal
+     0.25s  3.39% 40.65%      0.27s  3.66%  runtime.step
+     0.15s  2.03% 42.68%      0.66s  8.94%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.15s  2.03% 44.72%      0.45s  6.10%  runtime.pcvalue
+     0.12s  1.63% 46.34%      0.12s  1.63%  runtime.findfunc
+     0.10s  1.36% 47.70%      0.40s  5.42%  runtime.(*unwinder).resolveInternal
+     0.09s  1.22% 48.92%      0.09s  1.22%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.08s  1.08% 50.00%      0.08s  1.08%  runtime.nextFreeFast (inline)
+     0.08s  1.08% 51.08%      0.08s  1.08%  runtime.spanClass.sizeclass (inline)
+     0.06s  0.81% 51.90%      0.06s  0.81%  crypto/internal/fips140/nistec.p256Select
+     0.06s  0.81% 52.71%      0.11s  1.49%  runtime.(*stkframe).getStackMap
+     0.06s  0.81% 53.52%      1.12s 15.18%  runtime.mallocgc
+     0.05s  0.68% 54.20%      0.05s  0.68%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.05s  0.68% 54.88%      0.05s  0.68%  runtime.futex
+     0.05s  0.68% 55.56%      0.05s  0.68%  runtime.memclrNoHeapPointers
+     0.05s  0.68% 56.23%      0.07s  0.95%  strings.Map
+     0.05s  0.68% 56.91%      0.05s  0.68%  time.runtimeNow
+     0.04s  0.54% 57.45%      0.04s  0.54%  internal/runtime/maps.ctrlGroup.matchH2
+     0.04s  0.54% 57.99%      0.04s  0.54%  p256SubInternal
+     0.04s  0.54% 58.54%      0.05s  0.68%  runtime.mallocgcSmallNoScanSC4
+     0.04s  0.54% 59.08%      0.06s  0.81%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.04s  0.54% 59.62%      0.04s  0.54%  runtime.memmove
+     0.03s  0.41% 60.03%      0.26s  3.52%  context.WithDeadlineCause
+     0.03s  0.41% 60.43%      0.12s  1.63%  crypto/internal/fips140/nistec.p256PointAddAffineAsm
+     0.03s  0.41% 60.84%      0.16s  2.17%  github.com/miekg/dns.UnpackDomainName
+     0.03s  0.41% 61.25%      0.10s  1.36%  net.(*Resolver).internetAddrList
+     0.03s  0.41% 61.65%      0.08s  1.08%  runtime.(*mcentral).cacheSpan
+     0.03s  0.41% 62.06%      0.07s  0.95%  runtime.SetFinalizer

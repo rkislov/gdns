@@ -1,0 +1,39 @@
+File: baseline-profile
+Build ID: 1aadf4eb46616bc00d5f1d90b2383f0c36cff790
+Type: cpu
+Time: 2026-11-18 06:58:14 MSK
+Duration: 8.01s, Total samples = 7.35s (91.76%)
+Showing nodes accounting for 4.60s, 62.59% of 7.35s total
+Dropped 368 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 280
+      flat  flat%   sum%        cum   cum%
+     1.74s 23.67% 23.67%      1.74s 23.67%  internal/runtime/syscall/linux.Syscall6
+     0.59s  8.03% 31.70%      0.59s  8.03%  p256MulInternal
+     0.26s  3.54% 35.24%      0.26s  3.54%  p256SqrInternal
+     0.22s  2.99% 38.23%      0.23s  3.13%  runtime.step
+     0.20s  2.72% 40.95%      0.59s  8.03%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.16s  2.18% 43.13%      0.17s  2.31%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.16s  2.18% 45.31%      0.43s  5.85%  runtime.pcvalue
+     0.13s  1.77% 47.07%      0.13s  1.77%  runtime.futex
+     0.12s  1.63% 48.71%      0.12s  1.63%  runtime.findfunc
+     0.09s  1.22% 49.93%      0.34s  4.63%  runtime.(*unwinder).resolveInternal
+     0.07s  0.95% 50.88%      0.07s  0.95%  runtime.memclrNoHeapPointers
+     0.07s  0.95% 51.84%      0.07s  0.95%  runtime.memmove
+     0.07s  0.95% 52.79%      0.07s  0.95%  runtime.nanotime (inline)
+     0.07s  0.95% 53.74%      0.08s  1.09%  strings.Map
+     0.05s  0.68% 54.42%      0.40s  5.44%  crypto/internal/fips140/nistec.p256PointAddAsm
+     0.05s  0.68% 55.10%      0.33s  4.49%  gdns/internal/core.(*cache).getReply
+     0.05s  0.68% 55.78%      0.05s  0.68%  runtime.asyncPreempt
+     0.05s  0.68% 56.46%      0.07s  0.95%  runtime.stkbucket
+     0.04s  0.54% 57.01%      0.04s  0.54%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.04s  0.54% 57.55%      0.04s  0.54%  crypto/internal/fips140/nistec.p256Sqr
+     0.04s  0.54% 58.10%      0.08s  1.09%  runtime.(*stkframe).getStackMap
+     0.04s  0.54% 58.64%      0.04s  0.54%  runtime.acquirem (inline)
+     0.04s  0.54% 59.18%      0.04s  0.54%  runtime.exitsyscall
+     0.04s  0.54% 59.73%      0.07s  0.95%  runtime.mallocgcSmallScanNoHeaderSC4
+     0.04s  0.54% 60.27%      0.04s  0.54%  runtime.nextFreeFast (inline)
+     0.04s  0.54% 60.82%      0.04s  0.54%  runtime.spanClass.sizeclass
+     0.04s  0.54% 61.36%      0.04s  0.54%  time.runtimeNow
+     0.03s  0.41% 61.77%      0.17s  2.31%  crypto/internal/fips140/nistec.p256PointAddAffineAsm
+     0.03s  0.41% 62.18%      0.04s  0.54%  gdns/internal/core.(*Engine).observeDNSSEC
+     0.03s  0.41% 62.59%      0.45s  6.12%  github.com/miekg/dns.(*Server).readPacketConn

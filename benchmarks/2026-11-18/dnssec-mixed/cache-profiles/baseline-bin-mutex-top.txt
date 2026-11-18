@@ -1,0 +1,38 @@
+File: baseline-profile
+Build ID: 1aadf4eb46616bc00d5f1d90b2383f0c36cff790
+Type: delay
+Time: 2026-11-18 06:49:17 MSK
+Showing nodes accounting for 18.24ms, 100% of 18.24ms total
+Dropped 87 nodes (cum <= 0.09ms)
+Showing top 30 nodes out of 108
+      flat  flat%   sum%        cum   cum%
+   11.40ms 62.52% 62.52%    11.40ms 62.52%  sync.(*Mutex).Unlock (partial-inline)
+    5.17ms 28.35% 90.88%     5.17ms 28.35%  runtime.unlock (inline)
+    1.55ms  8.49% 99.37%     1.55ms  8.49%  runtime._LostContendedRuntimeLock
+    0.12ms  0.63%   100%     0.98ms  5.36%  sync.(*RWMutex).Unlock
+         0     0%   100%     1.05ms  5.78%  context.WithDeadline (inline)
+         0     0%   100%     1.05ms  5.78%  context.WithDeadlineCause
+         0     0%   100%    13.27ms 72.73%  gdns/internal/core.(*Engine).AnswerAs
+         0     0%   100%    13.27ms 72.73%  gdns/internal/core.(*Engine).Resolve
+         0     0%   100%    12.76ms 69.98%  gdns/internal/core.(*Engine).Resolve.func2
+         0     0%   100%     0.61ms  3.37%  gdns/internal/core.(*Engine).Resolve.func2.2
+         0     0%   100%    13.27ms 72.75%  gdns/internal/core.(*Engine).ServeDNS
+         0     0%   100%    13.27ms 72.75%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0%   100%     0.25ms  1.39%  gdns/internal/core.(*cache).getReply
+         0     0%   100%     1.37ms  7.53%  gdns/internal/core.exchange
+         0     0%   100%     1.37ms  7.53%  gdns/internal/core.lookup
+         0     0%   100%    11.98ms 65.70%  gdns/internal/dnssec.(*Validator).Validate
+         0     0%   100%    11.98ms 65.70%  gdns/internal/dnssec.(*validationRun).answer
+         0     0%   100%     0.67ms  3.66%  gdns/internal/dnssec.(*validationRun).buildState
+         0     0%   100%     0.61ms  3.37%  gdns/internal/dnssec.(*validationRun).query
+         0     0%   100%    11.92ms 65.33%  gdns/internal/dnssec.(*validationRun).state
+         0     0%   100%     1.64ms  9.02%  gdns/internal/dnssec.(*validationRun).state.func1
+         0     0%   100%     0.11ms  0.62%  gdns/internal/dnssec.(*validationRun).verify
+         0     0%   100%    13.27ms 72.75%  gdns/internal/transport.udpHandler.func1
+         0     0%   100%     0.29ms  1.57%  github.com/miekg/dns.(*A).copy
+         0     0%   100%     1.21ms  6.62%  github.com/miekg/dns.(*Client).DialContext
+         0     0%   100%     1.37ms  7.53%  github.com/miekg/dns.(*Client).ExchangeContext
+         0     0%   100%     0.23ms  1.28%  github.com/miekg/dns.(*Msg).Copy (inline)
+         0     0%   100%     0.23ms  1.24%  github.com/miekg/dns.(*Msg).CopyTo
+         0     0%   100%    13.27ms 72.75%  github.com/miekg/dns.(*Server).serveDNS
+         0     0%   100%    11.52ms 63.15%  github.com/miekg/dns.(*Server).serveUDP.gowrap2

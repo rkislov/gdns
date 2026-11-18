@@ -5,12 +5,16 @@
 package transport
 
 import (
+	"errors"
 	"github.com/miekg/dns"
 	"golang.org/x/net/ipv4"
 	"golang.org/x/net/ipv6"
 	"golang.org/x/sys/unix"
 	"net"
 	"net/netip"
+	"os"
+	"sync/atomic"
+	"time"
 )
 
 type udpPacketPeer struct {
@@ -25,7 +29,56 @@ type udpPacketPeer struct {
 func (p *udpPacketPeer) Network() string { return "udp" }
 func (p *udpPacketPeer) String() string  { return p.addr.String() }
 
-type packetUDPConn struct{ *net.UDPConn }
+type packetUDPConn struct {
+	*net.UDPConn
+	writer *net.UDPConn
+	next   atomic.Uint32
+}
+
+// A second poll descriptor shares the same socket and source address, but has
+// its own Go write lock. Reads remain on the original descriptor.
+func duplicateUDPWriter(conn *net.UDPConn) *net.UDPConn {
+	raw, err := conn.SyscallConn()
+	if err != nil {
+		return nil
+	}
+	fd := -1
+	var dupErr error
+	if err = raw.Control(func(original uintptr) {
+		fd, dupErr = unix.FcntlInt(original, unix.F_DUPFD_CLOEXEC, 0)
+	}); err != nil || dupErr != nil {
+		return nil
+	}
+	file := os.NewFile(uintptr(fd), "gdns-udp-writer")
+	packet, err := net.FilePacketConn(file)
+	file.Close()
+	if err != nil {
+		return nil
+	}
+	writer, ok := packet.(*net.UDPConn)
+	if !ok {
+		packet.Close()
+		return nil
+	}
+	return writer
+}
+func (c *packetUDPConn) Close() error {
+	err := c.UDPConn.Close()
+	if c.writer != nil {
+		err = errors.Join(err, c.writer.Close())
+	}
+	return err
+}
+func (c *packetUDPConn) SetWriteDeadline(t time.Time) error {
+	err := c.UDPConn.SetWriteDeadline(t)
+	if c.writer != nil {
+		err = errors.Join(err, c.writer.SetWriteDeadline(t))
+	}
+	return err
+}
+func (c *packetUDPConn) SetDeadline(t time.Time) error {
+	return errors.Join(c.UDPConn.SetReadDeadline(t), c.SetWriteDeadline(t))
+}
 
 func wrapUDPPacketConn(conn net.PacketConn) net.PacketConn {
 	udp, ok := conn.(*net.UDPConn)
@@ -37,11 +90,15 @@ func wrapUDPPacketConn(conn net.PacketConn) net.PacketConn {
 	if err4 != nil && err6 != nil {
 		return conn
 	}
-	return &packetUDPConn{udp}
+	wrapped := &packetUDPConn{UDPConn: udp}
+	if parallelUDPWriter {
+		wrapped.writer = duplicateUDPWriter(udp)
+	}
+	return wrapped
 }
 
 // Each request owns both receive scratch and outgoing packet-info.
-// No batching, queue, deadline override, or scheduling change is introduced.
+// No batching, queue, or scheduling change is introduced.
 func (c *packetUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	peer := new(udpPacketPeer)
 	n, nn, _, addr, err := c.UDPConn.ReadMsgUDPAddrPort(b, peer.receive[:])
@@ -63,11 +120,15 @@ func (c *packetUDPConn) ReadFrom(b []byte) (int, net.Addr, error) {
 	return n, peer, nil
 }
 func (c *packetUDPConn) WriteTo(b []byte, addr net.Addr) (int, error) {
+	writer := c.UDPConn
+	if c.writer != nil && c.next.Add(1)&1 != 0 {
+		writer = c.writer
+	}
 	if peer, ok := addr.(*udpPacketPeer); ok {
-		n, _, err := c.UDPConn.WriteMsgUDPAddrPort(b, peer.replyControl, peer.remote)
+		n, _, err := writer.WriteMsgUDPAddrPort(b, peer.replyControl, peer.remote)
 		return n, err
 	}
-	return c.UDPConn.WriteTo(b, addr)
+	return writer.WriteTo(b, addr)
 }
 func (p *udpPacketPeer) setReplyControl(oob []byte) {
 	original := oob

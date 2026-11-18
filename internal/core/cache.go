@@ -99,11 +99,21 @@ func addressReply[T any](edns bool) *cachedAddressReply[T] {
 
 // Cached records are immutable. A single address and its TTL fit in the
 // reply allocation, including private IP bytes and a per-client OPT.
-func copyCachedAddress(message *dns.Msg, age uint32, edns bool) *dns.Msg {
-	if len(message.Answer) != 1 || len(message.Ns) != 0 {
+func copyCachedAddress(message *dns.Msg, age uint32, edns, stripSignatures bool) *dns.Msg {
+	if len(message.Ns) != 0 || (!stripSignatures && len(message.Answer) != 1) {
 		return nil
 	}
-	switch rr := message.Answer[0].(type) {
+	var record dns.RR
+	for _, rr := range message.Answer {
+		if stripSignatures && rr.Header().Rrtype == dns.TypeRRSIG {
+			continue
+		}
+		if record != nil {
+			return nil
+		}
+		record = rr
+	}
+	switch rr := record.(type) {
 	case *dns.A:
 		if len(rr.A) != 4 && len(rr.A) != 16 {
 			return nil
@@ -155,7 +165,9 @@ func (c *cache) getReply(k cacheKey, edns bool) *dns.Msg {
 			}
 		}
 	}
-	if m := copyCachedAddress(e.msg, age, edns); m != nil {
+	// Signature validity above is checked against the complete immutable entry.
+	// Non-DO address clients do not need copies of signatures they cannot receive.
+	if m := copyCachedAddress(e.msg, age, edns, signedAddressCacheFastPath && !k.do && (k.qtype == dns.TypeA || k.qtype == dns.TypeAAAA)); m != nil {
 		return m
 	}
 	var m *dns.Msg

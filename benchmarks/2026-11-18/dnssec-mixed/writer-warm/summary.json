@@ -1,0 +1,12 @@
+{
+  "warm": {
+    "baseline-bin": {
+      "p95_ms": 3.672527,
+      "losses": 0
+    },
+    "candidate": {
+      "p95_ms": 5.559425,
+      "losses": 0
+    }
+  }
+}

@@ -1,0 +1,39 @@
+File: baseline-profile
+Build ID: 1aadf4eb46616bc00d5f1d90b2383f0c36cff790
+Type: cpu
+Time: 2026-11-18 06:49:09 MSK
+Duration: 8s, Total samples = 7.47s (93.32%)
+Showing nodes accounting for 4.57s, 61.18% of 7.47s total
+Dropped 353 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 273
+      flat  flat%   sum%        cum   cum%
+     1.91s 25.57% 25.57%      1.91s 25.57%  internal/runtime/syscall/linux.Syscall6
+     0.59s  7.90% 33.47%      0.59s  7.90%  p256MulInternal
+     0.35s  4.69% 38.15%      0.35s  4.69%  p256SqrInternal
+     0.16s  2.14% 40.29%      0.22s  2.95%  runtime.step
+     0.14s  1.87% 42.17%      0.69s  9.24%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.13s  1.74% 43.91%      0.13s  1.74%  runtime.futex
+     0.12s  1.61% 45.52%      0.14s  1.87%  runtime.findfunc
+     0.10s  1.34% 46.85%      0.10s  1.34%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.10s  1.34% 48.19%      0.32s  4.28%  runtime.pcvalue
+     0.08s  1.07% 49.26%      0.08s  1.07%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.08s  1.07% 50.33%      0.08s  1.07%  runtime.spanClass.sizeclass
+     0.07s  0.94% 51.27%      0.07s  0.94%  runtime.nextFreeFast (inline)
+     0.06s   0.8% 52.07%      0.07s  0.94%  runtime.exitsyscall
+     0.06s   0.8% 52.88%      0.06s   0.8%  runtime.readvarint (inline)
+     0.06s   0.8% 53.68%      0.08s  1.07%  strings.Map
+     0.05s  0.67% 54.35%      0.26s  3.48%  runtime.(*unwinder).resolveInternal
+     0.05s  0.67% 55.02%      0.92s 12.32%  runtime.mallocgc
+     0.05s  0.67% 55.69%      0.06s   0.8%  runtime.stkbucket
+     0.04s  0.54% 56.22%      0.30s  4.02%  crypto/internal/fips140/nistec.p256PointAddAsm
+     0.04s  0.54% 56.76%      0.04s  0.54%  crypto/internal/fips140/nistec.p256Select
+     0.04s  0.54% 57.30%      0.04s  0.54%  github.com/miekg/dns.isPacketConn
+     0.04s  0.54% 57.83%      0.04s  0.54%  runtime.(*mspan).writeHeapBitsSmall
+     0.04s  0.54% 58.37%      1.72s 23.03%  syscall.RawSyscall6
+     0.03s   0.4% 58.77%      1.37s 18.34%  gdns/internal/core.writeUDPReply
+     0.03s   0.4% 59.17%      0.16s  2.14%  github.com/miekg/dns.UnpackDomainName
+     0.03s   0.4% 59.57%      1.18s 15.80%  net.(*UDPConn).writeMsgAddrPort
+     0.03s   0.4% 59.97%      0.09s  1.20%  runtime.(*mcentral).cacheSpan
+     0.03s   0.4% 60.37%      0.06s   0.8%  runtime.(*stkframe).getStackMap
+     0.03s   0.4% 60.78%      0.10s  1.34%  runtime.adjustframe
+     0.03s   0.4% 61.18%      0.08s  1.07%  runtime.isSystemGoroutine

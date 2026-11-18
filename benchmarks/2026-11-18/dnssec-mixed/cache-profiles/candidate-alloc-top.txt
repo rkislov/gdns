@@ -1,0 +1,48 @@
+File: candidate-profile
+Build ID: 883734ab8019979196342cfe373833a324ea2492
+Type: alloc_space
+Time: 2026-11-18 06:49:26 MSK
+Showing nodes accounting for 104.61MB, 81.00% of 129.14MB total
+Dropped 153 nodes (cum <= 0.65MB)
+Showing top 40 nodes out of 147
+      flat  flat%   sum%        cum   cum%
+   12.34MB  9.55%  9.55%    12.34MB  9.55%  gdns/internal/transport.(*packetUDPConn).ReadFrom
+    9.80MB  7.59% 17.14%     9.80MB  7.59%  github.com/miekg/dns.(*Conn).ReadMsgHeader
+    7.43MB  5.76% 22.90%     7.43MB  5.76%  gdns/internal/core.addressReply[go.shape.struct { Hdr github.com/miekg/dns.RR_Header; A net.IP "dns:\"a\"" }] (inline)
+    6.55MB  5.07% 27.96%   102.23MB 79.16%  github.com/miekg/dns.(*Server).serveDNS
+    5.05MB  3.91% 31.87%   107.28MB 83.07%  github.com/miekg/dns.(*Server).serveUDPPacket
+    4.20MB  3.25% 35.12%     4.20MB  3.25%  crypto/internal/fips140/nistec.NewP256Point
+    3.84MB  2.97% 38.09%    16.84MB 13.04%  github.com/miekg/dns.(*Server).serveUDP
+    3.44MB  2.66% 40.76%     3.44MB  2.66%  github.com/miekg/dns.UnpackDomainName
+    3.40MB  2.63% 43.39%        5MB  3.87%  vendor/golang.org/x/crypto/cryptobyte.(*Builder).addLengthPrefixed
+    3.24MB  2.51% 45.90%     7.19MB  5.57%  github.com/semihalev/sdns/middleware/resolver/dnssec.rrsigSignedData
+    2.93MB  2.27% 48.17%    44.03MB 34.09%  gdns/internal/dnssec.(*validationRun).state
+    2.91MB  2.25% 50.42%     2.91MB  2.25%  math/big.nat.make (inline)
+    2.88MB  2.23% 52.65%     3.95MB  3.06%  github.com/semihalev/sdns/middleware/resolver/dnssec.canonicalRRset
+    2.19MB  1.70% 54.35%     2.19MB  1.70%  encoding/base64.(*Encoding).EncodeToString
+    2.01MB  1.56% 55.91%     2.01MB  1.56%  github.com/miekg/dns.(*RR_Header).String
+    1.92MB  1.49% 57.40%     4.66MB  3.61%  context.WithDeadlineCause
+    1.91MB  1.48% 58.87%     1.91MB  1.48%  github.com/semihalev/sdns/middleware/resolver/dnssec.fromBase64
+    1.73MB  1.34% 60.21%     5.91MB  4.57%  github.com/miekg/dns.(*Msg).Copy (inline)
+    1.68MB  1.30% 61.51%     1.68MB  1.30%  vendor/golang.org/x/crypto/cryptobyte.(*Builder).add (inline)
+    1.66MB  1.29% 62.79%    11.55MB  8.94%  github.com/miekg/dns.(*Client).DialContext
+    1.46MB  1.13% 63.93%     1.46MB  1.13%  crypto/internal/fips140/sha256.New (inline)
+    1.45MB  1.12% 65.05%     1.45MB  1.12%  github.com/miekg/dns.(*RRSIG).copy
+    1.40MB  1.08% 66.13%     9.89MB  7.66%  net.(*Dialer).DialContext
+    1.35MB  1.05% 67.18%     1.35MB  1.05%  context.(*cancelCtx).Done
+    1.29MB  1.00% 68.18%     1.29MB  1.00%  time.newTimer
+    1.24MB  0.96% 69.14%     1.43MB  1.11%  github.com/miekg/dns.(*A).copy
+    1.22MB  0.94% 70.08%    21.40MB 16.57%  github.com/semihalev/sdns/middleware/resolver/dnssec.verifyECDSASignature
+    1.20MB  0.93% 71.01%     1.36MB  1.05%  gdns/internal/dnssec.message
+    1.19MB  0.92% 71.93%     1.19MB  0.92%  github.com/miekg/dns.init.func62
+    1.16MB   0.9% 72.83%     1.16MB   0.9%  net.newFD (inline)
+    1.16MB   0.9% 73.73%    43.44MB 33.64%  gdns/internal/dnssec.(*validationRun).state.func1
+    1.14MB  0.88% 74.62%    19.53MB 15.13%  github.com/miekg/dns.(*Conn).ReadMsg
+    1.14MB  0.88% 75.50%     3.27MB  2.53%  crypto/internal/fips140/ecdsa.NewPublicKey[go.shape.*crypto/internal/fips140/nistec.P256Point]
+    1.12MB  0.87% 76.37%     1.12MB  0.87%  runtime/pprof.StartCPUProfile
+    1.10MB  0.85% 77.22%     2.34MB  1.81%  github.com/miekg/dns.(*RRSIG).String
+    1.09MB  0.85% 78.06%    10.79MB  8.36%  github.com/miekg/dns.(*Msg).unpack
+    1.01MB  0.78% 78.84%     1.45MB  1.12%  context.(*cancelCtx).propagateCancel
+    0.96MB  0.74% 79.59%     6.33MB  4.90%  github.com/miekg/dns.UnpackRRWithHeader
+    0.92MB  0.71% 80.30%     0.92MB  0.71%  crypto/ecdsa.pointFromAffine
+    0.91MB   0.7% 81.00%    93.34MB 72.27%  gdns/internal/transport.udpHandler.func1

@@ -1,0 +1,39 @@
+File: candidate-profile
+Build ID: 4a9b974afe61a6f556b6be6730892a9ab52535fa
+Type: cpu
+Time: 2026-11-18 06:58:31 MSK
+Duration: 8s, Total samples = 7.39s (92.35%)
+Showing nodes accounting for 4.66s, 63.06% of 7.39s total
+Dropped 348 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 260
+      flat  flat%   sum%        cum   cum%
+     1.82s 24.63% 24.63%      1.82s 24.63%  internal/runtime/syscall/linux.Syscall6
+     0.67s  9.07% 33.69%      0.67s  9.07%  p256MulInternal
+     0.42s  5.68% 39.38%      0.42s  5.68%  p256SqrInternal
+     0.16s  2.17% 41.54%      0.84s 11.37%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.13s  1.76% 43.30%      0.31s  4.19%  runtime.pcvalue
+     0.12s  1.62% 44.93%      0.12s  1.62%  runtime.futex
+     0.12s  1.62% 46.55%      0.15s  2.03%  runtime.step
+     0.10s  1.35% 47.90%      0.10s  1.35%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.10s  1.35% 49.26%      0.10s  1.35%  crypto/internal/fips140/nistec.p256Sqr
+     0.10s  1.35% 50.61%      0.11s  1.49%  runtime.findfunc
+     0.09s  1.22% 51.83%      0.09s  1.22%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.06s  0.81% 52.64%      0.39s  5.28%  crypto/internal/fips140/nistec.p256PointAddAsm
+     0.06s  0.81% 53.45%      0.06s  0.81%  p256SubInternal
+     0.06s  0.81% 54.26%      0.06s  0.81%  runtime.memclrNoHeapPointers
+     0.06s  0.81% 55.07%      0.06s  0.81%  runtime.spanClass.sizeclass
+     0.05s  0.68% 55.75%      0.22s  2.98%  runtime.(*unwinder).resolveInternal
+     0.04s  0.54% 56.29%      0.04s  0.54%  crypto/internal/fips140/nistec.p256OrdMul
+     0.04s  0.54% 56.83%      0.19s  2.57%  crypto/internal/fips140/nistec.p256PointAddAffineAsm
+     0.04s  0.54% 57.37%      0.04s  0.54%  crypto/internal/fips140/nistec.p256Select
+     0.04s  0.54% 57.92%      0.27s  3.65%  github.com/miekg/dns.UnpackDomainName
+     0.04s  0.54% 58.46%      0.09s  1.22%  runtime.(*stkframe).getStackMap
+     0.04s  0.54% 59.00%      0.04s  0.54%  runtime.exitsyscall
+     0.04s  0.54% 59.54%      0.06s  0.81%  runtime.mallocgcSmallNoScanSC4
+     0.04s  0.54% 60.08%      0.05s  0.68%  runtime.mapaccess2_faststr
+     0.04s  0.54% 60.62%      0.04s  0.54%  runtime.memmove
+     0.04s  0.54% 61.16%      0.49s  6.63%  runtime.newobject
+     0.04s  0.54% 61.71%      0.04s  0.54%  runtime.nextFreeFast (inline)
+     0.04s  0.54% 62.25%      0.04s  0.54%  runtime.stkbucket
+     0.03s  0.41% 62.65%      4.53s 61.30%  gdns/internal/core.(*Engine).Resolve
+     0.03s  0.41% 63.06%      0.82s 11.10%  runtime.mallocgc

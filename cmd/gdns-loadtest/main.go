@@ -21,11 +21,13 @@ import (
 type pending struct {
 	sent, scheduled time.Time
 	name            string
+	unique          bool
 }
 type result struct {
 	Sent, OK, Errors, Timeouts     int
 	Latencies, Lateness, Scheduled []float64
 	Last                           time.Time
+	UniqueNames, RepeatedNames     []float64
 }
 type worker struct {
 	conn    net.Conn
@@ -129,7 +131,13 @@ func main() {
 					if valid {
 						w.r.OK++
 						w.r.Last = received
-						w.r.Latencies = append(w.r.Latencies, float64(received.Sub(p.sent).Nanoseconds())/1e6)
+						latency := float64(received.Sub(p.sent).Nanoseconds()) / 1e6
+						w.r.Latencies = append(w.r.Latencies, latency)
+						if p.unique {
+							w.r.UniqueNames = append(w.r.UniqueNames, latency)
+						} else {
+							w.r.RepeatedNames = append(w.r.RepeatedNames, latency)
+						}
 						w.r.Scheduled = append(w.r.Scheduled, float64(received.Sub(p.scheduled).Nanoseconds())/1e6)
 					} else {
 						w.r.Errors++
@@ -151,7 +159,8 @@ func main() {
 	for i := 0; i < total; i++ {
 		scheduled := start.Add(time.Duration(int64(i) * int64(time.Second) / int64(*rate)))
 		name := fmt.Sprintf("n%d.%s", i%512, *zone)
-		if *mode == "miss" || *mode == "mixed" && i%10 == 0 {
+		unique := *mode == "miss" || *mode == "mixed" && i%10 == 0
+		if unique {
 			name = fmt.Sprintf("u%d-%d.miss.%s", nonce, i, *zone)
 		}
 		q := new(dns.Msg)
@@ -172,7 +181,7 @@ func main() {
 		w := workers[i%count]
 		sent := time.Now()
 		w.mu.Lock()
-		w.pending[q.Id] = pending{sent, scheduled, name}
+		w.pending[q.Id] = pending{sent, scheduled, name, unique}
 		w.r.Sent++
 		w.r.Lateness = append(w.r.Lateness, float64(sent.Sub(scheduled).Nanoseconds())/1e6)
 		w.mu.Unlock()
@@ -207,6 +216,8 @@ func main() {
 		all.Errors += r.Errors
 		all.Timeouts += r.Timeouts
 		all.Latencies = append(all.Latencies, r.Latencies...)
+		all.UniqueNames = append(all.UniqueNames, r.UniqueNames...)
+		all.RepeatedNames = append(all.RepeatedNames, r.RepeatedNames...)
 		all.Lateness = append(all.Lateness, r.Lateness...)
 		all.Scheduled = append(all.Scheduled, r.Scheduled...)
 		if r.Last.After(all.Last) {
@@ -214,7 +225,7 @@ func main() {
 		}
 	}
 	elapsed := max(float64(*seconds), all.Last.Sub(start).Seconds())
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"zone": *zone, "answer_ip": *expectedIP, "require_ad": *requireAD, "pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"unique_name_ok": len(all.UniqueNames), "unique_name_p95_ms": percentile(all.UniqueNames, .95), "repeated_name_ok": len(all.RepeatedNames), "repeated_name_p95_ms": percentile(all.RepeatedNames, .95), "zone": *zone, "answer_ip": *expectedIP, "require_ad": *requireAD, "pacing": *pacing, "target_qps": *rate, "seconds": *seconds, "elapsed_seconds": elapsed, "sent": all.Sent, "ok": all.OK, "errors": all.Errors, "timeouts": all.Timeouts, "qps": float64(all.OK) / elapsed, "p50_ms": percentile(all.Latencies, .50), "p95_ms": percentile(all.Latencies, .95), "p99_ms": percentile(all.Latencies, .99), "scheduled_p95_ms": percentile(all.Scheduled, .95), "send_lateness_p95_ms": percentile(all.Lateness, .95), "send_lateness_p99_ms": percentile(all.Lateness, .99), "send_lateness_max_ms": percentile(all.Lateness, 1), "transport": *transport, "mode": *mode})
 }
 
 func checkAnswers(addr, network string) {

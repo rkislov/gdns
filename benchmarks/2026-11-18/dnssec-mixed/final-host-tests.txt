@@ -1,0 +1,10 @@
+ok  	gdns/cmd/gdns	1.775s
+?   	gdns/cmd/gdns-bench-upstream	[no test files]
+?   	gdns/cmd/gdns-loadtest	[no test files]
+ok  	gdns/internal/access	(cached)
+ok  	gdns/internal/core	(cached)
+ok  	gdns/internal/dnssec	(cached)
+ok  	gdns/internal/storage	1.846s
+ok  	gdns/internal/telemetry	(cached)
+ok  	gdns/internal/transport	(cached)
+ok  	gdns/internal/web	1.950s

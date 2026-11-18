@@ -1,0 +1,28 @@
+File: candidate-profile
+Build ID: 4a9b974afe61a6f556b6be6730892a9ab52535fa
+Type: delay
+Time: 2026-11-18 06:58:39 MSK
+Showing nodes accounting for 14s, 99.82% of 14.03s total
+Dropped 18 nodes (cum <= 0.07s)
+      flat  flat%   sum%        cum   cum%
+       12s 85.57% 85.57%        12s 85.57%  runtime.selectgo
+        2s 14.25% 99.82%         2s 14.25%  internal/poll.(*fdMutex).rwlock
+         0     0% 99.82%      2.01s 14.32%  gdns/internal/core.(*Engine).ServeDNS
+         0     0% 99.82%      2.01s 14.32%  gdns/internal/core.(*Engine).ServeDNSAs
+         0     0% 99.82%         2s 14.25%  gdns/internal/core.writeUDPReply
+         0     0% 99.82%         5s 35.63%  gdns/internal/telemetry.(*Monitor).Run
+         0     0% 99.82%         2s 14.25%  gdns/internal/transport.(*packetUDPConn).WriteTo
+         0     0% 99.82%      2.01s 14.32%  gdns/internal/transport.udpHandler.func1
+         0     0% 99.82%         7s 49.93%  gdns/internal/web.(*Server).RunSecondaries
+         0     0% 99.82%      2.01s 14.32%  github.com/miekg/dns.(*Server).serveDNS
+         0     0% 99.82%      2.01s 14.32%  github.com/miekg/dns.(*Server).serveUDP.gowrap2
+         0     0% 99.82%      2.01s 14.32%  github.com/miekg/dns.(*Server).serveUDPPacket
+         0     0% 99.82%         2s 14.25%  github.com/miekg/dns.(*response).Write
+         0     0% 99.82%      2.01s 14.32%  github.com/miekg/dns.HandlerFunc.ServeDNS
+         0     0% 99.82%         2s 14.25%  internal/poll.(*FD).WriteMsgInet4
+         0     0% 99.82%         2s 14.25%  internal/poll.(*FD).writeLock (inline)
+         0     0% 99.82%         7s 49.93%  main.run.func6
+         0     0% 99.82%         5s 35.63%  main.run.gowrap4
+         0     0% 99.82%         2s 14.25%  net.(*UDPConn).WriteMsgUDPAddrPort
+         0     0% 99.82%         2s 14.25%  net.(*UDPConn).writeMsgAddrPort
+         0     0% 99.82%         2s 14.25%  net.(*netFD).writeMsgInet4

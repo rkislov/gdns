@@ -1,0 +1,39 @@
+File: baseline-profile
+Build ID: 8afb112a0d62822d845653f5d22fec3c07f98bc7
+Type: cpu
+Time: 2026-11-18 06:38:22 MSK
+Duration: 8s, Total samples = 7.31s (91.36%)
+Showing nodes accounting for 4.47s, 61.15% of 7.31s total
+Dropped 397 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 265
+      flat  flat%   sum%        cum   cum%
+     1.91s 26.13% 26.13%      1.91s 26.13%  internal/runtime/syscall/linux.Syscall6
+     0.71s  9.71% 35.84%      0.71s  9.71%  p256MulInternal
+     0.21s  2.87% 38.71%      0.21s  2.87%  p256SqrInternal
+     0.12s  1.64% 40.36%      0.67s  9.17%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.10s  1.37% 41.72%      0.10s  1.37%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.10s  1.37% 43.09%      0.11s  1.50%  runtime.findfunc
+     0.10s  1.37% 44.46%      0.10s  1.37%  runtime.futex
+     0.09s  1.23% 45.69%      0.09s  1.23%  crypto/internal/fips140/nistec.p256Select
+     0.09s  1.23% 46.92%      0.09s  1.23%  crypto/internal/fips140/nistec.p256Sqr
+     0.09s  1.23% 48.15%      0.24s  3.28%  runtime.(*unwinder).resolveInternal
+     0.08s  1.09% 49.25%      0.14s  1.92%  runtime.step
+     0.07s  0.96% 50.21%      0.07s  0.96%  p256SubInternal
+     0.07s  0.96% 51.16%      0.10s  1.37%  runtime.(*stkframe).getStackMap
+     0.06s  0.82% 51.98%      0.06s  0.82%  runtime.nextFreeFast (inline)
+     0.06s  0.82% 52.80%      0.06s  0.82%  runtime.readvarint (inline)
+     0.06s  0.82% 53.63%      0.06s  0.82%  time.runtimeNow
+     0.05s  0.68% 54.31%      0.05s  0.68%  crypto/internal/fips140/nistec.p256OrdMul
+     0.05s  0.68% 54.99%      0.05s  0.68%  runtime.memmove
+     0.04s  0.55% 55.54%      0.17s  2.33%  crypto/internal/fips140/nistec.p256PointAddAffineAsm
+     0.04s  0.55% 56.09%      0.25s  3.42%  gdns/internal/core.(*cache).getReply
+     0.04s  0.55% 56.63%      0.04s  0.55%  internal/runtime/maps.ctrlGroup.matchH2 (inline)
+     0.04s  0.55% 57.18%      0.81s 11.08%  net.(*UDPConn).writeMsg
+     0.04s  0.55% 57.73%      0.04s  0.55%  runtime.(*mspan).moveInlineMarks
+     0.04s  0.55% 58.28%      0.05s  0.68%  runtime.exitsyscall
+     0.04s  0.55% 58.82%      0.67s  9.17%  runtime.mallocgc
+     0.04s  0.55% 59.37%      0.18s  2.46%  runtime.netpoll
+     0.04s  0.55% 59.92%      0.07s  0.96%  strings.Map
+     0.03s  0.41% 60.33%      0.34s  4.65%  crypto/internal/fips140/nistec.p256PointAddAsm
+     0.03s  0.41% 60.74%      0.12s  1.64%  github.com/miekg/dns.UnpackDomainName
+     0.03s  0.41% 61.15%      0.04s  0.55%  internal/poll.(*FD).writeUnlock

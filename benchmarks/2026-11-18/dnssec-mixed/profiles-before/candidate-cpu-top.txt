@@ -1,0 +1,39 @@
+File: candidate-profile
+Build ID: f0efe8c7caf2218bdbe2190818b4726b9c4f3e54
+Type: cpu
+Time: 2026-11-18 06:38:39 MSK
+Duration: 8s, Total samples = 7.38s (92.21%)
+Showing nodes accounting for 4.56s, 61.79% of 7.38s total
+Dropped 359 nodes (cum <= 0.04s)
+Showing top 30 nodes out of 264
+      flat  flat%   sum%        cum   cum%
+     1.76s 23.85% 23.85%      1.76s 23.85%  internal/runtime/syscall/linux.Syscall6
+     0.61s  8.27% 32.11%      0.61s  8.27%  p256MulInternal
+     0.33s  4.47% 36.59%      0.33s  4.47%  p256SqrInternal
+     0.23s  3.12% 39.70%      0.92s 12.47%  crypto/internal/fips140/nistec.p256PointDoubleAsm
+     0.19s  2.57% 42.28%      0.19s  2.57%  crypto/internal/fips140/nistec.p256OrdSqr
+     0.12s  1.63% 43.90%      0.12s  1.63%  crypto/internal/fips140/nistec.p256Sqr
+     0.11s  1.49% 45.39%      0.11s  1.49%  p256SubInternal
+     0.11s  1.49% 46.88%      0.11s  1.49%  runtime.futex
+     0.09s  1.22% 48.10%      0.09s  1.22%  runtime.findfunc
+     0.09s  1.22% 49.32%      0.24s  3.25%  runtime.pcvalue
+     0.09s  1.22% 50.54%      0.12s  1.63%  runtime.step
+     0.07s  0.95% 51.49%      0.07s  0.95%  crypto/internal/fips140/nistec.p256Select
+     0.07s  0.95% 52.44%      0.18s  2.44%  runtime.(*unwinder).resolveInternal
+     0.06s  0.81% 53.25%      0.06s  0.81%  crypto/internal/fips140/nistec.p256SelectAffine
+     0.06s  0.81% 54.07%      0.06s  0.81%  runtime.spanClass.sizeclass (inline)
+     0.05s  0.68% 54.74%      0.31s  4.20%  gdns/internal/core.(*cache).getReply
+     0.05s  0.68% 55.42%      0.05s  0.68%  runtime.madvise
+     0.04s  0.54% 55.96%      0.04s  0.54%  crypto/internal/fips140/nistec.p256OrdMul
+     0.04s  0.54% 56.50%      0.06s  0.81%  gdns/internal/core.(*Engine).observeDNSSEC
+     0.04s  0.54% 57.05%      0.04s  0.54%  github.com/miekg/dns.packDomainName
+     0.04s  0.54% 57.59%      0.04s  0.54%  runtime.asyncPreempt
+     0.04s  0.54% 58.13%      0.10s  1.36%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.04s  0.54% 58.67%      0.50s  6.78%  runtime.mcall
+     0.04s  0.54% 59.21%      0.04s  0.54%  runtime.nanotime (inline)
+     0.04s  0.54% 59.76%      0.05s  0.68%  strings.Map
+     0.03s  0.41% 60.16%      4.75s 64.36%  gdns/internal/core.(*Engine).Resolve
+     0.03s  0.41% 60.57%      0.14s  1.90%  github.com/miekg/dns.UnpackDomainName
+     0.03s  0.41% 60.98%      0.04s  0.54%  internal/runtime/maps.memHashFallback
+     0.03s  0.41% 61.38%      0.80s 10.84%  runtime.mallocgc
+     0.03s  0.41% 61.79%      0.06s  0.81%  runtime.mallocgcSmallNoScanSC6

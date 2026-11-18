@@ -1,0 +1,2 @@
+ok  	gdns/internal/core	2.753s
+ok  	gdns/internal/transport	2.574s

@@ -1,0 +1,12 @@
+goos: darwin
+goarch: arm64
+pkg: gdns/internal/core
+cpu: Apple M4
+BenchmarkSignedAddressWithoutDO/plain-2         	 4410666	       263.8 ns/op	     224 B/op	       1 allocs/op
+BenchmarkSignedAddressWithoutDO/plain-2         	 4549620	       264.6 ns/op	     224 B/op	       1 allocs/op
+BenchmarkSignedAddressWithoutDO/plain-2         	 4578985	       265.7 ns/op	     224 B/op	       1 allocs/op
+BenchmarkSignedAddressWithoutDO/edns-2          	 4303141	       280.0 ns/op	     320 B/op	       1 allocs/op
+BenchmarkSignedAddressWithoutDO/edns-2          	 4162454	       280.2 ns/op	     320 B/op	       1 allocs/op
+BenchmarkSignedAddressWithoutDO/edns-2          	 4259280	       279.9 ns/op	     320 B/op	       1 allocs/op
+PASS
+ok  	gdns/internal/core	9.284s
