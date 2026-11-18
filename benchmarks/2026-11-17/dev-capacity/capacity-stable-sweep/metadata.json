@@ -1,0 +1,28 @@
+{
+  "baseline_commit": "cce7c2764507a832b9fe087ea2b517e046460b53",
+  "candidate_commit": "0a5392c3346a298dcd8a4ff9db905f16636e36f2",
+  "candidate_diff": "diff --git a/scripts/bind9-performance.py b/scripts/bind9-performance.py\nindex 9ecae4f..13e229c 100644\n--- a/scripts/bind9-performance.py\n+++ b/scripts/bind9-performance.py\n@@ -11,6 +11,7 @@ p.add_argument('--out', required=True)\n modes = p.add_mutually_exclusive_group()\n modes.add_argument('--quick', action='store_true')\n modes.add_argument('--control-only', action='store_true')\n+modes.add_argument('--capacity-sweep', action='store_true', help='diagnostic warm UDP at 1k/5k/10k QPS; never acceptance')\n modes.add_argument('--profile-only', action='store_true')\n p.add_argument('--arch', default='arm64')\n p.add_argument('--server-cpus', default='2,3')\n@@ -113,6 +114,8 @@ try:\n     scenarios = [('udp', 'warm', 15000, 5, 8), ('udp', 'warm', 5000, 3, 8), ('udp', 'warm', 30000, 3, 8), ('tcp', 'warm', 5000, 3, 5), ('udp', 'miss', 1000, 3, 5), ('udp', 'mixed', 5000, 3, 5)]\n     if a.control_only:\n         scenarios = scenarios[:1]\n+    if a.capacity_sweep:\n+        scenarios = [('udp', 'warm', rate, 3, 5) for rate in [1000, 5000, 10000]]\n     if a.profile_only:\n         for impl in ['baseline', 'candidate']:\n             remove(server)\n@@ -179,6 +182,12 @@ finally:\n     sp.run(['docker', 'network', 'rm', network], stdout=sp.DEVNULL)\n if a.profile_only:\n     raise SystemExit(0)\n+if a.capacity_sweep:\n+    diagnostic = {str(rate): {impl: {'p95_median_ms': statistics.median(r['p95_ms'] for r in rows if r['target_qps'] == rate and r['impl'] == impl), 'losses': sum(r['errors'] + r['timeouts'] for r in rows if r['target_qps'] == rate and r['impl'] == impl)} for impl in ['bind', 'baseline', 'candidate']} for rate in [1000, 5000, 10000]}\n+    summary = {'diagnostic_only': True, 'acceptance_met': False, 'rates': diagnostic}\n+    (out / 'summary.json').write_text(json.dumps(summary, indent=2))\n+    print(json.dumps(summary))\n+    raise SystemExit(0)\n control = [r for r in rows if r['transport'] == 'udp' and r['mode'] == 'warm' and (r['target_qps'] == 15000)]\n medians = {impl: statistics.median((r['p95_ms'] for r in control if r['impl'] == impl)) for impl in ['bind', 'baseline', 'candidate']}\n errors = {impl: sum((r['errors'] + r['timeouts'] for r in control if r['impl'] == impl)) for impl in medians}\n",
+  "image": "sha256:10a5dfa60b2a1e8a91380819063c0ca51b964af5599a5aa47acaff6f05b53e73",
+  "architecture": "linux/amd64",
+  "resolver_cpus": "0",
+  "client_cpus": "1,2",
+  "auth_cpus": "0",
+  "workers": 1,
+  "memory_limit": "512m",
+  "acceptance_qps": 15000,
+  "ttl": 3600,
+  "working_set": 512,
+  "log": false,
+  "dnssec": false,
+  "lab": "/tmp/gdns-bind-perf-zpazgng7",
+  "go_version": "go version go1.27.0 darwin/arm64",
+  "docker_version": "29.1.3",
+  "kernel": "6.8.0-111-generic",
+  "candidate_untracked_sources": {},
+  "pacing": "sleep",
+  "binary_sha256": {
+    "baseline-bin": "48186485925d71a33db5f09f759014582ee9e79654f17844fb1d6cd26867d3ba",
+    "candidate": "82edb6de5065e2c496059dbd3bec765dac491c9cd515c8246954eda05b6de17c",
+    "load": "4792336d91b6b40ba18da821ed8012df77cfc204dec4492d9fe37332dfadcb22"
+  }
+}

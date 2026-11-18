@@ -11,6 +11,7 @@ p.add_argument('--out', required=True)
 modes = p.add_mutually_exclusive_group()
 modes.add_argument('--quick', action='store_true')
 modes.add_argument('--control-only', action='store_true')
+modes.add_argument('--capacity-sweep', action='store_true', help='diagnostic warm UDP at 1k/5k/10k QPS; never acceptance')
 modes.add_argument('--profile-only', action='store_true')
 p.add_argument('--arch', default='arm64')
 p.add_argument('--server-cpus', default='2,3')
@@ -113,6 +114,8 @@ try:
     scenarios = [('udp', 'warm', 15000, 5, 8), ('udp', 'warm', 5000, 3, 8), ('udp', 'warm', 30000, 3, 8), ('tcp', 'warm', 5000, 3, 5), ('udp', 'miss', 1000, 3, 5), ('udp', 'mixed', 5000, 3, 5)]
     if a.control_only:
         scenarios = scenarios[:1]
+    if a.capacity_sweep:
+        scenarios = [('udp', 'warm', rate, 3, 5) for rate in [1000, 5000, 10000]]
     if a.profile_only:
         for impl in ['baseline', 'candidate']:
             remove(server)
@@ -178,6 +181,23 @@ finally:
         remove(name)
     sp.run(['docker', 'network', 'rm', network], stdout=sp.DEVNULL)
 if a.profile_only:
+    raise SystemExit(0)
+if a.capacity_sweep:
+    diagnostic = {}
+    for rate in [1000, 5000, 10000]:
+        diagnostic[str(rate)] = {}
+        for impl in ['bind', 'baseline', 'candidate']:
+            trials = [r for r in rows if r['target_qps'] == rate and r['impl'] == impl]
+            diagnostic[str(rate)][impl] = {
+                'p95_median_ms': statistics.median(r['p95_ms'] for r in trials),
+                'losses': sum(r['errors'] + r['timeouts'] for r in trials),
+                'sent': sum(r['sent'] for r in trials),
+                'goodput_qps_median': statistics.median(r['qps'] for r in trials),
+                'send_lateness_p95_median_ms': statistics.median(r['send_lateness_p95_ms'] for r in trials),
+            }
+    summary = {'diagnostic_only': True, 'acceptance_met': False, 'rates': diagnostic}
+    (out / 'summary.json').write_text(json.dumps(summary, indent=2))
+    print(json.dumps(summary))
     raise SystemExit(0)
 control = [r for r in rows if r['transport'] == 'udp' and r['mode'] == 'warm' and (r['target_qps'] == 15000)]
 medians = {impl: statistics.median((r['p95_ms'] for r in control if r['impl'] == impl)) for impl in ['bind', 'baseline', 'candidate']}
